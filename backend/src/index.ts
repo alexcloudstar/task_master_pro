@@ -4,7 +4,7 @@ const app: Application = express();
 const port = process.env.PORT || 8000;
 
 app.get('/', (_, res: Response) => {
-	res.send('Welcome to Express @@@');
+	res.send('Hello World');
 });
 
 app.listen(port, () => {
