@@ -3,8 +3,8 @@ import {
 	getUser,
 	register,
 	updateProfile,
-    getProfile,
-    deleteProfile,
+	getProfile,
+	deleteProfile,
 } from '../controllers/User.controller';
 import { Router } from 'express';
 
