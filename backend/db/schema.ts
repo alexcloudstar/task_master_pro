@@ -121,3 +121,6 @@ export const taskRelations = relations(task, ({ one, many }) => ({
 	}),
 	subtasks: many(task),
 }));
+
+export type TUser = typeof user.$inferSelect;
+export type TInsertUser = typeof user.$inferInsert;
