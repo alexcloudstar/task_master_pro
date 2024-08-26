@@ -56,3 +56,5 @@ export const register = async (req: Request, res: Response) => {
 		return res.status(500).json({ message: error?.errors?.[0]?.message });
 	}
 };
+
+
