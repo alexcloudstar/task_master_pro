@@ -13,12 +13,12 @@ const client = new Client({
 });
 
 const clientConnect = async () => {
-    try {
-        await client.connect();
-    } catch (error: any) {
-        console.error(error.stack);
-    }
-}
+	try {
+		await client.connect();
+	} catch (error: any) {
+		console.error(error.stack);
+	}
+};
 
 clientConnect();
 

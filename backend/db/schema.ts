@@ -30,6 +30,12 @@ export const user = pgTable('user', {
 	id: serial('id').primaryKey(),
 	clerk_id: varchar('clerk_id', { length: 255 }).notNull(),
 	role: eRole('role'),
+	avatar: varchar('avatar', { length: 255 }),
+	cover: varchar('cover', { length: 255 }),
+	email: varchar('email', { length: 255 }).notNull(),
+	first_name: varchar('first_name', { length: 255 }).notNull(),
+	last_name: varchar('last_name', { length: 255 }).notNull(),
+	username: varchar('username', { length: 255 }).notNull(),
 	created_at: timestamp('created_at').defaultNow(),
 	updated_at: timestamp('updated_at').defaultNow(),
 });
@@ -70,6 +76,12 @@ export const task = pgTable('task', {
 	color: varchar('color', { length: 255 }),
 });
 
+export const userRelations = relations(user, ({ many }) => ({
+	tasks: many(task),
+	projects: many(project),
+	sprint: many(sprint),
+}));
+
 export const projectRelations = relations(project, ({ one, many }) => ({
 	created_by: one(user, {
 		fields: [project.created_by_id],
@@ -109,3 +121,6 @@ export const taskRelations = relations(task, ({ one, many }) => ({
 	}),
 	subtasks: many(task),
 }));
+
+export type TUser = typeof user.$inferSelect;
+export type TInsertUser = typeof user.$inferInsert;
