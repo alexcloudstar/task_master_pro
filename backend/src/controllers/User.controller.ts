@@ -1,5 +1,7 @@
 import type { Request, Response } from 'express';
-import { clerk } from '..';
+import { clerk } from '../';
+import { db } from '../../db/drizzle';
+import { user } from 'db/schema';
 
 export type TUserRegister = {
 	firstName: string;
@@ -22,15 +24,21 @@ export const register = async (req: Request, res: Response) => {
 	const { emailAddress }: TUserRegister = req.body;
 
 	try {
-		const user = await clerk.users.createUser({
+		const clerkUser = await clerk.users.createUser({
 			...req.body,
 			emailAddress: [emailAddress],
 		});
 
 		const { token } = await clerk.signInTokens.createSignInToken({
-			userId: user.id,
+			userId: clerkUser.id,
 			expiresInSeconds,
 		});
+
+
+        db.insert(user).values({
+            clerk_id: clerkUser.id,
+            role: 'user',
+        })
 
 		return res.status(201).json({ token });
 	} catch (error: any) {

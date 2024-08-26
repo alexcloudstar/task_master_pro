@@ -12,7 +12,15 @@ const client = new Client({
 	ssl: false,
 });
 
-await client.connect().catch(err => console.error(err.stack));
+const clientConnect = async () => {
+    try {
+        await client.connect();
+    } catch (error: any) {
+        console.error(error.stack);
+    }
+}
+
+clientConnect();
 
 export const db = drizzle(client, {
 	schema,
