@@ -8,20 +8,6 @@ import {
 	varchar,
 } from 'drizzle-orm/pg-core';
 
-/*
-- title: string
-- description: string
-- created_at: timestamp - default.now()
-- updated_at: timestamp - default.now()
-- task? (like subtask?): Array<>
-- assets (but stored in S3)
-- assigned to
-- created/reported_by
-- color: string
-- status: enum(in progress, done, blocked, in review, etc) - check Jira
-- deadline
-*/
-
 export const eStatus = pgEnum('status', [
 	'in_progress',
 	'done',
