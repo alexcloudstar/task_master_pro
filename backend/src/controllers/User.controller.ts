@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { clerk } from '../';
 import { db } from '../../db/drizzle';
-import { user } from 'db/schema';
+import { user } from '../../db/schema';
 
 export type TUserRegister = {
 	firstName: string;
@@ -17,7 +17,11 @@ export type TUserLogin = {
 const expiresInSeconds = 60 * 60 * 24 * 7;
 
 export const getUsers = async (req: Request, res: Response) => {
-	return res.status(200).json({ message: 'Hello World' });
+    const users = await db.query.user.findMany();
+
+    return res.status(200).json({
+        users
+    });
 };
 
 export const register = async (req: Request, res: Response) => {
@@ -34,7 +38,7 @@ export const register = async (req: Request, res: Response) => {
 			expiresInSeconds,
 		});
 
-		db.insert(user).values({
+		await db.insert(user).values({
 			clerk_id: clerkUser.id,
 			role: 'user',
 		});
