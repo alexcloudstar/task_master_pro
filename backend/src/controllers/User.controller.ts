@@ -34,11 +34,10 @@ export const register = async (req: Request, res: Response) => {
 			expiresInSeconds,
 		});
 
-
-        db.insert(user).values({
-            clerk_id: clerkUser.id,
-            role: 'user',
-        })
+		db.insert(user).values({
+			clerk_id: clerkUser.id,
+			role: 'user',
+		});
 
 		return res.status(201).json({ token });
 	} catch (error: any) {
