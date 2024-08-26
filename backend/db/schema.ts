@@ -8,20 +8,6 @@ import {
 	varchar,
 } from 'drizzle-orm/pg-core';
 
-/*
-- title: string
-- description: string
-- created_at: timestamp - default.now()
-- updated_at: timestamp - default.now()
-- task? (like subtask?): Array<>
-- assets (but stored in S3)
-- assigned to
-- created/reported_by
-- color: string
-- status: enum(in progress, done, blocked, in review, etc) - check Jira
-- deadline
-*/
-
 export const eStatus = pgEnum('status', [
 	'in_progress',
 	'done',
@@ -83,6 +69,12 @@ export const task = pgTable('task', {
 	updated_at: timestamp('updated_at').defaultNow(),
 	color: varchar('color', { length: 255 }),
 });
+
+export const userRelations = relations(user, ({ many }) => ({
+	tasks: many(task),
+    projects: many(project),
+    sprint: many(sprint),
+}));
 
 export const projectRelations = relations(project, ({ one, many }) => ({
 	created_by: one(user, {
