@@ -30,6 +30,12 @@ export const user = pgTable('user', {
 	id: serial('id').primaryKey(),
 	clerk_id: varchar('clerk_id', { length: 255 }).notNull(),
 	role: eRole('role'),
+	avatar: varchar('avatar', { length: 255 }),
+	cover: varchar('cover', { length: 255 }),
+	email: varchar('email', { length: 255 }).notNull(),
+	first_name: varchar('first_name', { length: 255 }).notNull(),
+	last_name: varchar('last_name', { length: 255 }).notNull(),
+	username: varchar('username', { length: 255 }).notNull(),
 	created_at: timestamp('created_at').defaultNow(),
 	updated_at: timestamp('updated_at').defaultNow(),
 });
