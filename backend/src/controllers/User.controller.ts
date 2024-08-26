@@ -15,7 +15,7 @@ export type TUserLogin = {
 const expiresInSeconds = 60 * 60 * 24 * 7;
 
 export const getUsers = async (req: Request, res: Response) => {
-    return res.status(200).json({ message: 'Hello World' });
+	return res.status(200).json({ message: 'Hello World' });
 };
 
 export const register = async (req: Request, res: Response) => {
@@ -52,11 +52,10 @@ export const login = async (req: Request, res: Response) => {
 			return res.status(400).json({ message: 'Invalid credentials' });
 		}
 
-
 		const token = await clerk.signInTokens.createSignInToken({
-            userId: id,
-            expiresInSeconds,
-        });
+			userId: id,
+			expiresInSeconds,
+		});
 
 		return res.status(201).json({
 			token,
