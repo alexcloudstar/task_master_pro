@@ -4,9 +4,9 @@ import { db } from '../../db/drizzle';
 import { user } from '../../db/schema';
 
 export type TUserRegister = {
-	firstName: string;
-	lastName: string;
-	emailAddress: string;
+	first_name: string;
+	last_name: string;
+	email_address: string;
 	password: string;
 };
 
@@ -16,21 +16,22 @@ export type TUserLogin = {
 
 const expiresInSeconds = 60 * 60 * 24 * 7;
 
-export const getUsers = async (req: Request, res: Response) => {
-    const users = await db.query.user.findMany();
+export const getUsers = async (_: Request, res: Response) => {
+	const users = await db.query.user.findMany();
 
-    return res.status(200).json({
-        users
-    });
+	return res.status(200).json({
+		users,
+	});
 };
 
+// Only for testing purposes
 export const register = async (req: Request, res: Response) => {
-	const { emailAddress }: TUserRegister = req.body;
+	const { first_name, last_name, email_address }: TUserRegister = req.body;
 
 	try {
 		const clerkUser = await clerk.users.createUser({
 			...req.body,
-			emailAddress: [emailAddress],
+			emailAddress: [email_address],
 		});
 
 		const { token } = await clerk.signInTokens.createSignInToken({
@@ -40,37 +41,16 @@ export const register = async (req: Request, res: Response) => {
 
 		await db.insert(user).values({
 			clerk_id: clerkUser.id,
+			email: email_address,
+			first_name: first_name ?? '',
+			last_name: last_name ?? '',
+			username: clerkUser.username ?? '',
+			cover: '',
+			avatar: '',
 			role: 'user',
 		});
 
 		return res.status(201).json({ token });
-	} catch (error: any) {
-		console.log(error);
-		return res.status(500).json({ message: error?.errors?.[0]?.message });
-	}
-};
-
-export const login = async (req: Request, res: Response) => {
-	const { id, password }: TUserLogin = req.body;
-
-	try {
-		const response = await clerk.users.verifyPassword({
-			userId: id,
-			password,
-		});
-
-		if (!response) {
-			return res.status(400).json({ message: 'Invalid credentials' });
-		}
-
-		const token = await clerk.signInTokens.createSignInToken({
-			userId: id,
-			expiresInSeconds,
-		});
-
-		return res.status(201).json({
-			token,
-		});
 	} catch (error: any) {
 		console.log(error);
 		return res.status(500).json({ message: error?.errors?.[0]?.message });
