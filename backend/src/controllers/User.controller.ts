@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { clerk } from '../';
 import { db } from '../../db/drizzle';
 import { user } from '../../db/schema';
+import { eq } from 'drizzle-orm';
 
 export type TUserRegister = {
 	first_name: string;
@@ -19,8 +20,32 @@ const expiresInSeconds = 60 * 60 * 24 * 7;
 export const getUsers = async (_: Request, res: Response) => {
 	const users = await db.query.user.findMany();
 
+    if (!users.length) {
+        return res.status(404).json({
+            message: 'Users not found',
+        });
+    }
+
 	return res.status(200).json({
 		users,
+	});
+};
+
+export const getUser = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+	const findedUser = await db.query.user.findFirst({
+        where: eq(user.id, +id),
+    });
+
+    if (!findedUser) {
+        return res.status(404).json({
+            message: 'User not found',
+        });
+    }
+
+	return res.status(200).json({
+        user: findedUser,
 	});
 };
 
