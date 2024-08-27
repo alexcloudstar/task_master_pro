@@ -13,8 +13,8 @@ export const env = {
 };
 
 export const constants = {
-    BEFORE_ALL_TIMEOUT: 30000, // 30 sec
-    port : process.env.PORT || 8000,
-    origin: 'http://localhost:3000',
-    optionsSuccessStatus: 200,
-}
+	BEFORE_ALL_TIMEOUT: 30000, // 30 sec
+	port: process.env.PORT || 8000,
+	origin: 'http://localhost:3000',
+	optionsSuccessStatus: 200,
+};

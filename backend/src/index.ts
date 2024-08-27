@@ -17,10 +17,12 @@ declare global {
 	}
 }
 
-app.use(cors({
-    origin: constants.origin,
-    optionsSuccessStatus: constants.optionsSuccessStatus,
-}));
+app.use(
+	cors({
+		origin: constants.origin,
+		optionsSuccessStatus: constants.optionsSuccessStatus,
+	}),
+);
 app.use(express.json());
 
 export const clerk = createClerkClient({ secretKey: env.CLERK_SECRET_KEY });

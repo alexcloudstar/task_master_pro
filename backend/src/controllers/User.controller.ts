@@ -22,7 +22,7 @@ export const getUsers = async (_: Request, res: Response) => {
 
 	if (!users.length) {
 		return res.status(200).json({
-            message: 'Users not found',
+			message: 'Users not found',
 		});
 	}
 
@@ -92,7 +92,7 @@ export const updateProfile = async (req: Request, res: Response) => {
 			avatar,
 			cover,
 			username,
-            email_address,
+			email_address,
 			first_name,
 			last_name,
 		}: Omit<
@@ -126,7 +126,7 @@ export const updateProfile = async (req: Request, res: Response) => {
 				avatar,
 				cover,
 				username,
-                email_address,
+				email_address,
 				first_name,
 				last_name,
 			})
@@ -198,7 +198,7 @@ export const register = async (req: Request, res: Response) => {
 
 		const createdUser = await db.insert(user).values({
 			clerk_id: clerkUser.id,
-            email_address: email_address ?? '',
+			email_address: email_address ?? '',
 			first_name: first_name ?? '',
 			last_name: last_name ?? '',
 			username: clerkUser.username ?? '',
@@ -207,11 +207,11 @@ export const register = async (req: Request, res: Response) => {
 			role: 'user',
 		});
 
-        if (!createdUser) {
-            return res.status(500).json({
-                message: 'User not created',
-            });
-        }
+		if (!createdUser) {
+			return res.status(500).json({
+				message: 'User not created',
+			});
+		}
 
 		return res.status(201).json({ token });
 	} catch (error: any) {
