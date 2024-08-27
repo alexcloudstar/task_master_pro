@@ -7,20 +7,13 @@ import { jwtDecode } from 'jwt-decode';
 import { clerkClient } from '@clerk/clerk-sdk-node';
 
 export type TUserRegister = {
-	first_name: string;
-	last_name: string;
-	email_address: string;
 	password: string;
-};
+} & Pick<TInsertUser, 'first_name' | 'last_name' | 'email'>;
 
-export type TUserUpdate = {
-	avatar: string;
-	cover: string;
-	username: string;
-	email: string;
-	first_name: string;
-	last_name: string;
-};
+export type TUserUpdate = Omit<
+	TInsertUser,
+	'id' | 'clerk_id' | 'role' | 'created_at' | 'updated_at'
+>;
 
 const expiresInSeconds = 60 * 60 * 24 * 7;
 
@@ -190,12 +183,12 @@ export const deleteProfile = async (req: Request, res: Response) => {
 
 // Only for testing purposes
 export const register = async (req: Request, res: Response) => {
-	const { first_name, last_name, email_address }: TUserRegister = req.body;
+	const { first_name, last_name, email }: TUserRegister = req.body;
 
 	try {
 		const clerkUser = await clerk.users.createUser({
 			...req.body,
-			emailAddress: [email_address],
+			emailAddress: [email],
 		});
 
 		const { token } = await clerk.signInTokens.createSignInToken({
@@ -205,7 +198,7 @@ export const register = async (req: Request, res: Response) => {
 
 		const createdUser = await db.insert(user).values({
 			clerk_id: clerkUser.id,
-			email: email_address,
+			email: email,
 			first_name: first_name ?? '',
 			last_name: last_name ?? '',
 			username: clerkUser.username ?? '',
