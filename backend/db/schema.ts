@@ -32,7 +32,7 @@ export const user = pgTable('user', {
 	role: eRole('role'),
 	avatar: varchar('avatar', { length: 255 }),
 	cover: varchar('cover', { length: 255 }),
-	email: varchar('email', { length: 255 }).notNull(),
+	email_address: varchar('email', { length: 255 }).notNull(),
 	first_name: varchar('first_name', { length: 255 }).notNull(),
 	last_name: varchar('last_name', { length: 255 }).notNull(),
 	username: varchar('username', { length: 255 }).notNull(),
