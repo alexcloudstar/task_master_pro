@@ -203,7 +203,7 @@ export const register = async (req: Request, res: Response) => {
 			expiresInSeconds,
 		});
 
-		await db.insert(user).values({
+		const createdUser = await db.insert(user).values({
 			clerk_id: clerkUser.id,
 			email: email_address,
 			first_name: first_name ?? '',
@@ -213,6 +213,12 @@ export const register = async (req: Request, res: Response) => {
 			avatar: '',
 			role: 'user',
 		});
+
+		if (!createdUser) {
+			return res.status(500).json({
+				message: 'User not created',
+			});
+		}
 
 		return res.status(201).json({ token });
 	} catch (error: any) {
