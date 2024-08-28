@@ -4,7 +4,7 @@ import {
 	updateProfile,
 	getProfile,
 	deleteProfile,
-} from '../controllers/User.controller';
+} from '../controllers/Users.controller';
 import { Router } from 'express';
 
 const router = Router();

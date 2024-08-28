@@ -1,15 +1,15 @@
 import { Application } from 'express';
-import user from './User.route';
-import project from './Project.route';
-import sprint from './Sprint.route';
-import task from './Task.route';
-import { register } from '../controllers/User.controller';
+import user from './Users.route';
+import project from './Projects.route';
+import sprint from './Sprints.route';
+import task from './Tasks.route';
+import { register } from '../controllers/Users.controller';
 
 export default (app: Application): void => {
 	// only used for testing
 	app.post('/signup', register);
-	app.use('/api/user', user);
-	app.use('/api/project', project);
-	app.use('/api/sprint', sprint);
-	app.use('/api/task', task);
+	app.use('/api/users', user);
+	app.use('/api/projects', project);
+	app.use('/api/sprints', sprint);
+	app.use('/api/tasks', task);
 };

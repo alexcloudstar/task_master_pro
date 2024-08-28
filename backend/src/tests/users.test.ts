@@ -2,12 +2,12 @@ import { constants, env } from 'config';
 import { TSelectUser } from 'db/schema';
 import { describe, expect, test, beforeAll } from 'vitest';
 
-describe('/api/user', () => {
+describe('/api/users', () => {
 	let response: Response;
 	let body: { users: TSelectUser[] };
 
 	beforeAll(async () => {
-		response = await fetch('http://localhost:8000/api/user', {
+		response = await fetch('http://localhost:8000/api/users', {
 			headers: {
 				Authorization: `Bearer ${env.TEST_TOKEN}`,
 			},
@@ -39,7 +39,7 @@ describe('/api/user/:id', () => {
 	let body: { user: TSelectUser };
 
 	beforeAll(async () => {
-		response = await fetch('http://localhost:8000/api/user/1', {
+		response = await fetch('http://localhost:8000/api/users/1', {
 			headers: {
 				Authorization: `Bearer ${env.TEST_TOKEN}`,
 			},
@@ -61,7 +61,7 @@ describe('/api/user/me', () => {
 	let body: { user: TSelectUser };
 
 	beforeAll(async () => {
-		response = await fetch('http://localhost:8000/api/user/me', {
+		response = await fetch('http://localhost:8000/api/users/me', {
 			headers: {
 				Authorization: `Bearer ${env.TEST_TOKEN}`,
 			},
