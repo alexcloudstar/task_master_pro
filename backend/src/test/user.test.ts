@@ -1,8 +1,6 @@
-import { env } from 'config';
+import { constants, env } from 'config';
 import { TSelectUser } from 'db/schema';
 import { describe, expect, test, beforeAll } from 'vitest';
-
-const BEFORE_ALL_TIMEOUT = 30000; // 30 sec
 
 describe('/api/user', () => {
 	let response: Response;
@@ -15,7 +13,7 @@ describe('/api/user', () => {
 			},
 		});
 		body = await response.json();
-	}, BEFORE_ALL_TIMEOUT);
+	}, constants.BEFORE_ALL_TIMEOUT);
 
 	test('Should have response status 200', () => {
 		expect(response.status).toBe(200);
@@ -23,6 +21,16 @@ describe('/api/user', () => {
 
 	test('Should return an array of users', () => {
 		expect(Array.isArray(body.users)).toBe(true);
+	});
+
+	test('Should return an array of projects', () => {
+		expect(body.users.length).toBeGreaterThan(0);
+	});
+
+	test('Should return an array of users object', () => {
+		const keysOfUser = Object.keys(body.users[0]);
+
+		expect(keysOfUser).toMatchObject(keysOfUser);
 	});
 });
 
@@ -37,7 +45,7 @@ describe('/api/user/:id', () => {
 			},
 		});
 		body = await response.json();
-	}, BEFORE_ALL_TIMEOUT);
+	}, constants.BEFORE_ALL_TIMEOUT);
 
 	test('Should have response status 200', () => {
 		expect(response.status).toBe(200);
@@ -59,7 +67,7 @@ describe('/api/user/me', () => {
 			},
 		});
 		body = await response.json();
-	}, BEFORE_ALL_TIMEOUT);
+	}, constants.BEFORE_ALL_TIMEOUT);
 
 	test('Should have response status 200', () => {
 		expect(response.status).toBe(200);
