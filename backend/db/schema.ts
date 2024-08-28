@@ -130,3 +130,5 @@ export type TSelectProject = typeof project.$inferSelect;
 export type TInsertProject = typeof project.$inferInsert;
 export type TSelectSprint = typeof sprint.$inferSelect;
 export type TInsertSprint = typeof sprint.$inferInsert;
+export type TSelectTask = typeof task.$inferSelect;
+export type TInsertTask = typeof task.$inferInsert;
