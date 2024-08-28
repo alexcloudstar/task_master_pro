@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import routes from './routes';
-import { env } from '../config';
+import { env, constants } from '../config';
+
 import {
 	ClerkExpressRequireAuth,
 	createClerkClient,
@@ -9,7 +10,6 @@ import { StrictAuthProp } from '@clerk/clerk-sdk-node';
 import cors from 'cors';
 
 const app: Application = express();
-const port = process.env.PORT || 8000;
 
 declare global {
 	namespace Express {
@@ -17,12 +17,12 @@ declare global {
 	}
 }
 
-const corsOptions = {
-	origin: 'http://localhost:3000',
-	optionsSuccessStatus: 200,
-};
-
-app.use(cors(corsOptions));
+app.use(
+	cors({
+		origin: constants.origin,
+		optionsSuccessStatus: constants.optionsSuccessStatus,
+	}),
+);
 app.use(express.json());
 
 export const clerk = createClerkClient({ secretKey: env.CLERK_SECRET_KEY });
@@ -38,6 +38,6 @@ app.use((err: any, _: any, res: any, __: any) => {
 
 routes(app);
 
-app.listen(port, () => {
-	console.log(`Server is running at http://localhost:${port}`);
+app.listen(constants.port, () => {
+	console.log(`Server is running at http://localhost:${constants.port}`);
 });

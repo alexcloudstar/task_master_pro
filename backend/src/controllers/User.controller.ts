@@ -8,7 +8,7 @@ import { clerkClient } from '@clerk/clerk-sdk-node';
 
 export type TUserRegister = {
 	password: string;
-} & Pick<TInsertUser, 'first_name' | 'last_name' | 'email'>;
+} & Pick<TInsertUser, 'first_name' | 'last_name' | 'email_address'>;
 
 export type TUserUpdate = Omit<
 	TInsertUser,
@@ -21,7 +21,7 @@ export const getUsers = async (_: Request, res: Response) => {
 	const users = await db.query.user.findMany();
 
 	if (!users.length) {
-		return res.status(404).json({
+		return res.status(200).json({
 			message: 'Users not found',
 		});
 	}
@@ -92,7 +92,7 @@ export const updateProfile = async (req: Request, res: Response) => {
 			avatar,
 			cover,
 			username,
-			email,
+			email_address,
 			first_name,
 			last_name,
 		}: Omit<
@@ -126,7 +126,7 @@ export const updateProfile = async (req: Request, res: Response) => {
 				avatar,
 				cover,
 				username,
-				email,
+				email_address,
 				first_name,
 				last_name,
 			})
@@ -183,12 +183,12 @@ export const deleteProfile = async (req: Request, res: Response) => {
 
 // Only for testing purposes
 export const register = async (req: Request, res: Response) => {
-	const { first_name, last_name, email }: TUserRegister = req.body;
+	const { first_name, last_name, email_address }: TUserRegister = req.body;
 
 	try {
 		const clerkUser = await clerk.users.createUser({
 			...req.body,
-			emailAddress: [email],
+			emailAddress: [email_address],
 		});
 
 		const { token } = await clerk.signInTokens.createSignInToken({
@@ -198,7 +198,7 @@ export const register = async (req: Request, res: Response) => {
 
 		const createdUser = await db.insert(user).values({
 			clerk_id: clerkUser.id,
-			email: email,
+			email_address: email_address ?? '',
 			first_name: first_name ?? '',
 			last_name: last_name ?? '',
 			username: clerkUser.username ?? '',

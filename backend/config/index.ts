@@ -9,4 +9,12 @@ export const env = {
 	DB_PORT: process.env.DB_PORT,
 	CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
 	CLERK_PUBLIC_KEY: process.env.CLERK_PUBLIC_KEY,
+	TEST_TOKEN: process.env.TEST_TOKEN,
+};
+
+export const constants = {
+	BEFORE_ALL_TIMEOUT: 30000, // 30 sec
+	port: process.env.PORT || 8000,
+	origin: 'http://localhost:3000',
+	optionsSuccessStatus: 200,
 };
