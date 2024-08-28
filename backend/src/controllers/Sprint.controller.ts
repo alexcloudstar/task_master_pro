@@ -2,21 +2,21 @@ import { Request, Response } from 'express';
 
 import { db } from '../../db/drizzle';
 import { and, eq } from 'drizzle-orm';
-import { project, TInsertProject, TSelectProject, user } from '../../db/schema';
+import { sprint, TInsertSprint, TSelectSprint, user } from '../../db/schema';
 import { jwtDecode } from 'jwt-decode';
 
-export const getProjects = async (_: Request, res: Response) => {
+export const getSprints = async (_: Request, res: Response) => {
 	try {
-		const projects: TSelectProject[] = await db.query.project.findMany();
+		const sprints: TSelectSprint[] = await db.query.sprint.findMany();
 
-		if (!projects.length) {
+		if (!sprints.length) {
 			return res.status(404).json({
-				message: 'Projects not found',
+				message: 'Sprints not found',
 			});
 		}
 
 		return res.status(200).json({
-			projects,
+			sprints,
 		});
 	} catch (error) {
 		return res.status(500).json({
@@ -25,23 +25,23 @@ export const getProjects = async (_: Request, res: Response) => {
 	}
 };
 
-export const getProject = async (req: Request, res: Response) => {
+export const getSprint = async (req: Request, res: Response) => {
 	const { id } = req.params;
 
 	try {
-		const findedProject: TSelectProject | undefined =
-			await db.query.project.findFirst({
-				where: eq(project.id, +id),
+		const findedSprint: TSelectSprint | undefined =
+			await db.query.sprint.findFirst({
+				where: eq(sprint.id, +id),
 			});
 
-		if (!findedProject) {
+		if (!findedSprint) {
 			return res.status(404).json({
-				message: 'Project not found',
+				message: 'Sprint not found',
 			});
 		}
 
 		return res.status(200).json({
-			project: findedProject,
+			sprint: findedSprint,
 		});
 	} catch (error) {
 		return res.status(500).json({
@@ -50,8 +50,15 @@ export const getProject = async (req: Request, res: Response) => {
 	}
 };
 
-export const createProject = async (req: Request, res: Response) => {
-	const { title, description, color }: TInsertProject = req.body;
+export const createSprint = async (req: Request, res: Response) => {
+	const {
+		title,
+		assigned_to_id,
+		color,
+		status,
+		deadline,
+		project_id,
+	}: TInsertSprint = req.body;
 
 	try {
 		const token = req.headers.authorization?.split(' ')[1];
@@ -74,29 +81,34 @@ export const createProject = async (req: Request, res: Response) => {
 			});
 		}
 
-		const createdProject = await db
-			.insert(project)
+		const createdSprint = await db
+			.insert(sprint)
 			.values({
 				title,
-				description,
 				color,
 				created_by_id: findedUser.id,
+				assigned_to_id: assigned_to_id ?? findedUser.id,
+				status,
+				deadline,
+				project_id: +project_id,
 			})
 			.returning();
 
 		return res.status(201).json({
-			project: createdProject[0],
+			sprint: createdSprint[0],
 		});
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({
 			message: 'Internal Server Error',
 		});
 	}
 };
 
-export const updateProject = async (req: Request, res: Response) => {
+export const updateSprint = async (req: Request, res: Response) => {
 	const { id } = req.params;
-	const { title, description, color }: TInsertProject = req.body;
+	const { title, assigned_to_id, color, status, deadline }: TInsertSprint =
+		req.body;
 
 	try {
 		const token = req.headers.authorization?.split(' ')[1];
@@ -119,37 +131,41 @@ export const updateProject = async (req: Request, res: Response) => {
 			});
 		}
 
-		const findedProject = await db.query.project.findFirst({
-			where: eq(project.id, +id),
+		const findedSprint = await db.query.sprint.findFirst({
+			where: eq(sprint.id, +id),
 		});
 
 		if (
 			findedUser.role !== 'admin' &&
-			findedUser.id !== findedProject?.created_by_id
+			findedUser.id !== findedSprint?.created_by_id
 		) {
 			return res.status(403).json({
 				message: 'Forbidden',
 			});
 		}
 
-		const updatedProject = await db
-			.update(project)
+		const updatedSprint = await db
+			.update(sprint)
 			.set({
 				title,
-				description,
 				color,
+				created_by_id: findedUser.id,
+				assigned_to_id: assigned_to_id ?? findedUser.id,
+				status,
+				deadline,
+				project_id: findedSprint?.project_id,
 			})
-			.where(and(eq(project.id, +id), eq(project.created_by_id, findedUser.id)))
+			.where(and(eq(sprint.id, +id), eq(sprint.created_by_id, findedUser.id)))
 			.returning();
 
-		if (!updatedProject.length) {
+		if (!updatedSprint.length) {
 			return res.status(404).json({
-				message: 'Project not found',
+				message: 'Sprint not found',
 			});
 		}
 
 		return res.status(200).json({
-			project: updatedProject[0],
+			sprint: updatedSprint[0],
 		});
 	} catch (error) {
 		return res.status(500).json({
@@ -158,7 +174,7 @@ export const updateProject = async (req: Request, res: Response) => {
 	}
 };
 
-export const deleteProject = async (req: Request, res: Response) => {
+export const deleteSprint = async (req: Request, res: Response) => {
 	const { id } = req.params;
 
 	try {
@@ -172,10 +188,6 @@ export const deleteProject = async (req: Request, res: Response) => {
 
 		const decoded = jwtDecode(token);
 
-		const findedProject = await db.query.project.findFirst({
-			where: eq(project.id, +id),
-		});
-
 		const findedUser = await db.query.user.findFirst({
 			where: eq(user.clerk_id, decoded.sub ?? ''),
 		});
@@ -186,9 +198,13 @@ export const deleteProject = async (req: Request, res: Response) => {
 			});
 		}
 
+		const findedSprint = await db.query.sprint.findFirst({
+			where: eq(sprint.id, +id),
+		});
+
 		if (
 			findedUser.role !== 'admin' &&
-			findedUser.id !== findedProject?.created_by_id
+			findedUser.id !== findedSprint?.created_by_id
 		) {
 			return res.status(403).json({
 				message: 'Forbidden',
@@ -196,13 +212,11 @@ export const deleteProject = async (req: Request, res: Response) => {
 		}
 
 		await db
-			.delete(project)
-			.where(
-				and(eq(project.id, +id), eq(project.created_by_id, findedUser.id)),
-			);
+			.delete(sprint)
+			.where(and(eq(sprint.id, +id), eq(sprint.created_by_id, findedUser.id)));
 
 		return res.status(200).json({
-			message: 'Project deleted',
+			message: 'Sprint deleted',
 		});
 	} catch (error) {
 		return res.status(500).json({

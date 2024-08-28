@@ -53,12 +53,14 @@ export const project = pgTable('project', {
 export const sprint = pgTable('sprint', {
 	id: serial('id').primaryKey(),
 	title: varchar('title', { length: 255 }).notNull(),
-	assigned_to_id: integer('assigned_to_id').notNull(),
 	created_by_id: integer('created_by_id').notNull(),
+	assigned_to_id: integer('assigned_to_id'),
 	color: varchar('color', { length: 255 }),
 	status: eStatus('status'),
 	project_id: integer('project_id').notNull(),
-	deadline: timestamp('deadline'),
+	deadline: timestamp('deadline', {
+		mode: 'string',
+	}).notNull(),
 	created_at: timestamp('created_at').defaultNow(),
 	updated_at: timestamp('updated_at').defaultNow(),
 });
@@ -126,3 +128,5 @@ export type TSelectUser = typeof user.$inferSelect;
 export type TInsertUser = typeof user.$inferInsert;
 export type TSelectProject = typeof project.$inferSelect;
 export type TInsertProject = typeof project.$inferInsert;
+export type TSelectSprint = typeof sprint.$inferSelect;
+export type TInsertSprint = typeof sprint.$inferInsert;
