@@ -1,17 +1,4 @@
 services:
-  postgresdb:
-    image: postgres
-    restart: unless-stopped
-    env_file: ./.env
-    environment:
-      - DB_USER=$DB_USER
-      - DB_PASSWORD=$DB_PASSWORD
-      - DB_NAME=$DB_NAME
-      - POSTGRES_HOST_AUTH_METHOD=trust
-    ports:
-      - $DB_PORT:$DB_PORT
-    volumes:
-      - db:/var/lib/postgres
   app:
     depends_on:
       - postgresdb
@@ -32,5 +19,19 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+  postgresdb:
+    image: postgres
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_NAME=$DB_NAME
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - $DB_PORT:$DB_PORT
+    volumes:
+      - db:/var/lib/postgresql/data/
+
 volumes: 
   db:
