@@ -2,7 +2,7 @@ import { constants, env } from 'config';
 import { TSelectProject } from 'db/schema';
 import { describe, expect, test, beforeAll } from 'vitest';
 
-describe('/api/user', () => {
+describe('/api/project', () => {
 	let response: Response;
 	let body: { projects: TSelectProject[] };
 
