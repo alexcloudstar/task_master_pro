@@ -50,10 +50,14 @@ export const getTask = async (req: Request, res: Response) => {
 };
 
 export const createTask = async (req: Request, res: Response) => {
-	const { project_id } = req.params;
-
-	const { title, description, status, assigned_to_id, color }: TInsertTask =
-		req.body;
+	const {
+		title,
+		description,
+		status,
+		assigned_to_id,
+		color,
+		project_id,
+	}: TInsertTask = req.body;
 
 	try {
 		const token = req.headers.authorization?.split(' ')[1];
