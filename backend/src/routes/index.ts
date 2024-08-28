@@ -1,6 +1,7 @@
 import { Application } from 'express';
 import user from './User.route';
 import project from './Project.route';
+import sprint from './Sprint.route';
 import { register } from '../controllers/User.controller';
 
 export default (app: Application): void => {
@@ -8,4 +9,5 @@ export default (app: Application): void => {
 	app.post('/signup', register);
 	app.use('/api/user', user);
 	app.use('/api/project', project);
+	app.use('/api/sprint', sprint);
 };
