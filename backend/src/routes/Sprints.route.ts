@@ -4,7 +4,7 @@ import {
 	getSprint,
 	getSprints,
 	updateSprint,
-} from '../controllers/Sprint.controller';
+} from '../controllers/Sprints.controller';
 import { Router } from 'express';
 
 const router = Router();

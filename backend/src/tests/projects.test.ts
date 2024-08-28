@@ -2,12 +2,12 @@ import { constants, env } from 'config';
 import { TSelectProject } from 'db/schema';
 import { describe, expect, test, beforeAll } from 'vitest';
 
-describe('/api/project', () => {
+describe('/api/projects', () => {
 	let response: Response;
 	let body: { projects: TSelectProject[] };
 
 	beforeAll(async () => {
-		response = await fetch('http://localhost:8000/api/project', {
+		response = await fetch('http://localhost:8000/api/projects', {
 			headers: {
 				Authorization: `Bearer ${env.TEST_TOKEN}`,
 			},
@@ -39,7 +39,7 @@ describe('/api/project/:id', () => {
 	let body: { project: TSelectProject };
 
 	beforeAll(async () => {
-		response = await fetch('http://localhost:8000/api/project/1', {
+		response = await fetch('http://localhost:8000/api/projects/1', {
 			headers: {
 				Authorization: `Bearer ${env.TEST_TOKEN}`,
 			},

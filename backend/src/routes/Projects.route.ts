@@ -4,7 +4,7 @@ import {
 	getProject,
 	getProjects,
 	updateProject,
-} from '../controllers/Project.controller';
+} from '../controllers/Projects.controller';
 import { Router } from 'express';
 
 const router = Router();

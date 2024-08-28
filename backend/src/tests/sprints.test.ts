@@ -2,12 +2,12 @@ import { constants, env } from 'config';
 import { TSelectSprint } from 'db/schema';
 import { describe, expect, test, beforeAll } from 'vitest';
 
-describe('/api/sprint', () => {
+describe('/api/sprints', () => {
 	let response: Response;
 	let body: { sprints: TSelectSprint[] };
 
 	beforeAll(async () => {
-		response = await fetch('http://localhost:8000/api/sprint', {
+		response = await fetch('http://localhost:8000/api/sprints', {
 			headers: {
 				Authorization: `Bearer ${env.TEST_TOKEN}`,
 			},
@@ -39,7 +39,7 @@ describe('/api/sprint/:id', () => {
 	let body: { sprint: TSelectSprint };
 
 	beforeAll(async () => {
-		response = await fetch('http://localhost:8000/api/sprint/4', {
+		response = await fetch('http://localhost:8000/api/sprints/4', {
 			headers: {
 				Authorization: `Bearer ${env.TEST_TOKEN}`,
 			},

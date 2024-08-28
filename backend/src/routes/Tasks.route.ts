@@ -4,7 +4,7 @@ import {
 	getTask,
 	getTasks,
 	updateTask,
-} from '../controllers/Task.controller';
+} from '../controllers/Tasks.controller';
 import { Router } from 'express';
 
 const router = Router();
