@@ -35,7 +35,7 @@ export const getProject = async (req: Request, res: Response) => {
 			});
 
 		if (!findedProject) {
-			return res.status(404).json({
+			return res.status(200).json({
 				message: 'Project not found',
 			});
 		}
@@ -88,6 +88,7 @@ export const createProject = async (req: Request, res: Response) => {
 			project: createdProject[0],
 		});
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({
 			message: 'Internal Server Error',
 		});
@@ -123,6 +124,12 @@ export const updateProject = async (req: Request, res: Response) => {
 			where: eq(project.id, +id),
 		});
 
+		if (!findedProject) {
+			return res.status(404).json({
+				message: 'Project not found',
+			});
+		}
+
 		if (
 			findedUser.role !== 'admin' &&
 			findedUser.id !== findedProject?.created_by_id
@@ -141,12 +148,6 @@ export const updateProject = async (req: Request, res: Response) => {
 			})
 			.where(and(eq(project.id, +id), eq(project.created_by_id, findedUser.id)))
 			.returning();
-
-		if (!updatedProject.length) {
-			return res.status(404).json({
-				message: 'Project not found',
-			});
-		}
 
 		return res.status(200).json({
 			project: updatedProject[0],
@@ -176,6 +177,12 @@ export const deleteProject = async (req: Request, res: Response) => {
 			where: eq(project.id, +id),
 		});
 
+		if (!findedProject) {
+			return res.status(404).json({
+				message: 'Project not found',
+			});
+		}
+
 		const findedUser = await db.query.user.findFirst({
 			where: eq(user.clerk_id, decoded.sub ?? ''),
 		});
@@ -195,6 +202,7 @@ export const deleteProject = async (req: Request, res: Response) => {
 			});
 		}
 
+
 		await db
 			.delete(project)
 			.where(
@@ -205,6 +213,7 @@ export const deleteProject = async (req: Request, res: Response) => {
 			message: 'Project deleted',
 		});
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({
 			message: 'Internal Server Error',
 		});
