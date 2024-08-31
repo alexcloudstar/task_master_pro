@@ -35,7 +35,7 @@ export const getProject = async (req: Request, res: Response) => {
 			});
 
 		if (!findedProject) {
-			return res.status(200).json({
+			return res.status(404).json({
 				message: 'Project not found',
 			});
 		}

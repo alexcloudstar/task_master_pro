@@ -165,7 +165,7 @@ describe('[GET] /projects/:id', () => {
 
 		const response = await request(app).get('/projects/999');
 
-		expect(response.status).toBe(200);
+		expect(response.status).toBe(404);
 		expect(response.body).toEqual({ message: 'Project not found' });
 	});
 
