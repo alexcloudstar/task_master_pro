@@ -88,7 +88,6 @@ export const createProject = async (req: Request, res: Response) => {
 			project: createdProject[0],
 		});
 	} catch (error) {
-		console.log(error);
 		return res.status(500).json({
 			message: 'Internal Server Error',
 		});
@@ -202,7 +201,6 @@ export const deleteProject = async (req: Request, res: Response) => {
 			});
 		}
 
-
 		await db
 			.delete(project)
 			.where(
@@ -213,7 +211,6 @@ export const deleteProject = async (req: Request, res: Response) => {
 			message: 'Project deleted',
 		});
 	} catch (error) {
-		console.log(error);
 		return res.status(500).json({
 			message: 'Internal Server Error',
 		});
