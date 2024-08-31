@@ -24,18 +24,18 @@ vi.mock('../../db/drizzle', () => ({
 				findFirst: vi.fn(),
 			},
 		},
-        insert: vi.fn().mockReturnValue({
-            values: vi.fn().mockReturnThis(),
-            returning: vi.fn(),
-        }),
+		insert: vi.fn().mockReturnValue({
+			values: vi.fn().mockReturnThis(),
+			returning: vi.fn(),
+		}),
 		update: vi.fn().mockReturnValue({
 			set: vi.fn().mockReturnThis(),
 			where: vi.fn().mockReturnThis(),
 			returning: vi.fn(),
 		}),
-        delete: vi.fn().mockReturnValue({
-            where: vi.fn().mockReturnThis(),
-        }),
+		delete: vi.fn().mockReturnValue({
+			where: vi.fn().mockReturnThis(),
+		}),
 	},
 }));
 
@@ -473,8 +473,8 @@ describe('[DELETE] /projects/:id', () => {
 
 		// Mock the delete operation to resolve successfully
 		(db.delete as ReturnType<typeof vi.fn>).mockReturnValue({
-            where: vi.fn().mockReturnThis(),
-        })
+			where: vi.fn().mockReturnThis(),
+		});
 
 		// Perform the DELETE request
 		const response = await request(app)
@@ -566,6 +566,7 @@ describe('[DELETE] /projects/:id', () => {
 	it('should return 500 on internal server error', async () => {
 		const mockProject = { id: 1, created_by_id: 1 };
 		const mockUser = { id: 1, role: 'user', clerk_id: 'mock-user-id' };
+		const spyDelete = vi.spyOn(db, 'delete');
 
 		// Mock jwtDecode to return the user's ID
 		(jwtDecode as ReturnType<typeof vi.fn>).mockReturnValue({
@@ -583,9 +584,7 @@ describe('[DELETE] /projects/:id', () => {
 		);
 
 		// Simulate the internal server error during the delete operation
-		(db.delete as ReturnType<typeof vi.fn>).mockRejectedValue(
-			new Error('Database Error'),
-		);
+		spyDelete.mockRejectedValue(new Error('Database Error'));
 
 		const response = await request(app)
 			.delete('/projects/1')
