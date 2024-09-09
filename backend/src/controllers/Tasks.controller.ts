@@ -206,6 +206,12 @@ export const deleteTask = async (req: Request, res: Response) => {
 			where: eq(task.id, +id),
 		});
 
+		if (!findedTask) {
+			return res.status(404).json({
+				message: 'Task not found',
+			});
+		}
+
 		if (
 			findedUser.role !== 'admin' &&
 			findedUser.id !== findedTask?.created_by_id
