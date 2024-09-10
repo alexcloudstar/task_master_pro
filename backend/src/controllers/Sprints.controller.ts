@@ -98,7 +98,6 @@ export const createSprint = async (req: Request, res: Response) => {
 			sprint: createdSprint[0],
 		});
 	} catch (error) {
-		console.log(error);
 		return res.status(500).json({
 			message: 'Internal Server Error',
 		});
@@ -134,6 +133,12 @@ export const updateSprint = async (req: Request, res: Response) => {
 		const findedSprint = await db.query.sprint.findFirst({
 			where: eq(sprint.id, +id),
 		});
+
+		if (!findedSprint) {
+			return res.status(404).json({
+				message: 'Sprint not found',
+			});
+		}
 
 		if (
 			findedUser.role !== 'admin' &&
@@ -201,6 +206,12 @@ export const deleteSprint = async (req: Request, res: Response) => {
 		const findedSprint = await db.query.sprint.findFirst({
 			where: eq(sprint.id, +id),
 		});
+
+		if (!findedSprint) {
+			return res.status(404).json({
+				message: 'Sprint not found',
+			});
+		}
 
 		if (
 			findedUser.role !== 'admin' &&
