@@ -1,9 +1,9 @@
 import {
-  getUsers,
-  getUser,
-  updateProfile,
-  getProfile,
-  deleteProfile,
+	getUsers,
+	getUser,
+	updateProfile,
+	getProfile,
+	deleteProfile,
 } from '../controllers/Users.controller';
 import { Router } from 'express';
 
