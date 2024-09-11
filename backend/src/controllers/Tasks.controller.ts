@@ -97,7 +97,6 @@ export const createTask = async (req: Request, res: Response) => {
 			task: createdTask[0],
 		});
 	} catch (error) {
-		console.log(error);
 		return res.status(500).json({
 			message: 'Internal Server Error',
 		});
@@ -133,6 +132,12 @@ export const updateTask = async (req: Request, res: Response) => {
 		const findedTask = await db.query.task.findFirst({
 			where: eq(task.id, +id),
 		});
+
+		if (!findedTask) {
+			return res.status(404).json({
+				message: 'Task not found',
+			});
+		}
 
 		if (
 			findedUser.role !== 'admin' &&
@@ -200,6 +205,12 @@ export const deleteTask = async (req: Request, res: Response) => {
 		const findedTask = await db.query.task.findFirst({
 			where: eq(task.id, +id),
 		});
+
+		if (!findedTask) {
+			return res.status(404).json({
+				message: 'Task not found',
+			});
+		}
 
 		if (
 			findedUser.role !== 'admin' &&
