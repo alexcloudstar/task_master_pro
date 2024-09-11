@@ -169,12 +169,13 @@ export const deleteProfile = async (req: Request, res: Response) => {
 
 		const res0 = await clerkClient.users.deleteUser(findedUser.clerk_id);
 
-        console.log(res0);
+		console.log(res0);
 
-		const res1 = await db.delete(user).where(eq(user.clerk_id, decoded.sub ?? ''));
+		const res1 = await db
+			.delete(user)
+			.where(eq(user.clerk_id, decoded.sub ?? ''));
 
-        console.log(res1);
-
+		console.log(res1);
 
 		return res.status(204).json({
 			message: 'User deleted',
