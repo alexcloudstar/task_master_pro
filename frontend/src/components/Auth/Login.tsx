@@ -7,6 +7,7 @@ import { useCookies } from "react-cookie";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 
 const Login = () => {
   const formSchema = z.object({
@@ -70,9 +71,11 @@ const Login = () => {
                   </FormItem>
                 )}
               />
-              <Button type='submit' className='w-full'>
-                Login
-              </Button>
+                <SignedOut>
+                    <Button type='submit' className='w-full'>
+                        Login
+                    </Button>
+                </SignedOut>
             </form>
           </Form>
     )

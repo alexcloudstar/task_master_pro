@@ -6,6 +6,12 @@ import { Toaster } from './components/ui/sonner';
 import { TooltipProvider } from './components/ui/tooltip';
 import { ClerkProvider } from '@clerk/clerk-react'
 
+// Import your publishable key
+const PUBLISHABLE_KEY = import.meta.env.VITE_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error('Missing Publishable Key')
+}
 
 // Register the router instance for type safety
 const queryClient = new QueryClient();
