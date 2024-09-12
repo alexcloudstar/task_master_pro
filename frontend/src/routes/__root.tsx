@@ -1,6 +1,6 @@
 import Navigation from '@/components/Navigation';
 import { TanStackRouterDevtools } from '@/components/TanStackRouterDevtools';
-import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
+import { createRootRoute, Outlet } from '@tanstack/react-router';
 import { Suspense } from 'react';
 
 export const Route = createRootRoute({

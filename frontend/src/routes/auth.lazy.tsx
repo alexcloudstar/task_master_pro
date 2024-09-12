@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { useCookies } from 'react-cookie';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -12,12 +12,14 @@ import {
   FormItem,
   FormLabel,
 } from '@/components/ui/form';
+import { useMutation } from '@tanstack/react-query';
+import { signup } from '@/services/signup';
 
 const Auth = () => {
   const formSchema = z.object({
     first_name: z.string().min(2).max(255),
     last_name: z.string().min(2).max(255),
-    email: z.string().email(),
+    email_address: z.string().email(),
     password: z.string().min(8).max(255),
   });
 
@@ -26,13 +28,30 @@ const Auth = () => {
     defaultValues: {
       first_name: '',
       last_name: '',
-      email: '',
+      email_address: '',
       password: '',
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setCookie] = useCookies(['token']);
+
+  const mutation = useMutation({
+    mutationFn: signup,
+  });
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    try {
+      const token = await mutation.mutateAsync(values);
+
+      setCookie('token', token, {
+        path: '/',
+        // 1 week
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -42,7 +61,7 @@ const Auth = () => {
           <div className='grid gap-2 text-center'>
             <h1 className='text-3xl font-bold'>Login</h1>
             <p className='text-balance text-muted-foreground'>
-              Enter your email below to login to your account
+              Enter your email_address below to login to your account
             </p>
           </div>
           <Form {...form}>
@@ -73,7 +92,7 @@ const Auth = () => {
               />
               <FormField
                 control={form.control}
-                name='email'
+                name='email_address'
                 render={({ field }) => (
                   <FormItem className='grid gap-2'>
                     <FormLabel>Email</FormLabel>
