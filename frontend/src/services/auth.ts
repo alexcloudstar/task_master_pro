@@ -1,9 +1,9 @@
 import { toast } from 'sonner';
 
 type TAuth = {
-    email_address: string;
-    password: string;
-}
+  email_address: string;
+  password: string;
+};
 
 type TRegister = {
   first_name: string;
@@ -43,10 +43,7 @@ export const signup = async ({
   }
 };
 
-export const login = async ({
-  email_address,
-  password,
-}: TAuth) => {
+export const login = async ({ email_address, password }: TAuth) => {
   try {
     const res = await fetch('http://localhost:8000/login', {
       method: 'POST',
@@ -71,5 +68,3 @@ export const login = async ({
     toast.error(error.message);
   }
 };
-
-

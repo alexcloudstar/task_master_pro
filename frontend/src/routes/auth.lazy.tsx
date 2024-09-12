@@ -4,26 +4,27 @@ import Login from '@/components/Auth/Login';
 import Signup from '@/components/Auth/Signup';
 
 const Auth = () => {
-    const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(true);
 
-    const toggleIsLogin = () => setIsLogin(!isLogin);
+  const toggleIsLogin = () => setIsLogin(!isLogin);
 
   return (
     <div className='w-full lg:grid lg:min-h-[600px] xl:min-h-[800px] h-[calc(100%-24px)]'>
       <div className='flex items-center justify-center py-12'>
         <div className='mx-auto grid w-[350px] gap-6'>
           <div className='grid gap-2 text-center'>
-            <h1 className='text-3xl font-bold'>{
-                isLogin ? 'Login' : 'Sign Up'
-                        }</h1>
+            <h1 className='text-3xl font-bold'>
+              {isLogin ? 'Login' : 'Sign Up'}
+            </h1>
             <p className='text-balance text-muted-foreground'>
-              Enter your email below to {isLogin ? 'login' : 'signup'} to your account
+              Enter your email below to {isLogin ? 'login' : 'signup'} to your
+              account
             </p>
           </div>
-            {isLogin ? <Login /> : <Signup />}
+          {isLogin ? <Login /> : <Signup />}
           <div className='mt-4 text-center text-sm'>
             Don&apos;t have an account?{' '}
-            <button type="button" className='underline' onClick={toggleIsLogin}>
+            <button type='button' className='underline' onClick={toggleIsLogin}>
               Sign up
             </button>
           </div>

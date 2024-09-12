@@ -5,9 +5,9 @@ import { Suspense } from 'react';
 import { useCookies } from 'react-cookie';
 
 const Main = () => {
-    const [token] = useCookies(['token']);
+  const [token] = useCookies(['token']);
 
-return (
+  return (
     <>
       {token.token && <AsideNavigation />}
       <Outlet />
@@ -15,8 +15,8 @@ return (
         <TanStackRouterDevtools position='bottom-right' />
       </Suspense>
     </>
-  )
-}
+  );
+};
 
 export const Route = createRootRoute({
   component: Main,
