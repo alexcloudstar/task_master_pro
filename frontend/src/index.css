@@ -6,3 +6,22 @@
     --radius: 0.5rem;
   }
 }
+
+html,
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  height: 100dvh;
+}
+
+html,
+body,
+#root {
+  height: 100dvh;
+}
+
+#root {
+  padding: 6px 56px;
+}
