@@ -2,11 +2,18 @@ import { createLazyFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import Login from '@/components/Auth/Login';
 import Signup from '@/components/Auth/Signup';
+import { useAuth } from '@clerk/clerk-react';
+import Loader from '@/components/Loader/Loader';
 
 const Auth = () => {
+  const auth = useAuth();
   const [isLogin, setIsLogin] = useState(true);
 
   const toggleIsLogin = () => setIsLogin(!isLogin);
+
+  if (!auth.isLoaded) {
+    return <Loader />;
+  }
 
   return (
     <div className='w-full lg:grid lg:min-h-[600px] xl:min-h-[800px] h-[calc(100%-24px)]'>
