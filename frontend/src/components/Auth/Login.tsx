@@ -1,15 +1,19 @@
-import { useMutation } from "@tanstack/react-query";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
-import { login } from "@/services/auth";
 import { useCookies } from "react-cookie";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
+import { SignedOut, useAuth, useSignIn } from "@clerk/clerk-react";
+import { useCallback, useEffect } from "react";
+import { useNavigate } from "@tanstack/react-router";
 
 const Login = () => {
+    const {signIn, isLoaded } = useSignIn();
+    const auth = useAuth();
+
+
   const formSchema = z.object({
     email_address: z.string().email(),
     password: z.string().min(8).max(255),
@@ -26,23 +30,37 @@ const Login = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setCookie] = useCookies(['token']);
 
-  const mutation = useMutation({
-    mutationFn: login,
-  });
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      const token = await mutation.mutateAsync(values);
+        const res = await signIn?.create({
+            strategy: 'password',
+            password: values.password,
+            identifier: values.email_address,
+        });
 
-      setCookie('token', token, {
-        path: '/',
-        // 1 week
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-      });
-    } catch (error) {
-      console.error(error);
-    }
+        if(res?.status === 'complete') {
+            window.location.reload();
+        }
   };
+
+    const setToken = useCallback(async () => {
+        const token = await auth.getToken();
+        console.log(token);
+        setCookie('token', token, { path: '/' });
+    }, [auth, setCookie]);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(isLoaded) {
+            setToken();
+        }
+
+        if(auth.isSignedIn) {
+            navigate({
+                to: '/',
+            });
+        }
+    }, [auth.isSignedIn, isLoaded, navigate, setToken]);
 
     return (
           <Form {...form}>
