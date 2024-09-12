@@ -3,6 +3,7 @@ import { RouterProvider } from '@tanstack/react-router';
 import { useCookies } from 'react-cookie';
 import { router } from './main';
 import { Toaster } from './components/ui/sonner';
+import { TooltipProvider } from './components/ui/tooltip';
 
 // Register the router instance for type safety
 const queryClient = new QueryClient();
@@ -12,8 +13,10 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} context={{ auth: cookie?.token }} />
-      <Toaster />
+      <TooltipProvider>
+        <RouterProvider router={router} context={{ auth: cookie?.token }} />
+        <Toaster />
+      </TooltipProvider>
     </QueryClientProvider>
   );
 };

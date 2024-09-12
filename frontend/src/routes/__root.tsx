@@ -1,4 +1,4 @@
-import Navigation from '@/components/Navigation';
+import AsideNavigation from '@/components/AsideNavigation';
 import { TanStackRouterDevtools } from '@/components/TanStackRouterDevtools';
 import { createRootRoute, Outlet } from '@tanstack/react-router';
 import { Suspense } from 'react';
@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 export const Route = createRootRoute({
   component: () => (
     <>
-      <Navigation />
+      <AsideNavigation />
       <Outlet />
       <Suspense>
         <TanStackRouterDevtools position='bottom-right' />
