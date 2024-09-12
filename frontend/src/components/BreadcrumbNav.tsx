@@ -10,26 +10,33 @@ import {
 
 const BreadcrumbNav = () => {
   const { pathname } = useLocation();
-  console.log(pathname);
+  const pathArr = [...new Set(pathname.split('/'))];
 
   return (
     <Breadcrumb className='hidden md:flex'>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to='/'>Dashboard</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to='/'>Products</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbPage>All Products</BreadcrumbPage>
-        </BreadcrumbItem>
+      <BreadcrumbList className='capitalize'>
+        {pathArr.map((path, idx) => {
+          const computedPath = path === '' ? 'home' : path;
+
+          if (idx === pathArr.length - 1) {
+            return (
+              <BreadcrumbItem key={idx}>
+                <BreadcrumbPage>{computedPath}</BreadcrumbPage>
+              </BreadcrumbItem>
+            );
+          }
+
+          return (
+            <>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to={`/${path}`}>{computedPath}</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+            </>
+          );
+        })}
       </BreadcrumbList>
     </Breadcrumb>
   );
