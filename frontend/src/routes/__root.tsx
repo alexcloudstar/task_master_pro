@@ -2,15 +2,22 @@ import AsideNavigation from '@/components/AsideNavigation';
 import { TanStackRouterDevtools } from '@/components/TanStackRouterDevtools';
 import { createRootRoute, Outlet } from '@tanstack/react-router';
 import { Suspense } from 'react';
+import { useCookies } from 'react-cookie';
 
-export const Route = createRootRoute({
-  component: () => (
+const Main = () => {
+    const [token] = useCookies(['token']);
+
+return (
     <>
-      <AsideNavigation />
+      {token.token && <AsideNavigation />}
       <Outlet />
       <Suspense>
         <TanStackRouterDevtools position='bottom-right' />
       </Suspense>
     </>
-  ),
+  )
+}
+
+export const Route = createRootRoute({
+  component: Main,
 });
