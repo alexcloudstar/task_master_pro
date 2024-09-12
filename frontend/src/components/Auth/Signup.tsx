@@ -1,14 +1,18 @@
-import { useMutation } from '@tanstack/react-query';
 import { Button } from '../ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
 import { Input } from '../ui/input';
-import { signup } from '@/services/auth';
-import { useCookies } from 'react-cookie';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useNavigate } from '@tanstack/react-router';
+import { toast } from 'sonner';
+import { useAuth, useSignUp } from '@clerk/clerk-react';
+import { useEffect } from 'react';
 
 const Signup = () => {
+  const { signUp } = useSignUp();
+  const auth = useAuth();
+  const navigate = useNavigate();
   const formSchema = z.object({
     first_name: z.string().min(2).max(255),
     last_name: z.string().min(2).max(255),
@@ -26,26 +30,36 @@ const Signup = () => {
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setCookie] = useCookies(['token']);
-
-  const mutation = useMutation({
-    mutationFn: signup,
-  });
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const token = await mutation.mutateAsync(values);
-
-      setCookie('token', token, {
-        path: '/',
-        // 1 week
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+      await signUp?.prepareVerification({
+        strategy: 'email_code',
       });
-    } catch (error) {
-      console.error(error);
+
+      const res = await signUp?.create({
+        firstName: values.first_name,
+        lastName: values.last_name,
+        emailAddress: values.email_address,
+        password: values.password,
+      });
+
+      if (res?.status === 'complete') {
+        window.location.reload();
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.errors[0].longMessage);
     }
   };
+
+  useEffect(() => {
+    if (auth.isSignedIn) {
+      navigate({
+        to: '/',
+      });
+    }
+  }, [auth.isSignedIn, navigate]);
 
   return (
     <Form {...form}>

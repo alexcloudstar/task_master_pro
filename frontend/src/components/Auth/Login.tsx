@@ -1,16 +1,16 @@
 import { Button } from '../ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
 import { Input } from '../ui/input';
-import { useCookies } from 'react-cookie';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { SignedOut, useAuth, useSignIn } from '@clerk/clerk-react';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from '@tanstack/react-router';
+import { toast } from 'sonner';
 
 const Login = () => {
-  const { signIn, isLoaded } = useSignIn();
+  const { signIn } = useSignIn();
   const auth = useAuth();
 
   const formSchema = z.object({
@@ -26,39 +26,31 @@ const Login = () => {
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setCookie] = useCookies(['token']);
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const res = await signIn?.create({
-      strategy: 'password',
-      password: values.password,
-      identifier: values.email_address,
-    });
+    try {
+      const res = await signIn?.create({
+        strategy: 'password',
+        password: values.password,
+        identifier: values.email_address,
+      });
 
-    if (res?.status === 'complete') {
-      window.location.reload();
+      if (res?.status === 'complete') {
+        window.location.reload();
+      }
+    } catch {
+      toast.error('Invalid email or password');
     }
   };
-
-  const setToken = useCallback(async () => {
-    const token = await auth.getToken();
-    setCookie('token', token, { path: '/' });
-  }, [auth, setCookie]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLoaded) {
-      setToken();
-    }
-
     if (auth.isSignedIn) {
       navigate({
         to: '/',
       });
     }
-  }, [auth.isSignedIn, isLoaded, navigate, setToken]);
+  }, [auth.isSignedIn, navigate]);
 
   return (
     <Form {...form}>

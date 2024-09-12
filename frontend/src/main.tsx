@@ -6,6 +6,7 @@ import App from './App';
 
 import { routeTree } from './routeTree.gen';
 import { createRouter } from '@tanstack/react-router';
+import { ClerkProvider } from '@clerk/clerk-react';
 
 export const router = createRouter({
   routeTree,
@@ -22,6 +23,13 @@ declare module '@tanstack/react-router' {
   }
 }
 
+// Import your publishable key
+const PUBLISHABLE_KEY = import.meta.env.VITE_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error('Missing Publishable Key');
+}
+
 // Render the app
 const rootElement = document.getElementById('root')!;
 if (!rootElement.innerHTML) {
@@ -29,7 +37,9 @@ if (!rootElement.innerHTML) {
 
   root.render(
     <StrictMode>
-      <App />
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl='/'>
+        <App />
+      </ClerkProvider>
     </StrictMode>,
   );
 }

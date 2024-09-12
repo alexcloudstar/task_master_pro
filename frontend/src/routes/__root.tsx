@@ -1,15 +1,15 @@
 import AsideNavigation from '@/components/AsideNavigation';
 import { TanStackRouterDevtools } from '@/components/TanStackRouterDevtools';
+import { useAuth } from '@clerk/clerk-react';
 import { createRootRoute, Outlet } from '@tanstack/react-router';
 import { Suspense } from 'react';
-import { useCookies } from 'react-cookie';
 
 const Main = () => {
-  const [token] = useCookies(['token']);
+  const auth = useAuth();
 
   return (
     <>
-      {token.token && <AsideNavigation />}
+      {auth.isSignedIn && <AsideNavigation />}
       <Outlet />
       <Suspense>
         <TanStackRouterDevtools position='bottom-right' />
