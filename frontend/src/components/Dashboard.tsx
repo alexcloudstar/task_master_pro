@@ -25,6 +25,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Link } from '@tanstack/react-router';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from './ui/breadcrumb';
 
 export const description =
   'An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image. The main content area is divided into two rows. The first row has a grid of cards with statistics. The second row has a grid of cards with a table of recent transactions and a list of recent sales.';
@@ -33,6 +34,25 @@ const Dashboard = () => {
   return (
     <div className='flex min-h-screen w-full flex-col'>
       <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
+                <Breadcrumb className="hidden md:flex">
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink asChild>
+                                <Link to="/">Dashboard</Link>
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink asChild>
+                                <Link to="/">Products</Link>
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>All Products</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
         <div className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4 drop-shadow-md'>
           <Card x-chunk='dashboard-01-chunk-0'>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
