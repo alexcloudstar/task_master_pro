@@ -12,12 +12,13 @@ import { cn } from '@/lib/utils';
 const AsideNavigation = () => {
   const linkSize = 'size-9 md:size-8';
   const iconSize = 'size-5 md:size-4';
+  const activeLinkClasses = '[&.active]:text-red-500';
 
   return (
-    <aside className='fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex'>
+    <aside className='fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex drop-shadow-md'>
       <nav className='flex flex-col items-center gap-4 px-2 py-4'>
-        <a
-          href='#'
+        <Link
+          to='/'
           className={cn(
             'flex items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground',
             linkSize,
@@ -28,7 +29,7 @@ const AsideNavigation = () => {
             className={cn('transition-all group-hover:scale-110', iconSize)}
           />
           <span className='sr-only'>Task Master Pro</span>
-        </a>
+        </Link>
         {routes.map(({ id, to, label, Icon }) => (
           <Fragment key={id}>
             <Tooltip>
@@ -36,9 +37,10 @@ const AsideNavigation = () => {
                 <Link
                   to={to}
                   className={cn(
-                    'flex items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground [&.active]:text-red-500',
+                    'flex items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground',
                     linkSize,
                     iconSize,
+                    activeLinkClasses,
                   )}
                 >
                   <Icon className={iconSize} />
@@ -55,11 +57,12 @@ const AsideNavigation = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              to='/'
+              to='/settings'
               className={cn(
                 'flex items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground',
                 linkSize,
                 iconSize,
+                activeLinkClasses,
               )}
             >
               <Settings className={iconSize} />
