@@ -6,10 +6,11 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { SignedOut, useAuth, useSignIn } from '@clerk/clerk-react';
 import { useEffect } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
 
 const Login = () => {
+  const location = useLocation();
   const { signIn } = useSignIn();
   const auth = useAuth();
 
@@ -47,10 +48,11 @@ const Login = () => {
   useEffect(() => {
     if (auth.isSignedIn) {
       navigate({
-        to: '/',
+        // @ts-expect-error redirect exists
+        to: location?.search.redirect,
       });
     }
-  }, [auth.isSignedIn, navigate]);
+  }, [auth.isSignedIn, location.href, navigate]);
 
   return (
     <Form {...form}>

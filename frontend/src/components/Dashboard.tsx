@@ -3,6 +3,7 @@ import {
   ArrowUpRight,
   CreditCard,
   DollarSign,
+  Search,
   Users,
 } from 'lucide-react';
 
@@ -26,40 +27,70 @@ import {
 } from '@/components/ui/table';
 import { Link } from '@tanstack/react-router';
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from './ui/breadcrumb';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
+import { Input } from './ui/input';
+import { SignedIn, SignOutButton, useAuth, useUser } from '@clerk/clerk-react';
+import BreadcrumbNav from './BreadcrumbNav';
 
 export const description =
   'An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image. The main content area is divided into two rows. The first row has a grid of cards with statistics. The second row has a grid of cards with a table of recent transactions and a list of recent sales.';
 
 const Dashboard = () => {
+  const { user } = useUser();
+
   return (
     <div className='flex min-h-screen w-full flex-col'>
       <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
-        <Breadcrumb className='hidden md:flex'>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to='/'>Dashboard</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to='/'>Products</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>All Products</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <header className='flex items-center justify-between'>
+          <BreadcrumbNav />
+          <div className='flex gap-5'>
+            <div className='relative ml-auto flex-1 md:grow-0'>
+              <Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground' />
+              <Input
+                type='search'
+                placeholder='Search...'
+                className='w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]'
+              />
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant='outline'
+                  size='icon'
+                  className='overflow-hidden rounded-full'
+                >
+                  <img
+                    src={user?.imageUrl}
+                    width={36}
+                    height={36}
+                    alt='Avatar'
+                    className='overflow-hidden rounded-full'
+                  />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align='end'>
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Link to='/settings'>Settings</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>Support</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <SignedIn>
+                    <SignOutButton>Sign Out</SignOutButton>
+                  </SignedIn>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </header>
         <div className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4 drop-shadow-md'>
           <Card x-chunk='dashboard-01-chunk-0'>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>

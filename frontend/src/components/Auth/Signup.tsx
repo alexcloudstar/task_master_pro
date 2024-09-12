@@ -56,7 +56,8 @@ const Signup = () => {
   useEffect(() => {
     if (auth.isSignedIn) {
       navigate({
-        to: '/',
+        // @ts-expect-error redirect exists
+        to: location?.search?.redirect || '/',
       });
     }
   }, [auth.isSignedIn, navigate]);
