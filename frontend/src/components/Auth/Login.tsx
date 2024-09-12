@@ -6,13 +6,13 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { SignedOut, useAuth, useSignIn } from '@clerk/clerk-react';
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { toast } from 'sonner';
 
 const Login = () => {
-  const location = useLocation();
   const { signIn } = useSignIn();
   const auth = useAuth();
+  const search = useSearch({ from: '/auth' });
 
   const formSchema = z.object({
     email_address: z.string().email(),
@@ -49,10 +49,11 @@ const Login = () => {
     if (auth.isSignedIn) {
       navigate({
         // @ts-expect-error redirect exists
-        to: location?.search.redirect,
+        to: search.redirect || '/_authenticated',
       });
     }
-  }, [auth.isSignedIn, location.href, navigate]);
+    // @ts-expect-error redirect exists
+  }, [auth.isSignedIn, navigate, search.redirect]);
 
   return (
     <Form {...form}>
