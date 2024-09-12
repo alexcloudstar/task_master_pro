@@ -7,6 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from './ui/breadcrumb';
+import { Fragment } from 'react/jsx-runtime';
 
 const BreadcrumbNav = () => {
   const { pathname } = useLocation();
@@ -27,14 +28,14 @@ const BreadcrumbNav = () => {
           }
 
           return (
-            <>
+            <Fragment key={idx}>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
                   <Link to={`/${path}`}>{computedPath}</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
-            </>
+            </Fragment>
           );
         })}
       </BreadcrumbList>
