@@ -1,10 +1,9 @@
 import {
-  Activity,
   ArrowUpRight,
-  CreditCard,
   DollarSign,
-  Users,
 } from 'lucide-react';
+import { v4 as uuid } from 'uuid';
+import { useCookies } from 'react-cookie';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -25,62 +24,76 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Link } from '@tanstack/react-router';
+import { useQuery } from '@tanstack/react-query';
+import { getUsers } from '@/services/users';
+import Loader from './Loader/Loader';
+import useGetToken from '@/hooks/useGetToken';
 
 export const description =
   'An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image. The main content area is divided into two rows. The first row has a grid of cards with statistics. The second row has a grid of cards with a table of recent transactions and a list of recent sales.';
 
+type TDashboardCardContent = {
+    title: string;
+    value: string;
+    description: string;
+}
+
 const Dashboard = () => {
+    const cardContent: TDashboardCardContent[] = [
+        {
+            title: 'Total Team Members',
+            value: '23',
+            description: '+3 from last month'
+        },
+        {
+            title: 'Total Projects',
+            value: '6',
+            description: '+1 from last month'
+        },
+        {
+            title: 'Total Sprints',
+            value: '12',
+            description: '+2 from last month'
+        },
+        {
+            title: 'Total Tasks',
+            value: '120',
+            description: '+20 from last month'
+        }
+    ];
+
+    const token = useGetToken();
+
+    const {isLoading, isError, data} = useQuery({
+        queryKey: ['users'],
+        queryFn: () => getUsers({ token: token as string }),
+        enabled: !!token
+    })
+
+    if (isLoading) {
+        return <Loader />
+    }
+
+    if (isError) {
+        return <div>Error</div>
+    }
+
   return (
     <>
       <div className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4 drop-shadow-md'>
-        <Card x-chunk='dashboard-01-chunk-0'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Total Revenue</CardTitle>
-            <DollarSign className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>$45,231.89</div>
-            <p className='text-xs text-muted-foreground'>
-              +20.1% from last month
-            </p>
-          </CardContent>
-        </Card>
-        <Card x-chunk='dashboard-01-chunk-1'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Subscriptions</CardTitle>
-            <Users className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>+2350</div>
-            <p className='text-xs text-muted-foreground'>
-              +180.1% from last month
-            </p>
-          </CardContent>
-        </Card>
-        <Card x-chunk='dashboard-01-chunk-2'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Sales</CardTitle>
-            <CreditCard className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>+12,234</div>
-            <p className='text-xs text-muted-foreground'>
-              +19% from last month
-            </p>
-          </CardContent>
-        </Card>
-        <Card x-chunk='dashboard-01-chunk-3'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Active Now</CardTitle>
-            <Activity className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>+573</div>
-            <p className='text-xs text-muted-foreground'>
-              +201 since last hour
-            </p>
-          </CardContent>
-        </Card>
+                {
+                    cardContent.map((content) => (
+                        <Card x-chunk='dashboard-01-chunk-0' key={uuid()}>
+                            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                                <CardTitle className='text-sm font-medium'>{content.title}</CardTitle>
+                                <DollarSign className='h-4 w-4 text-muted-foreground' />
+                            </CardHeader>
+                            <CardContent>
+                                <div className='text-2xl font-bold'>{data?.users.length}</div>
+                            </CardContent>
+                        </Card>
+                    ))
+                }
       </div>
       <div className='grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3 drop-shadow-md'>
         <Card className='xl:col-span-2' x-chunk='dashboard-01-chunk-4'>

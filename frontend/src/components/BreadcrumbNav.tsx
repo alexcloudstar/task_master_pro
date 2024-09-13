@@ -17,7 +17,7 @@ const BreadcrumbNav = () => {
     <Breadcrumb className='hidden md:flex'>
       <BreadcrumbList className='capitalize'>
         {pathArr.map((path, idx) => {
-          const computedPath = path === '' ? 'home' : path;
+          const computedPath = path === '' ? 'dashboard' : path;
 
           if (idx === pathArr.length - 1) {
             return (
