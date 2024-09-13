@@ -1,17 +1,17 @@
-import { useAuth } from "@clerk/clerk-react"
-import { useEffect, useState } from "react"
+import { useAuth } from '@clerk/clerk-react';
+import { useEffect, useState } from 'react';
 
 const useGetToken = () => {
-    const [token, setToken] = useState<string | null>(null)
-    const auth = useAuth()
+  const [token, setToken] = useState<string | null>(null);
+  const auth = useAuth();
 
-    useEffect(() => {
-        if (auth.isSignedIn) {
-            auth.getToken().then((token) => setToken(token))
-        }
-    }, [auth])
+  useEffect(() => {
+    if (auth.isSignedIn) {
+      auth.getToken().then((token) => setToken(token));
+    }
+  }, [auth]);
 
-    return token
-}
+  return token;
+};
 
-export default useGetToken
+export default useGetToken;
