@@ -37,6 +37,8 @@ export const signup = async ({
     }
 
     toast.success('Account created successfully');
+
+    return data.token;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     toast.error(error.message);

@@ -6,12 +6,10 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { useAuth, useSignUp } from '@clerk/clerk-react';
-import { useEffect } from 'react';
+import { signup } from '@/services/auth';
+import { useCookies } from 'react-cookie';
 
 const Signup = () => {
-  const { signUp } = useSignUp();
-  const auth = useAuth();
   const navigate = useNavigate();
   const formSchema = z.object({
     first_name: z.string().min(2).max(255),
@@ -30,36 +28,28 @@ const Signup = () => {
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setCookie] = useCookies(['token']);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await signUp?.prepareVerification({
-        strategy: 'email_code',
-      });
-
-      const res = await signUp?.create({
-        firstName: values.first_name,
-        lastName: values.last_name,
-        emailAddress: values.email_address,
+      const token = await signup({
+        first_name: values.first_name,
+        last_name: values.last_name,
+        email_address: values.email_address,
         password: values.password,
       });
 
-      if (res?.status === 'complete') {
-        window.location.reload();
-      }
+      setCookie('token', token, {});
 
+      navigate({
+        to: '/',
+      });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.errors[0].longMessage);
     }
   };
-
-  useEffect(() => {
-    if (auth.isSignedIn) {
-      navigate({
-        to: '/',
-      });
-    }
-  }, [auth.isSignedIn, navigate]);
 
   return (
     <Form {...form}>
