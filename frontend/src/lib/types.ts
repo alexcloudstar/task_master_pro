@@ -8,3 +8,7 @@ export type TRoute = {
     Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
   >;
 };
+
+export type TToken = {
+  token: string;
+};
