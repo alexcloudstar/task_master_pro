@@ -1,9 +1,7 @@
 import { TToken } from '@/lib/types';
 import { TTask } from './types';
 
-export const getTasks = async ({
-  token,
-}: TToken): Promise<TTask[]> => {
+export const getTasks = async ({ token }: TToken): Promise<TTask[]> => {
   try {
     const res = await fetch('http://localhost:8000/api/tasks', {
       method: 'GET',
