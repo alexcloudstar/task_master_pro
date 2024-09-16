@@ -1,4 +1,4 @@
-import { TUser } from "../users/types";
+import { TUser } from '../users/types';
 
 export enum ETaskStatus {
   IN_PROGRESS = 'in_progress',
@@ -16,7 +16,7 @@ export type TTask = {
   project_id: number;
   created_by_id: number;
   assigned_to_id: number;
-    assigned_to: TUser;
+  assigned_to: TUser;
   created_at: string;
   updated_at: string;
   color: string;

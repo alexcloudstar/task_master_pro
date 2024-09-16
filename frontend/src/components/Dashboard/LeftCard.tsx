@@ -69,29 +69,29 @@ const LeftCard = () => {
           </TableHeader>
           <TableBody>
             {data?.map((task: TTask) => (
-                <TableRow key={task.id}>
-                  <TableCell>
-                    <div className='font-medium'>{task.title}</div>
-                    <div className='hidden text-sm text-muted-foreground md:inline'>
-                      {task.description}
-                    </div>
-                  </TableCell>
-                  <TableCell className='hidden xl:table-cell'>
-                    {task.assigned_to.first_name} {task.assigned_to.last_name}
-                  </TableCell>
-                  <TableCell className='hidden xl:table-cell'>
-                    <Badge className='text-xs' variant='outline'>
-                      {task.status.replace('_', ' ')}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className='hidden md:table-cell lg:hidden xl:table-cell'>
-                    {new Date(task.created_at).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell className='text-right'>
-                    {new Date(task.updated_at).toLocaleDateString()}
-                  </TableCell>
-                </TableRow>
-              ))}
+              <TableRow key={task.id}>
+                <TableCell>
+                  <div className='font-medium'>{task.title}</div>
+                  <div className='hidden text-sm text-muted-foreground md:inline'>
+                    {task.description}
+                  </div>
+                </TableCell>
+                <TableCell className='hidden xl:table-cell'>
+                  {task.assigned_to.first_name} {task.assigned_to.last_name}
+                </TableCell>
+                <TableCell className='hidden xl:table-cell'>
+                  <Badge className='text-xs' variant='outline'>
+                    {task.status.replace('_', ' ')}
+                  </Badge>
+                </TableCell>
+                <TableCell className='hidden md:table-cell lg:hidden xl:table-cell'>
+                  {new Date(task.created_at).toLocaleDateString()}
+                </TableCell>
+                <TableCell className='text-right'>
+                  {new Date(task.updated_at).toLocaleDateString()}
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </CardContent>
