@@ -1,3 +1,5 @@
+import { TToken } from "@/lib/types";
+
 export type TStats = {
   users: number;
   projects: number;
@@ -7,9 +9,7 @@ export type TStats = {
 
 export const getStats = async ({
   token,
-}: {
-  token: string;
-}): Promise<TStats> => {
+}: TToken): Promise<TStats> => {
   try {
     const res = await fetch('http://localhost:8000/api/users/stats', {
       method: 'GET',
