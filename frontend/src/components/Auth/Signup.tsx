@@ -15,6 +15,7 @@ const Signup = () => {
   const auth = useAuth();
   const navigate = useNavigate();
   const search = useSearch({ from: '/auth' });
+
   const formSchema = z.object({
     first_name: z.string().min(2).max(255),
     last_name: z.string().min(2).max(255),
