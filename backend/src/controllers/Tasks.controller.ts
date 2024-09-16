@@ -7,7 +7,11 @@ import { jwtDecode } from 'jwt-decode';
 
 export const getTasks = async (_: Request, res: Response) => {
 	try {
-		const tasks: TSelectTask[] = await db.query.task.findMany();
+		const tasks: TSelectTask[] = await db.query.task.findMany({
+            with: {
+                assigned_to: true,
+            }
+        });
 
 		if (!tasks.length) {
 			return res.status(404).json({
