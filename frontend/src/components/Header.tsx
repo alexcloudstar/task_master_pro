@@ -10,7 +10,8 @@ import { Input } from './ui/input';
 import { SignedIn, SignOutButton, useUser } from '@clerk/clerk-react';
 import BreadcrumbNav from './BreadcrumbNav';
 import { Button } from './ui/button';
-import { Link, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 
 const Header = () => {
   const { user } = useUser();

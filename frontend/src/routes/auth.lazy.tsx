@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Login from '@/components/Auth/Login';
 import Signup from '@/components/Auth/Signup';
 import { useAuth } from '@clerk/clerk-react';
-import Loader from '@/components/Loader/Loader';
+import {Loader} from '@/components/Loader';
 
 const Auth = () => {
   const auth = useAuth();
