@@ -1,9 +1,9 @@
 export type TStats = {
-    users: number;
-    projects: number;
-    tasks: number;
-    sprints: number;
-}
+  users: number;
+  projects: number;
+  tasks: number;
+  sprints: number;
+};
 
 export const getStats = async ({
   token,
@@ -19,7 +19,7 @@ export const getStats = async ({
       },
     });
 
-    const { stats }: {stats: TStats } = await res.json();
+    const { stats }: { stats: TStats } = await res.json();
 
     return stats;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

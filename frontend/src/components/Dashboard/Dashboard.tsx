@@ -22,7 +22,7 @@ import { Link } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import useGetToken from '@/hooks/useGetToken';
 import { getStats } from '@/services/stats';
-import {Loader} from '@/components/Loader';
+import { Loader } from '@/components/Loader';
 
 export const description =
   'An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image. The main content area is divided into two rows. The first row has a grid of cards with statistics. The second row has a grid of cards with a table of recent transactions and a list of recent sales.';
@@ -42,7 +42,6 @@ const Dashboard = () => {
     enabled: !!token,
   });
 
-
   if (isLoading) {
     return <Loader />;
   }
@@ -51,28 +50,28 @@ const Dashboard = () => {
     return <div>Error</div>;
   }
 
-    const cardContent: TDashboardCardContent[] = [
-        {
-            title: 'Total Team Members',
-            value: data?.users.toString() || '0',
-            description: '+3 from last month',
-        },
-        {
-            title: 'Total Projects',
-            value: data?.projects.toString() || '0',
-            description: '+1 from last month',
-        },
-        {
-            title: 'Total Sprints',
-            value: data?.sprints.toString() || '0',
-            description: '+2 from last month',
-        },
-        {
-            title: 'Total Tasks',
-            value: data?.tasks.toString() || '0',
-            description: '+20 from last month',
-        },
-    ];
+  const cardContent: TDashboardCardContent[] = [
+    {
+      title: 'Total Team Members',
+      value: data?.users.toString() || '0',
+      description: '+3 from last month',
+    },
+    {
+      title: 'Total Projects',
+      value: data?.projects.toString() || '0',
+      description: '+1 from last month',
+    },
+    {
+      title: 'Total Sprints',
+      value: data?.sprints.toString() || '0',
+      description: '+2 from last month',
+    },
+    {
+      title: 'Total Tasks',
+      value: data?.tasks.toString() || '0',
+      description: '+20 from last month',
+    },
+  ];
 
   return (
     <>
@@ -96,9 +95,7 @@ const Dashboard = () => {
           <CardHeader className='flex flex-row items-center'>
             <div className='grid gap-2'>
               <CardTitle>Tasks</CardTitle>
-              <CardDescription>
-                Recent tasks and their status
-              </CardDescription>
+              <CardDescription>Recent tasks and their status</CardDescription>
             </div>
             <Button asChild size='sm' className='ml-auto gap-1'>
               <Link to='/'>
