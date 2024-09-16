@@ -1,21 +1,20 @@
 import { toast } from 'sonner';
 
-type TAuth = {
-  email_address: string;
-  password: string;
-};
-
 type TRegister = {
+  clerk_id: string;
   first_name: string;
   last_name: string;
-} & TAuth;
+  email_address: string;
+  username: string;
+};
 
 export const signup = async ({
+  clerk_id,
   first_name,
   last_name,
   email_address,
-  password,
-}: TRegister) => {
+  username,
+}: TRegister): Promise<boolean> => {
   try {
     const res = await fetch('http://localhost:8000/signup', {
       method: 'POST',
@@ -23,10 +22,11 @@ export const signup = async ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        clerk_id,
         first_name,
         last_name,
         email_address,
-        password,
+        username,
       }),
     });
 
@@ -37,34 +37,10 @@ export const signup = async ({
     }
 
     toast.success('Account created successfully');
+
+    return res.ok;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    toast.error(error.message);
-  }
-};
-
-export const login = async ({ email_address, password }: TAuth) => {
-  try {
-    const res = await fetch('http://localhost:8000/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email_address,
-        password,
-      }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message);
-    }
-
-    toast.success('Login successfully');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    toast.error(error.message);
+    throw new Error(error.message);
   }
 };
