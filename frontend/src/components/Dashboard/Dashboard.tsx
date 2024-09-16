@@ -1,28 +1,12 @@
-import { ArrowUpRight, DollarSign } from 'lucide-react';
+import { DollarSign } from 'lucide-react';
 import { v4 as uuid } from 'uuid';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Link } from '@tanstack/react-router';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import useGetToken from '@/hooks/useGetToken';
-import { getStats } from '@/services/stats';
+import { getStats } from '@/services/users';
 import { Loader } from '@/components/Loader';
+import LeftCard from './LeftCard';
 
 export const description =
   'An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image. The main content area is divided into two rows. The first row has a grid of cards with statistics. The second row has a grid of cards with a table of recent transactions and a list of recent sales.';
@@ -91,131 +75,7 @@ const Dashboard = () => {
         ))}
       </div>
       <div className='grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3 drop-shadow-md'>
-        <Card className='xl:col-span-2' x-chunk='dashboard-01-chunk-4'>
-          <CardHeader className='flex flex-row items-center'>
-            <div className='grid gap-2'>
-              <CardTitle>Tasks</CardTitle>
-              <CardDescription>Recent tasks and their status</CardDescription>
-            </div>
-            <Button asChild size='sm' className='ml-auto gap-1'>
-              <Link to='/'>
-                View All
-                <ArrowUpRight className='h-4 w-4' />
-              </Link>
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Task</TableHead>
-                  <TableHead className='hidden xl:table-column'>Type</TableHead>
-                  <TableHead className='hidden xl:table-column'>
-                    Status
-                  </TableHead>
-                  <TableHead className='hidden xl:table-column'>Date</TableHead>
-                  <TableHead className='text-right'>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell>
-                    <div className='font-medium'>Liam Johnson</div>
-                    <div className='hidden text-sm text-muted-foreground md:inline'>
-                      liam@example.com
-                    </div>
-                  </TableCell>
-                  <TableCell className='hidden xl:table-column'>Sale</TableCell>
-                  <TableCell className='hidden xl:table-column'>
-                    <Badge className='text-xs' variant='outline'>
-                      Approved
-                    </Badge>
-                  </TableCell>
-                  <TableCell className='hidden md:table-cell lg:hidden xl:table-column'>
-                    2023-06-23
-                  </TableCell>
-                  <TableCell className='text-right'>$250.00</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <div className='font-medium'>Olivia Smith</div>
-                    <div className='hidden text-sm text-muted-foreground md:inline'>
-                      olivia@example.com
-                    </div>
-                  </TableCell>
-                  <TableCell className='hidden xl:table-column'>
-                    Refund
-                  </TableCell>
-                  <TableCell className='hidden xl:table-column'>
-                    <Badge className='text-xs' variant='outline'>
-                      Declined
-                    </Badge>
-                  </TableCell>
-                  <TableCell className='hidden md:table-cell lg:hidden xl:table-column'>
-                    2023-06-24
-                  </TableCell>
-                  <TableCell className='text-right'>$150.00</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <div className='font-medium'>Noah Williams</div>
-                    <div className='hidden text-sm text-muted-foreground md:inline'>
-                      noah@example.com
-                    </div>
-                  </TableCell>
-                  <TableCell className='hidden xl:table-column'>
-                    Subscription
-                  </TableCell>
-                  <TableCell className='hidden xl:table-column'>
-                    <Badge className='text-xs' variant='outline'>
-                      Approved
-                    </Badge>
-                  </TableCell>
-                  <TableCell className='hidden md:table-cell lg:hidden xl:table-column'>
-                    2023-06-25
-                  </TableCell>
-                  <TableCell className='text-right'>$350.00</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <div className='font-medium'>Emma Brown</div>
-                    <div className='hidden text-sm text-muted-foreground md:inline'>
-                      emma@example.com
-                    </div>
-                  </TableCell>
-                  <TableCell className='hidden xl:table-column'>Sale</TableCell>
-                  <TableCell className='hidden xl:table-column'>
-                    <Badge className='text-xs' variant='outline'>
-                      Approved
-                    </Badge>
-                  </TableCell>
-                  <TableCell className='hidden md:table-cell lg:hidden xl:table-column'>
-                    2023-06-26
-                  </TableCell>
-                  <TableCell className='text-right'>$450.00</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <div className='font-medium'>Liam Johnson</div>
-                    <div className='hidden text-sm text-muted-foreground md:inline'>
-                      liam@example.com
-                    </div>
-                  </TableCell>
-                  <TableCell className='hidden xl:table-column'>Sale</TableCell>
-                  <TableCell className='hidden xl:table-column'>
-                    <Badge className='text-xs' variant='outline'>
-                      Approved
-                    </Badge>
-                  </TableCell>
-                  <TableCell className='hidden md:table-cell lg:hidden xl:table-column'>
-                    2023-06-27
-                  </TableCell>
-                  <TableCell className='text-right'>$550.00</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+        <LeftCard />
         <Card x-chunk='dashboard-01-chunk-5'>
           <CardHeader>
             <CardTitle>Recent Sales</CardTitle>
