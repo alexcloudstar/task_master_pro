@@ -4,7 +4,7 @@ import { Input } from '../ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { useAuth, useSignUp } from '@clerk/clerk-react';
 import { useEffect } from 'react';
@@ -14,6 +14,7 @@ const Signup = () => {
   const { signUp } = useSignUp();
   const auth = useAuth();
   const navigate = useNavigate();
+  const search = useSearch({ from: '/auth' });
   const formSchema = z.object({
     first_name: z.string().min(2).max(255),
     last_name: z.string().min(2).max(255),
@@ -64,10 +65,12 @@ const Signup = () => {
   useEffect(() => {
     if (auth.isSignedIn) {
       navigate({
-        to: '/',
+        // @ts-expect-error redirect exists
+        to: search.redirect || '/_authenticated',
       });
     }
-  }, [auth.isSignedIn, navigate]);
+    // @ts-expect-error redirect exists
+  }, [auth.isSignedIn, navigate, search.redirect]);
 
   return (
     <Form {...form}>

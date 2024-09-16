@@ -5,5 +5,5 @@ export const Route = createLazyFileRoute('/_authenticated/settings')({
 });
 
 function Settings() {
-  return <div className='p-2'>Hello from Settings!</div>;
+  return <div>Hello from Settings!</div>;
 }
