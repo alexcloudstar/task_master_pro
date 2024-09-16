@@ -1,7 +1,5 @@
 import { ArrowUpRight, DollarSign } from 'lucide-react';
 import { v4 as uuid } from 'uuid';
-import { useCookies } from 'react-cookie';
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

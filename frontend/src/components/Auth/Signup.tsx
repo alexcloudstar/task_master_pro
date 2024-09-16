@@ -8,6 +8,7 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { useAuth, useSignUp } from '@clerk/clerk-react';
 import { useEffect } from 'react';
+import { signup } from '@/services/auth';
 
 const Signup = () => {
   const { signUp } = useSignUp();
@@ -33,10 +34,6 @@ const Signup = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await signUp?.prepareVerification({
-        strategy: 'email_code',
-      });
-
       const res = await signUp?.create({
         firstName: values.first_name,
         lastName: values.last_name,
@@ -45,7 +42,18 @@ const Signup = () => {
       });
 
       if (res?.status === 'complete') {
-        window.location.reload();
+        const be_res = await signup({
+          clerk_id: res.createdUserId as string,
+          username: `${values.first_name.toLowerCase()}_${values.last_name.toLowerCase()}`,
+          email_address: values.email_address,
+          first_name: values.first_name,
+          last_name: values.last_name,
+        });
+
+        if (be_res) {
+          toast.success('Account created successfully');
+          window.location.reload();
+        }
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
