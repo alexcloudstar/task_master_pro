@@ -4,7 +4,7 @@ import {
 	updateProfile,
 	getProfile,
 	deleteProfile,
-    getStats,
+	getStats,
 } from '../controllers/Users.controller';
 import { Router } from 'express';
 
