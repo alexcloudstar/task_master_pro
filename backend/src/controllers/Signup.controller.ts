@@ -2,7 +2,10 @@ import type { Request, Response } from 'express';
 import { db } from '../../db/drizzle';
 import { TInsertUser, user } from '../../db/schema';
 
-export type TUserRegister = Pick<TInsertUser, 'first_name' | 'last_name' | 'email_address' | 'clerk_id' | 'username'>
+export type TUserRegister = Pick<
+	TInsertUser,
+	'first_name' | 'last_name' | 'email_address' | 'clerk_id' | 'username'
+>;
 
 export type TUserUpdate = Omit<
 	TInsertUser,
@@ -11,7 +14,13 @@ export type TUserUpdate = Omit<
 
 // Only for testing purposes
 export const signup = async (req: Request, res: Response) => {
-	const { clerk_id, username, first_name, last_name, email_address }: TUserRegister = req.body;
+	const {
+		clerk_id,
+		username,
+		first_name,
+		last_name,
+		email_address,
+	}: TUserRegister = req.body;
 
 	try {
 		const createdUser = await db.insert(user).values({
@@ -31,11 +40,11 @@ export const signup = async (req: Request, res: Response) => {
 			});
 		}
 
-        return res.status(201).json({
-            message: 'User created successfully',
-        });
+		return res.status(201).json({
+			message: 'User created successfully',
+		});
 	} catch (error: any) {
-        console.log(error);
+		console.log(error);
 		return res.status(500).json({ message: error?.errors?.[0]?.message });
 	}
 };
