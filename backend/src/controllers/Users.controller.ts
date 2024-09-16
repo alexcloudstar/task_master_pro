@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { db } from '../../db/drizzle';
-import { TInsertUser, TSelectUser, user } from '../../db/schema';
+import { TInsertUser, TSelectProject, TSelectSprint, TSelectTask, TSelectUser, user } from '../../db/schema';
 import { eq } from 'drizzle-orm';
 import { jwtDecode } from 'jwt-decode';
 import { clerkClient } from '@clerk/clerk-sdk-node';
@@ -167,15 +167,11 @@ export const deleteProfile = async (req: Request, res: Response) => {
 			});
 		}
 
-		const res0 = await clerkClient.users.deleteUser(findedUser.clerk_id);
+		await clerkClient.users.deleteUser(findedUser.clerk_id);
 
-		console.log(res0);
-
-		const res1 = await db
+		await db
 			.delete(user)
 			.where(eq(user.clerk_id, decoded.sub ?? ''));
-
-		console.log(res1);
 
 		return res.status(204).json({
 			message: 'User deleted',
@@ -185,4 +181,28 @@ export const deleteProfile = async (req: Request, res: Response) => {
 			message: 'Internal Server Error',
 		});
 	}
+};
+
+export const getStats = async (_: Request, res: Response) => {
+    try {
+        const users: TSelectUser[] = await db.query.user.findMany();
+        const projects: TSelectProject[] = await db.query.project.findMany();
+        const tasks: TSelectTask[] = await db.query.task.findMany();
+        const sprints: TSelectSprint[] = await db.query.sprint.findMany();
+
+        const stats = {
+            users: users.length,
+            projects: projects.length,
+            tasks: tasks.length,
+            sprints: sprints.length,
+        };
+        
+
+        return res.status(200).json({
+            stats,
+        });
+
+        } catch (error) {
+            return res.status(500).json({ message: 'Internal Server Error' });
+    }
 };
