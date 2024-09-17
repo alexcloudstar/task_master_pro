@@ -76,11 +76,9 @@ const Add = () => {
       </div>
       <div>
         <AlertDialog>
-          <Button>
-            <AlertDialogTrigger>
-              <Plus />
-            </AlertDialogTrigger>
-          </Button>
+          <AlertDialogTrigger className='bg-red-500 px-4 py-2'>
+            <Plus />
+          </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Add a new Project</AlertDialogTitle>
@@ -112,9 +110,9 @@ const Add = () => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <Button type='submit' form='create_project'>
-                <AlertDialogAction>Add</AlertDialogAction>
-              </Button>
+              <AlertDialogAction type='submit' form='create_project'>
+                Add
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
