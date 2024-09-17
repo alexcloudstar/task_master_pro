@@ -661,6 +661,20 @@
     "@radix-ui/react-use-callback-ref" "1.1.0"
     "@radix-ui/react-use-layout-effect" "1.1.0"
 
+"@radix-ui/react-checkbox@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-checkbox/-/react-checkbox-1.1.1.tgz#a559c4303957d797acee99914480b755aa1f27d6"
+  integrity sha512-0i/EKJ222Afa1FE0C6pNJxDq1itzcl3HChE9DwskA4th4KRse8ojx8a1nVcOjwJdbpDLcz7uol77yYnQNMHdKw==
+  dependencies:
+    "@radix-ui/primitive" "1.1.0"
+    "@radix-ui/react-compose-refs" "1.1.0"
+    "@radix-ui/react-context" "1.1.0"
+    "@radix-ui/react-presence" "1.1.0"
+    "@radix-ui/react-primitive" "2.0.0"
+    "@radix-ui/react-use-controllable-state" "1.1.0"
+    "@radix-ui/react-use-previous" "1.1.0"
+    "@radix-ui/react-use-size" "1.1.0"
+
 "@radix-ui/react-collection@1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-collection/-/react-collection-1.1.0.tgz#f18af78e46454a2360d103c2251773028b7724ed"
@@ -904,6 +918,11 @@
   resolved "https://registry.yarnpkg.com/@radix-ui/react-use-layout-effect/-/react-use-layout-effect-1.1.0.tgz#3c2c8ce04827b26a39e442ff4888d9212268bd27"
   integrity sha512-+FPE0rOdziWSrH9athwI1R0HDVbWlEhd+FR+aSDk4uWGmSJ9Z54sdZVDQPZAinJhJXwfT+qnj969mCsT2gfm5w==
 
+"@radix-ui/react-use-previous@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-use-previous/-/react-use-previous-1.1.0.tgz#d4dd37b05520f1d996a384eb469320c2ada8377c"
+  integrity sha512-Z/e78qg2YFnnXcW88A4JmTtm4ADckLno6F7OXotmkQfeuCVaKuYzqAATPhVzl3delXE7CxIV8shofPn3jPc5Og==
+
 "@radix-ui/react-use-rect@1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-use-rect/-/react-use-rect-1.1.0.tgz#13b25b913bd3e3987cc9b073a1a164bb1cf47b88"
@@ -1052,6 +1071,13 @@
     "@tanstack/store" "0.5.5"
     use-sync-external-store "^1.2.2"
 
+"@tanstack/react-table@^8.20.5":
+  version "8.20.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.20.5.tgz#19987d101e1ea25ef5406dce4352cab3932449d8"
+  integrity sha512-WEHopKw3znbUZ61s9i0+i9g8drmDo6asTWbrQh8Us63DAk/M0FkmIqERew6P71HI75ksZ2Pxyuf4vvKh9rAkiA==
+  dependencies:
+    "@tanstack/table-core" "8.20.5"
+
 "@tanstack/router-devtools@^1.57.9":
   version "1.57.9"
   resolved "https://registry.yarnpkg.com/@tanstack/router-devtools/-/router-devtools-1.57.9.tgz#b5e48326c9501bebd39a9d397f9e6deb537ef16d"
@@ -1098,6 +1124,11 @@
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/@tanstack/store/-/store-0.5.5.tgz#84d78568c4a71c885cb15754bf51eca42a776efe"
   integrity sha512-EOSrgdDAJExbvRZEQ/Xhh9iZchXpMN+ga1Bnk8Nmygzs8TfiE6hbzThF+Pr2G19uHL6+DTDTHhJ8VQiOd7l4tA==
+
+"@tanstack/table-core@8.20.5":
+  version "8.20.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.20.5.tgz#3974f0b090bed11243d4107283824167a395cf1d"
+  integrity sha512-P9dF7XbibHph2PFRz8gfBKEXEY/HJPOhym8CHmjF8y3q5mWpKx9xtZapXQUWCgkqvsK0R46Azuz+VaxD4Xl+Tg==
 
 "@tanstack/virtual-file-routes@^1.56.0":
   version "1.56.0"

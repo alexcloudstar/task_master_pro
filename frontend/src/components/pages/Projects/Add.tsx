@@ -20,12 +20,19 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import useGetToken from '@/hooks/useGetToken';
+import { postProject } from '@/services/projects';
+import { TCreateProject } from '@/services/projects/post';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const Add = () => {
+  const token = useGetToken();
+
   const formSchema = z.object({
     title: z.string().min(2).max(255),
   });
@@ -37,8 +44,29 @@ const Add = () => {
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: (values: TCreateProject) =>
+      postProject({ token: token as string, createdProject: values }),
+  });
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    const newProject: TCreateProject = {
+      title: values.title,
+      description: '',
+      color: '#000000',
+      created_by_id: 1,
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
+
+    try {
+      await mutation.mutateAsync(newProject);
+      form.reset();
+      toast.success('Project created successfully');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -58,28 +86,35 @@ const Add = () => {
               <AlertDialogTitle>Add a new Project</AlertDialogTitle>
               <AlertDialogDescription>
                 <Form {...form}>
-                  <FormField
-                    control={form.control}
-                    name='title'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Project Title</FormLabel>
-                        <FormControl>
-                          <Input placeholder='shadcn' {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          This is your public display name.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    id='create_project'
+                  >
+                    <FormField
+                      control={form.control}
+                      name='title'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Project Title</FormLabel>
+                          <FormControl>
+                            <Input placeholder='shadcn' {...field} />
+                          </FormControl>
+                          <FormDescription>
+                            This is your public display name.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </form>
                 </Form>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction>Add</AlertDialogAction>
+              <Button type='submit' form='create_project'>
+                <AlertDialogAction>Add</AlertDialogAction>
+              </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
