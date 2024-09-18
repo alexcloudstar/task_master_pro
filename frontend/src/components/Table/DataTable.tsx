@@ -32,13 +32,13 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-    filterIdentifier: keyof TData;
+  filterIdentifier: keyof TData;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-    filterIdentifier
+  filterIdentifier,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -64,16 +64,21 @@ export function DataTable<TData, TValue>({
     },
   });
 
-    const mFilterIdentifier = filterIdentifier as string;
+  const mFilterIdentifier = filterIdentifier as string;
 
   return (
     <div>
       <div className='flex items-center py-4'>
         <Input
           placeholder={`Filter by ${mFilterIdentifier}`}
-          value={(table.getColumn(mFilterIdentifier)?.getFilterValue() as string) ?? ''}
+          value={
+            (table.getColumn(mFilterIdentifier)?.getFilterValue() as string) ??
+            ''
+          }
           onChange={(event) =>
-            table.getColumn(mFilterIdentifier)?.setFilterValue(event.target.value)
+            table
+              .getColumn(mFilterIdentifier)
+              ?.setFilterValue(event.target.value)
           }
           className='max-w-sm capitalize'
         />
