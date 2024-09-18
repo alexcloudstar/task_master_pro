@@ -1,5 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 
 import { Checkbox } from '@/components/ui/checkbox';
 
@@ -13,16 +13,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Payment = {
-  id: string;
-  amount: number;
-  status: 'pending' | 'processing' | 'success' | 'failed';
-  email: string;
-};
+export type Header<T> = ColumnDef<T>['header'];
 
-export const columns: ColumnDef<Payment>[] = [
+const onCopy = (text: string) => navigator.clipboard.writeText(text);
+
+export const createColumns = <T,>(columns: ColumnDef<T>[]): ColumnDef<T>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -45,41 +40,12 @@ export const columns: ColumnDef<Payment>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-  },
-  {
-    accessorKey: 'email',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant='ghost'
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Email
-          <ArrowUpDown className='ml-2 size-4' />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: 'amount',
-    header: () => <div className='text-right'>Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('amount'));
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(amount);
-
-      return <div className='text-right font-medium'>{formatted}</div>;
-    },
-  },
+  ...columns,
   {
     id: 'actions',
     cell: ({ row }) => {
       const payment = row.original;
+
 
       return (
         <DropdownMenu>
@@ -92,7 +58,9 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={
+                                onCopy.bind(null, payment.id)
+                            }
             >
               Copy payment ID
             </DropdownMenuItem>
