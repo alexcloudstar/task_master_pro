@@ -44,10 +44,10 @@ export const createColumns = <T,>(columns: ColumnDef<T>[]): ColumnDef<T>[] => [
   {
     id: 'actions',
     cell: ({ row }) => {
-        const { id } = row.original as {
-            id: string;
-        };
- 
+      const { id } = row.original as {
+        id: string;
+      };
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
