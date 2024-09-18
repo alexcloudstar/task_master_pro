@@ -15,39 +15,39 @@ export type Payment = {
 };
 
 const Projects = () => {
-    const projectColumns: ColumnDef<Payment>[] = [
-        {
-            accessorKey: 'status',
-            header: 'Status'
-        },
-        {
-            accessorKey: 'email',
-            header: ({ column}) => (
-                <Button
-                    variant='ghost'
-                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                >
-                    Email
-                    <ArrowUpDown className='ml-2 size-4' />
-                </Button>
-            )
-        },
-        {
-            accessorKey: 'amount',
-            header: () => <div className='text-right'>Amount</div>,
-            cell: ({ row }) => {
-                const amount = parseFloat(row.getValue('amount'));
-                const formatted = new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: 'USD'
-                }).format(amount);
+  const projectColumns: ColumnDef<Payment>[] = [
+    {
+      accessorKey: 'status',
+      header: 'Status',
+    },
+    {
+      accessorKey: 'email',
+      header: ({ column }) => (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Email
+          <ArrowUpDown className='ml-2 size-4' />
+        </Button>
+      ),
+    },
+    {
+      accessorKey: 'amount',
+      header: () => <div className='text-right'>Amount</div>,
+      cell: ({ row }) => {
+        const amount = parseFloat(row.getValue('amount'));
+        const formatted = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }).format(amount);
 
-                return <div className='text-right font-medium'>{formatted}</div>;
-            }
-        }
-    ];
+        return <div className='text-right font-medium'>{formatted}</div>;
+      },
+    },
+  ];
 
-    const columns = createColumns(projectColumns);
+  const columns = createColumns(projectColumns);
 
   return (
     <div>

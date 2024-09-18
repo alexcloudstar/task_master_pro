@@ -46,7 +46,6 @@ export const createColumns = <T,>(columns: ColumnDef<T>[]): ColumnDef<T>[] => [
     cell: ({ row }) => {
       const payment = row.original;
 
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -57,11 +56,7 @@ export const createColumns = <T,>(columns: ColumnDef<T>[]): ColumnDef<T>[] => [
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={
-                                onCopy.bind(null, payment.id)
-                            }
-            >
+            <DropdownMenuItem onClick={onCopy.bind(null, payment.id)}>
               Copy payment ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
