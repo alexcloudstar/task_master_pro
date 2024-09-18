@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 const AsideNavigation = () => {
   const linkSize = 'size-9 md:size-8';
   const iconSize = 'size-5 md:size-4';
-  const activeLinkClasses = '[&.active]:text-red-500';
+  const activeLinkClasses = '[&.active]:text-sky-500';
 
   return (
     <aside className='fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex drop-shadow-md'>

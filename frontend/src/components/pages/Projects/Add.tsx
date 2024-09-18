@@ -9,7 +9,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -76,7 +75,7 @@ const Add = () => {
       </div>
       <div>
         <AlertDialog>
-          <AlertDialogTrigger className='bg-red-500 px-4 py-2'>
+          <AlertDialogTrigger className='bg-sky-500 px-4 py-2 rounded-md text-white'>
             <Plus />
           </AlertDialogTrigger>
           <AlertDialogContent>
