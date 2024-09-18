@@ -8,6 +8,7 @@ export type Header<T> = ColumnDef<T>['header'];
 export const createColumns = <T,>(
   columns: ColumnDef<T>[],
   actions: TAction[],
+  copyIdentifier: keyof T,
 ): ColumnDef<T>[] => [
   {
     id: 'select',
@@ -34,6 +35,6 @@ export const createColumns = <T,>(
   ...columns,
   {
     id: 'actions',
-    cell: () => RowActions({ actions }),
+    cell: ({ row }) => RowActions({ row, actions, copyIdentifier }),
   },
 ];

@@ -75,24 +75,18 @@ const Projects = () => {
     },
   ];
 
-  const onCopy = (text: string) => navigator.clipboard.writeText(text);
-
   const actions: TAction[] = [
     {
-      title: 'Project title',
-      onClick: onCopy.bind(null, ''),
+      title: 'View project',
+      onClick: () => alert('Should do something, right?'),
     },
     {
-      title: 'View customer',
-      onClick: () => {},
-    },
-    {
-      title: 'View payment details',
-      onClick: () => {},
+      title: 'Action 2',
+      onClick: () => alert('Should do something, right?'),
     },
   ];
 
-  const columns = createColumns(projectColumns, actions);
+  const columns = createColumns(projectColumns, actions, 'title');
 
   return (
     <div>

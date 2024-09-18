@@ -8,28 +8,39 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { Button } from '../ui/button';
-import { TAction } from './types';
+import { TRowActionsProps } from './types';
 
-const RowActions = ({ actions }: { actions: TAction[] }) => (
-  <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <Button variant='ghost' className='size-8 p-0'>
-        <span className='sr-only'>Open menu</span>
-        <MoreHorizontal className='size-4' />
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent align='end'>
-      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-      {actions.map(({ title, onClick }, idx) => (
-        <>
+const RowActions = <T,>({
+  row,
+  actions,
+  copyIdentifier,
+}: TRowActionsProps<T>) => {
+  const identifier = row.original[copyIdentifier];
+
+  const onCopy = (text: string) => navigator.clipboard.writeText(text);
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant='ghost' className='size-8 p-0'>
+          <span className='sr-only'>Open menu</span>
+          <MoreHorizontal className='size-4' />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align='end'>
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem onClick={onCopy.bind(null, identifier as string)}>
+          Copy payment {copyIdentifier as string}
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        {actions.map(({ title, onClick }) => (
           <DropdownMenuItem key={title} onClick={onClick}>
             {title}
           </DropdownMenuItem>
-          {idx === 0 ? <DropdownMenuSeparator /> : null}
-        </>
-      ))}
-    </DropdownMenuContent>
-  </DropdownMenu>
-);
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 export default RowActions;
