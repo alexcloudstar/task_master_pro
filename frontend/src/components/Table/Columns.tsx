@@ -17,7 +17,7 @@ export type Header<T> = ColumnDef<T>['header'];
 
 const onCopy = (text: string) => navigator.clipboard.writeText(text);
 
-export const createColumns = <T extends {id?: string},>(columns: ColumnDef<T>[]): ColumnDef<T>[] => [
+export const createColumns = <T,>(columns: ColumnDef<T>[]): ColumnDef<T>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -44,19 +44,21 @@ export const createColumns = <T extends {id?: string},>(columns: ColumnDef<T>[])
   {
     id: 'actions',
     cell: ({ row }) => {
-      const payment = row.original;
-
+        const { id } = row.original as {
+            id: string;
+        };
+ 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='h-8 w-8 p-0'>
+            <Button variant='ghost' className='size-8 p-0'>
               <span className='sr-only'>Open menu</span>
-              <MoreHorizontal className='h-4 w-4' />
+              <MoreHorizontal className='size-4' />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={onCopy.bind(null, payment.id ?? "")}>
+            <DropdownMenuItem onClick={onCopy.bind(null, id)}>
               Copy payment ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />

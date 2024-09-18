@@ -17,24 +17,27 @@ export const routes: TRoute[] = [
   },
 ];
 
-type Payment = {
+export type TPayment = {
   id: string;
   amount: number;
   status: 'pending' | 'processing' | 'success' | 'failed';
   email: string;
+  something: string;
 };
 
-export const payments: Payment[] = [
+export const payments: TPayment[] = [
   {
     id: '728ed52f',
     amount: 100,
     status: 'pending',
     email: 'm@example.com',
+    something: 'something',
   },
   {
     id: '489e1d42',
     amount: 125,
     status: 'processing',
     email: 'example@gmail.com',
+    something: 'something',
   },
 ];

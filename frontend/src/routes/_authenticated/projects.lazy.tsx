@@ -2,48 +2,73 @@ import { Add } from '@/components/pages/Projects';
 import { DataTable } from '@/components/pages/Projects/DataTable';
 import { createColumns } from '@/components/Table/Columns';
 import { Button } from '@/components/ui/button';
-import { payments } from '@/lib/constants';
+import { TProject } from '@/lib/types';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: 'pending' | 'processing' | 'success' | 'failed';
-  email: string;
-};
-
 const Projects = () => {
-  const projectColumns: ColumnDef<Payment>[] = [
+  const projectColumns: ColumnDef<TProject>[] = [
     {
-      accessorKey: 'status',
-      header: 'Status',
+      accessorKey: 'title',
+      header: 'Title',
     },
     {
-      accessorKey: 'email',
+      accessorKey: 'description',
       header: ({ column }) => (
         <Button
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Email
+          Description
           <ArrowUpDown className='ml-2 size-4' />
         </Button>
       ),
     },
     {
-      accessorKey: 'amount',
-      header: () => <div className='text-right'>Amount</div>,
-      cell: ({ row }) => {
-        const amount = parseFloat(row.getValue('amount'));
-        const formatted = new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        }).format(amount);
+      accessorKey: 'color',
+      header: ({ column }) => (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Color
+          <ArrowUpDown className='ml-2 size-4' />
+        </Button>
+      ),
+    },
+    {
+      accessorKey: 'created_by_id',
+      header: 'Created By',
+    },
+    {
+      accessorKey: 'created_at',
+      header: 'Created At',
+    },
+    {
+      accessorKey: 'updated_at',
+      header: 'Updated At',
+    },
+  ];
 
-        return <div className='text-right font-medium'>{formatted}</div>;
-      },
+  const projects: TProject[] = [
+    {
+      id: 1,
+      title: 'Hi there 33',
+      description: 'test project',
+      color: 'white',
+      created_by_id: 1,
+      created_at: new Date('2024-09-16T19:15:22.909Z'),
+      updated_at: new Date('2024-09-16T19:15:22.909Z'),
+    },
+    {
+      id: 2,
+      title: 'Project 2',
+      description: 'test project 2',
+      color: 'black',
+      created_by_id: 2,
+      created_at: new Date('2024-09-16T19:15:22.909Z'),
+      updated_at: new Date('2024-09-16T19:15:22.909Z'),
     },
   ];
 
@@ -52,7 +77,7 @@ const Projects = () => {
   return (
     <div>
       <Add />
-      <DataTable columns={columns} data={payments} />
+      <DataTable columns={columns} data={projects} />
     </div>
   );
 };
