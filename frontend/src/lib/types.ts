@@ -14,3 +14,13 @@ export type TRoute = {
 export type TToken = {
   token: string;
 };
+
+export type TProject = {
+  id?: number;
+  title: string;
+  description: string;
+  color: string;
+  created_by_id: number;
+  created_at: string;
+  updated_at: string;
+};

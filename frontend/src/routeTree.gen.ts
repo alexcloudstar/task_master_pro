@@ -22,6 +22,9 @@ const AuthenticatedIndexLazyImport = createFileRoute('/_authenticated/')();
 const AuthenticatedSettingsLazyImport = createFileRoute(
   '/_authenticated/settings',
 )();
+const AuthenticatedProjectsLazyImport = createFileRoute(
+  '/_authenticated/projects',
+)();
 const AuthenticatedAboutLazyImport = createFileRoute('/_authenticated/about')();
 
 // Create/Update Routes
@@ -48,6 +51,13 @@ const AuthenticatedSettingsLazyRoute = AuthenticatedSettingsLazyImport.update({
   getParentRoute: () => AuthenticatedRoute,
 } as any).lazy(() =>
   import('./routes/_authenticated/settings.lazy').then((d) => d.Route),
+);
+
+const AuthenticatedProjectsLazyRoute = AuthenticatedProjectsLazyImport.update({
+  path: '/projects',
+  getParentRoute: () => AuthenticatedRoute,
+} as any).lazy(() =>
+  import('./routes/_authenticated/projects.lazy').then((d) => d.Route),
 );
 
 const AuthenticatedAboutLazyRoute = AuthenticatedAboutLazyImport.update({
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAboutLazyImport;
       parentRoute: typeof AuthenticatedImport;
     };
+    '/_authenticated/projects': {
+      id: '/_authenticated/projects';
+      path: '/projects';
+      fullPath: '/projects';
+      preLoaderRoute: typeof AuthenticatedProjectsLazyImport;
+      parentRoute: typeof AuthenticatedImport;
+    };
     '/_authenticated/settings': {
       id: '/_authenticated/settings';
       path: '/settings';
@@ -103,12 +120,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAboutLazyRoute: typeof AuthenticatedAboutLazyRoute;
+  AuthenticatedProjectsLazyRoute: typeof AuthenticatedProjectsLazyRoute;
   AuthenticatedSettingsLazyRoute: typeof AuthenticatedSettingsLazyRoute;
   AuthenticatedIndexLazyRoute: typeof AuthenticatedIndexLazyRoute;
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAboutLazyRoute: AuthenticatedAboutLazyRoute,
+  AuthenticatedProjectsLazyRoute: AuthenticatedProjectsLazyRoute,
   AuthenticatedSettingsLazyRoute: AuthenticatedSettingsLazyRoute,
   AuthenticatedIndexLazyRoute: AuthenticatedIndexLazyRoute,
 };
@@ -121,6 +140,7 @@ export interface FileRoutesByFullPath {
   '': typeof AuthenticatedRouteWithChildren;
   '/auth': typeof AuthLazyRoute;
   '/about': typeof AuthenticatedAboutLazyRoute;
+  '/projects': typeof AuthenticatedProjectsLazyRoute;
   '/settings': typeof AuthenticatedSettingsLazyRoute;
   '/': typeof AuthenticatedIndexLazyRoute;
 }
@@ -128,6 +148,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/auth': typeof AuthLazyRoute;
   '/about': typeof AuthenticatedAboutLazyRoute;
+  '/projects': typeof AuthenticatedProjectsLazyRoute;
   '/settings': typeof AuthenticatedSettingsLazyRoute;
   '/': typeof AuthenticatedIndexLazyRoute;
 }
@@ -137,20 +158,22 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren;
   '/auth': typeof AuthLazyRoute;
   '/_authenticated/about': typeof AuthenticatedAboutLazyRoute;
+  '/_authenticated/projects': typeof AuthenticatedProjectsLazyRoute;
   '/_authenticated/settings': typeof AuthenticatedSettingsLazyRoute;
   '/_authenticated/': typeof AuthenticatedIndexLazyRoute;
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: '' | '/auth' | '/about' | '/settings' | '/';
+  fullPaths: '' | '/auth' | '/about' | '/projects' | '/settings' | '/';
   fileRoutesByTo: FileRoutesByTo;
-  to: '/auth' | '/about' | '/settings' | '/';
+  to: '/auth' | '/about' | '/projects' | '/settings' | '/';
   id:
     | '__root__'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/about'
+    | '/_authenticated/projects'
     | '/_authenticated/settings'
     | '/_authenticated/';
   fileRoutesById: FileRoutesById;
@@ -186,6 +209,7 @@ export const routeTree = rootRoute
       "filePath": "_authenticated.tsx",
       "children": [
         "/_authenticated/about",
+        "/_authenticated/projects",
         "/_authenticated/settings",
         "/_authenticated/"
       ]
@@ -195,6 +219,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/about": {
       "filePath": "_authenticated/about.lazy.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/projects": {
+      "filePath": "_authenticated/projects.lazy.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/settings": {
