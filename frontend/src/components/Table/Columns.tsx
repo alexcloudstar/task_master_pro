@@ -1,23 +1,14 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal } from 'lucide-react';
-
 import { Checkbox } from '@/components/ui/checkbox';
-
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import RowActions from './RowActions';
+import { TAction } from './types';
 
 export type Header<T> = ColumnDef<T>['header'];
 
-const onCopy = (text: string) => navigator.clipboard.writeText(text);
-
-export const createColumns = <T,>(columns: ColumnDef<T>[]): ColumnDef<T>[] => [
+export const createColumns = <T,>(
+  columns: ColumnDef<T>[],
+  actions: TAction[],
+): ColumnDef<T>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -43,30 +34,6 @@ export const createColumns = <T,>(columns: ColumnDef<T>[]): ColumnDef<T>[] => [
   ...columns,
   {
     id: 'actions',
-    cell: ({ row }) => {
-      const { id } = row.original as {
-        id: string;
-      };
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='size-8 p-0'>
-              <span className='sr-only'>Open menu</span>
-              <MoreHorizontal className='size-4' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={onCopy.bind(null, id)}>
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: () => RowActions({ actions }),
   },
 ];

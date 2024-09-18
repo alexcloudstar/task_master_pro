@@ -1,6 +1,7 @@
 import { Add } from '@/components/pages/Projects';
 import { DataTable } from '@/components/pages/Projects/DataTable';
 import { createColumns } from '@/components/Table/Columns';
+import { TAction } from '@/components/Table/types';
 import { Button } from '@/components/ui/button';
 import { TProject } from '@/lib/types';
 import { createLazyFileRoute } from '@tanstack/react-router';
@@ -18,6 +19,7 @@ const Projects = () => {
       header: ({ column }) => (
         <Button
           variant='ghost'
+          className='pl-0'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Description
@@ -30,6 +32,7 @@ const Projects = () => {
       header: ({ column }) => (
         <Button
           variant='ghost'
+          className='pl-0'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Color
@@ -58,8 +61,8 @@ const Projects = () => {
       description: 'test project',
       color: 'white',
       created_by_id: 1,
-      created_at: new Date('2024-09-16T19:15:22.909Z'),
-      updated_at: new Date('2024-09-16T19:15:22.909Z'),
+      created_at: new Date('2024-09-16T19:15:22.909Z').toLocaleDateString(),
+      updated_at: new Date('2024-09-16T19:15:22.909Z').toLocaleDateString(),
     },
     {
       id: 2,
@@ -67,12 +70,29 @@ const Projects = () => {
       description: 'test project 2',
       color: 'black',
       created_by_id: 2,
-      created_at: new Date('2024-09-16T19:15:22.909Z'),
-      updated_at: new Date('2024-09-16T19:15:22.909Z'),
+      created_at: new Date('2024-09-16T19:15:22.909Z').toLocaleDateString(),
+      updated_at: new Date('2024-09-16T19:15:22.909Z').toLocaleDateString(),
     },
   ];
 
-  const columns = createColumns(projectColumns);
+  const onCopy = (text: string) => navigator.clipboard.writeText(text);
+
+  const actions: TAction[] = [
+    {
+      title: 'Project title',
+      onClick: onCopy.bind(null, ''),
+    },
+    {
+      title: 'View customer',
+      onClick: () => {},
+    },
+    {
+      title: 'View payment details',
+      onClick: () => {},
+    },
+  ];
+
+  const columns = createColumns(projectColumns, actions);
 
   return (
     <div>
