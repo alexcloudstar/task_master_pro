@@ -29,8 +29,8 @@ const RowActions = <T,>({
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem onClick={onCopy.bind(null, identifier as string)}>
-          Copy payment {copyIdentifier as string}
+        <DropdownMenuItem onClick={onCopy.bind(null, identifier as string)} className='capitalize'>
+          Copy {copyIdentifier as string}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         {actions.map(({ title, onClick }) => (

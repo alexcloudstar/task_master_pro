@@ -1,79 +1,72 @@
+import { Loader } from '@/components/Loader';
 import { Add } from '@/components/pages/Projects';
 import { DataTable } from '@/components/pages/Projects/DataTable';
 import { createColumns } from '@/components/Table/Columns';
 import { TAction } from '@/components/Table/types';
 import { Button } from '@/components/ui/button';
+import useGetToken from '@/hooks/useGetToken';
 import { TProject } from '@/lib/types';
+import { getProjects } from '@/services/projects';
+import { useQuery } from '@tanstack/react-query';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
-const Projects = () => {
-  const projectColumns: ColumnDef<TProject>[] = [
+const projectColumns: ColumnDef<TProject>[] = [
     {
-      accessorKey: 'title',
-      header: 'Title',
+        accessorKey: 'title',
+        header: 'Title',
     },
     {
-      accessorKey: 'description',
-      header: ({ column }) => (
-        <Button
-          variant='ghost'
-          className='pl-0'
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Description
-          <ArrowUpDown className='ml-2 size-4' />
-        </Button>
-      ),
+        accessorKey: 'description',
+        header: ({ column }) => (
+            <Button
+                variant='ghost'
+                className='pl-0'
+                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            >
+                Description
+                <ArrowUpDown className='ml-2 size-4' />
+            </Button>
+        ),
     },
     {
-      accessorKey: 'color',
-      header: ({ column }) => (
-        <Button
-          variant='ghost'
-          className='pl-0'
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Color
-          <ArrowUpDown className='ml-2 size-4' />
-        </Button>
-      ),
+        accessorKey: 'color',
+        header: ({ column }) => (
+            <Button
+                variant='ghost'
+                className='pl-0'
+                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            >
+                Color
+                <ArrowUpDown className='ml-2 size-4' />
+            </Button>
+        ),
     },
     {
-      accessorKey: 'created_by_id',
-      header: 'Created By',
+        accessorKey: 'created_by_id',
+        header: 'Created By',
     },
     {
-      accessorKey: 'created_at',
-      header: 'Created At',
+        accessorKey: 'created_at',
+        header: 'Created At',
     },
     {
-      accessorKey: 'updated_at',
-      header: 'Updated At',
+        accessorKey: 'updated_at',
+        header: 'Updated At',
     },
-  ];
+];
 
-  const projects: TProject[] = [
-    {
-      id: 1,
-      title: 'Hi there 33',
-      description: 'test project',
-      color: 'white',
-      created_by_id: 1,
-      created_at: new Date('2024-09-16T19:15:22.909Z').toLocaleDateString(),
-      updated_at: new Date('2024-09-16T19:15:22.909Z').toLocaleDateString(),
-    },
-    {
-      id: 2,
-      title: 'Project 2',
-      description: 'test project 2',
-      color: 'black',
-      created_by_id: 2,
-      created_at: new Date('2024-09-16T19:15:22.909Z').toLocaleDateString(),
-      updated_at: new Date('2024-09-16T19:15:22.909Z').toLocaleDateString(),
-    },
-  ];
+const Projects = () => {
+
+
+  const token = useGetToken();
+
+  const { isLoading, isError, data } = useQuery({
+    queryKey: ['projects'],
+    queryFn: () => getProjects({ token: token as string }),
+    enabled: !!token,
+  });
 
   const actions: TAction[] = [
     {
@@ -87,6 +80,18 @@ const Projects = () => {
   ];
 
   const columns = createColumns(projectColumns, actions, 'title');
+
+    const projects = data?.map((project) => ({
+        ...project,
+        created_at: new Date(project.created_at).toLocaleDateString(),
+        updated_at: new Date(project.updated_at).toLocaleDateString(),
+    }));
+
+    if (isLoading) return <Loader />
+
+    if (isError) return <div>Error</div>
+
+    if(!projects) return <div>No projects</div>
 
   return (
     <div>
