@@ -1,3 +1,4 @@
+import { Loader } from '@/components/Loader';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,8 +23,9 @@ import { Input } from '@/components/ui/input';
 import useGetToken from '@/hooks/useGetToken';
 import { postProject } from '@/services/projects';
 import { TCreateProject } from '@/services/projects/post';
+import { getMe } from '@/services/users';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -34,13 +36,25 @@ const Add = () => {
 
   const formSchema = z.object({
     title: z.string().min(2).max(255),
+    description: z.string().min(2).max(255),
+    color: z.string().min(2).max(255),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
+        description: '',
+        color: '',
     },
+  });
+
+    const queryClient = useQueryClient();
+
+  const { isLoading, isError, data } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => getMe({ token: token as string }),
+    enabled: !!token,
   });
 
   const mutation = useMutation({
@@ -50,10 +64,8 @@ const Add = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const newProject: TCreateProject = {
-      title: values.title,
-      description: '',
-      color: '#000000',
-      created_by_id: 1,
+            ...values,
+      created_by_id: data?.id ?? -1,
       created_at: new Date(),
       updated_at: new Date(),
     };
@@ -62,11 +74,20 @@ const Add = () => {
       await mutation.mutateAsync(newProject);
       form.reset();
       toast.success('Project created successfully');
+        queryClient.invalidateQueries({queryKey: ['projects']});
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message);
     }
   };
+
+    if (isLoading) {
+        return <Loader />;
+    }
+
+    if (isError) {
+        return <div>There was an error</div>;
+    }
 
   return (
     <div className='flex items-center justify-between'>
@@ -86,19 +107,43 @@ const Add = () => {
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
                     id='create_project'
+                                        className='space-y-4'
                   >
                     <FormField
                       control={form.control}
                       name='title'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Project Title</FormLabel>
+                          <FormLabel>Project title</FormLabel>
                           <FormControl>
                             <Input placeholder='shadcn' {...field} />
                           </FormControl>
-                          <FormDescription>
-                            This is your public display name.
-                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='description'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Project description</FormLabel>
+                          <FormControl>
+                            <Input placeholder='Project for...' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='color'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Project color</FormLabel>
+                          <FormControl>
+                            <Input type="color" {...field} />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
