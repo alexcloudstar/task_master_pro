@@ -1,9 +1,14 @@
-import { createLazyFileRoute } from '@tanstack/react-router'
+import { SelectProject } from '@/components/pages/Tasks';
+import { createLazyFileRoute } from '@tanstack/react-router';
 
 const Tasks = () => {
-    return <div>Hello /_authenticated/tasks!</div>
-}
+  return (
+    <div>
+      <SelectProject />
+    </div>
+  );
+};
 
 export const Route = createLazyFileRoute('/_authenticated/tasks')({
   component: Tasks,
-})
+});
