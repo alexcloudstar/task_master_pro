@@ -29,6 +29,33 @@ export const getTasks = async (_: Request, res: Response) => {
 	}
 };
 
+export const getProjectTasks = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+	try {
+		const tasks: TSelectTask[] = await db.query.task.findMany({
+			with: {
+				assigned_to: true,
+			},
+            where: eq(task.project_id, +id),
+		});
+
+		if (!tasks.length) {
+			return res.status(404).json({
+				message: 'Tasks not found',
+			});
+		}
+
+		return res.status(200).json({
+			tasks,
+		});
+	} catch (error) {
+		return res.status(500).json({
+			message: 'Internal Server Error',
+		});
+	}
+};
+
 export const getTask = async (req: Request, res: Response) => {
 	const { id } = req.params;
 
