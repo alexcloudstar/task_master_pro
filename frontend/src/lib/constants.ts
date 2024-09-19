@@ -1,4 +1,4 @@
-import { FolderKanban, Home } from 'lucide-react';
+import { FolderKanban, Home, ListTodo } from 'lucide-react';
 import { TRoute } from './types';
 import { v4 as uuid } from 'uuid';
 
@@ -14,6 +14,12 @@ export const routes: TRoute[] = [
     to: '/projects',
     label: 'Projects',
     Icon: FolderKanban,
+  },
+  {
+    id: uuid(),
+    to: '/tasks',
+    label: 'Tasks',
+    Icon: ListTodo,
   },
 ];
 
