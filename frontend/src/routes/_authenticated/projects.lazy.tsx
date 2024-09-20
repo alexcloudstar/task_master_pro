@@ -5,14 +5,19 @@ import { DataTable } from '@/components/Table/DataTable';
 import { TAction } from '@/components/Table/types';
 import { Button } from '@/components/ui/button';
 import useGetToken from '@/hooks/useGetToken';
-import { TProject } from '@/lib/types';
 import { getProjects } from '@/services/projects';
+import { TProject } from '@/services/projects/types';
 import { useQuery } from '@tanstack/react-query';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
-const projectColumns: ColumnDef<TProject>[] = [
+type TCustomProject = {
+    created_at: string;
+    updated_at: string;
+    } & Omit<TProject, 'created_at' | 'updated_at'>;
+
+const projectColumns: ColumnDef<TCustomProject>[] = [
   {
     accessorKey: 'title',
     header: 'Title',
@@ -83,7 +88,7 @@ const Projects = () => {
     ...project,
     created_at: new Date(project.created_at).toLocaleDateString(),
     updated_at: new Date(project.updated_at).toLocaleDateString(),
-  }));
+  })) ?? [];
 
   if (isLoading) return <Loader />;
 
