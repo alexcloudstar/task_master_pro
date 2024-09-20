@@ -1,7 +1,11 @@
 import { Draggable, Droppable } from '@/components/DragNDrop';
+import useGetToken from '@/hooks/useGetToken';
+import { updateTask } from '@/services/tasks';
 import { ETaskStatus, TTask } from '@/services/tasks/types';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 type TColumsProps = {
   tasks: TTask[];
@@ -10,7 +14,17 @@ type TColumsProps = {
 const Columns = ({ tasks }: TColumsProps) => {
   const [tasksState, setTasksState] = useState<TTask[]>(tasks);
 
-  const onDragEnd = (event: DragEndEvent) => {
+    const token = useGetToken();
+
+  const mutation = useMutation({
+    mutationFn: ({id, fields}: {
+            id: string;
+            fields: Partial<TTask>;
+        }) =>
+      updateTask({ token: token as string, id, fields }),
+  });
+
+  const onDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (!active || !over) return;
@@ -35,7 +49,17 @@ const Columns = ({ tasks }: TColumsProps) => {
       return task;
     });
 
-    setTasksState(newTasks);
+        try {
+            await mutation.mutateAsync({ id: activeTask.id.toString(), fields: { status: ETaskStatus[overId as keyof typeof ETaskStatus] } });
+
+            setTasksState(newTasks);
+
+
+            toast.success("Task updated successfully");
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            toast.error(error.message);
+        }
   };
 
   return (
