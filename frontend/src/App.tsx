@@ -5,7 +5,6 @@ import { Toaster } from './components/ui/sonner';
 import { TooltipProvider } from './components/ui/tooltip';
 import { useAuth } from '@clerk/clerk-react';
 
-// Register the router instance for type safety
 const queryClient = new QueryClient();
 
 const App = () => {
