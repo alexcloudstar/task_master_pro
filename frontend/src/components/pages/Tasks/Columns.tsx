@@ -8,33 +8,35 @@ type TColumsProps = {
 };
 
 const Columns = ({ tasks }: TColumsProps) => {
-    const [tasksState, setTasksState] = useState<TTask[]>(tasks);
+  const [tasksState, setTasksState] = useState<TTask[]>(tasks);
 
-    const onDragEnd = (event: DragEndEvent) => {
-        const {active, over} = event;
+  const onDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
 
-        if (!active || !over) return;
+    if (!active || !over) return;
 
-        const activeId = active.id;
-        const overId = over.id;
+    const activeId = active.id;
+    const overId = over.id;
 
-        const activeTask = tasksState.find((task) => task.id === parseInt(activeId.toString()));
+    const activeTask = tasksState.find(
+      (task) => task.id === parseInt(activeId.toString()),
+    );
 
-        if (!activeTask) return;
+    if (!activeTask) return;
 
-        const newTasks = tasksState.map((task) => {
-            if (task.id === parseInt(activeId.toString())) {
-                return {
-                    ...task,
-                    status: ETaskStatus[overId as keyof typeof ETaskStatus],
-                };
-            }
+    const newTasks = tasksState.map((task) => {
+      if (task.id === parseInt(activeId.toString())) {
+        return {
+          ...task,
+          status: ETaskStatus[overId as keyof typeof ETaskStatus],
+        };
+      }
 
-            return task;
-        });
+      return task;
+    });
 
-        setTasksState(newTasks);
-    }
+    setTasksState(newTasks);
+  };
 
   return (
     <div className='grid grid-flow-col grid-cols-5 gap-1'>

@@ -10,13 +10,13 @@ const Droppable = ({ children, id }: TProps) => {
     id,
   });
 
-    if (isOver) {
-        return (
-            <div ref={setNodeRef} className='shadow-md rounded-lg'>
-                {children}
-            </div>
-        );
-    }
+  if (isOver) {
+    return (
+      <div ref={setNodeRef} className='shadow-md rounded-lg'>
+        {children}
+      </div>
+    );
+  }
 
   return <div ref={setNodeRef}>{children}</div>;
 };
