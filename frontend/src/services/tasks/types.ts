@@ -1,11 +1,11 @@
 import { TUser } from '../users/types';
 
 export enum ETaskStatus {
+  TODO = 'todo',
   IN_PROGRESS = 'in_progress',
-  DONE = 'done',
   BLOCKED = 'blocked',
   IN_REVIEW = 'in_review',
-  TODO = 'todo',
+  DONE = 'done',
 }
 
 export type TTask = {

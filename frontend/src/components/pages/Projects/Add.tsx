@@ -13,7 +13,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -44,12 +43,12 @@ const Add = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
-        description: '',
-        color: '',
+      description: '',
+      color: '',
     },
   });
 
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const { isLoading, isError, data } = useQuery({
     queryKey: ['me'],
@@ -64,7 +63,7 @@ const Add = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const newProject: TCreateProject = {
-            ...values,
+      ...values,
       created_by_id: data?.id ?? -1,
       created_at: new Date(),
       updated_at: new Date(),
@@ -74,20 +73,20 @@ const Add = () => {
       await mutation.mutateAsync(newProject);
       form.reset();
       toast.success('Project created successfully');
-        queryClient.invalidateQueries({queryKey: ['projects']});
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message);
     }
   };
 
-    if (isLoading) {
-        return <Loader />;
-    }
+  if (isLoading) {
+    return <Loader />;
+  }
 
-    if (isError) {
-        return <div>There was an error</div>;
-    }
+  if (isError) {
+    return <div>There was an error</div>;
+  }
 
   return (
     <div className='flex items-center justify-between'>
@@ -107,7 +106,7 @@ const Add = () => {
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
                     id='create_project'
-                                        className='space-y-4'
+                    className='space-y-4'
                   >
                     <FormField
                       control={form.control}
@@ -142,7 +141,7 @@ const Add = () => {
                         <FormItem>
                           <FormLabel>Project color</FormLabel>
                           <FormControl>
-                            <Input type="color" {...field} />
+                            <Input type='color' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

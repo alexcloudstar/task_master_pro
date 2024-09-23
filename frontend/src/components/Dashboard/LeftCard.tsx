@@ -48,7 +48,7 @@ const LeftCard = () => {
           <CardDescription>Recent tasks and their status</CardDescription>
         </div>
         <Button asChild size='sm' className='ml-auto gap-1'>
-          <Link to='/'>
+          <Link to='/tasks'>
             View All
             <ArrowUpRight className='size-4' />
           </Link>
