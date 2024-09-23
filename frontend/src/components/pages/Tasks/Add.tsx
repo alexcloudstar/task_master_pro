@@ -133,10 +133,10 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
     return <div>There was an error</div>;
   }
 
-    // TODO: Status is ""
+  // TODO: Status is ""
 
-    console.log(form.formState.errors)
-    console.log(form.getValues())
+  console.log(form.formState.errors);
+  console.log(form.getValues());
 
   return (
     <div className='flex items-center justify-between'>
@@ -235,9 +235,9 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                                        <button type='submit' form='create_task'>
-                        Add
-                        </button>
+                    <button type='submit' form='create_task'>
+                      Add
+                    </button>
                   </form>
                 </Form>
               </AlertDialogDescription>
