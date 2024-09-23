@@ -44,6 +44,7 @@ const Columns = ({ tasks }: TColumsProps) => {
 
     const activeId = active.id;
     const overId = over.id;
+    let newItems = tasksState;
 
     const activeTask = tasksState.find(
       (task) => task.id === parseInt(activeId.toString()),
@@ -51,24 +52,40 @@ const Columns = ({ tasks }: TColumsProps) => {
 
     if (!activeTask) return;
 
-    const newTasks = tasksState.map((task) => {
-      if (task.id === parseInt(activeId.toString())) {
-        return {
-          ...task,
-          status: ETaskStatus[overId as keyof typeof ETaskStatus],
-        };
-      }
+    if (active.id !== over.id) {
+      const oldIndex = tasksState.findIndex(
+        (task) => task.id === parseInt(activeId.toString()),
+      );
+      const newIndex = tasksState.findIndex(
+        (task) => task.id === parseInt(overId.toString()),
+      );
+      const newTasks = arrayMove(tasksState, oldIndex, newIndex);
 
-      return task;
-    });
+      newItems = newTasks.map((task, index) => ({
+        ...task,
+        order: newIndex === index ? oldIndex : index,
+        status:
+          index === oldIndex
+            ? ETaskStatus[overId as keyof typeof ETaskStatus]
+            : task.status,
+      }));
+    }
 
     try {
-      await mutation.mutateAsync({
-        id: activeTask.id.toString(),
-        fields: { status: ETaskStatus[overId as keyof typeof ETaskStatus] },
-      });
+      await Promise.all(
+        newItems.map((task) =>
+          mutation.mutateAsync({
+            id: task.id.toString(),
+            fields: {
+              order: task.order,
+              status: task.status,
+            },
+          }),
+        ),
+      );
 
-      setTasksState(newTasks);
+      toast.success('Tasks sorted successfully');
+      setTasksState(newItems);
 
       toast.success('Task updated successfully');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -95,6 +112,7 @@ const Columns = ({ tasks }: TColumsProps) => {
                   <div className='flex flex-col gap-4'>
                     {tasksState
                       ?.filter((task) => task.status === ETaskStatus[key])
+                      .sort((a, b) => a.order - b.order)
                       .map((task) => (
                         <Draggable key={task.id} id={task.id.toString()}>
                           <div className='bg-white p-4 rounded-lg shadow'>

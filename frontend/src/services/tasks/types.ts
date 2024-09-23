@@ -17,7 +17,8 @@ export type TTask = {
   created_by_id: number;
   assigned_to_id: number;
   assigned_to: TUser;
+  color: string;
+  order: number;
   created_at: string;
   updated_at: string;
-  color: string;
 };
