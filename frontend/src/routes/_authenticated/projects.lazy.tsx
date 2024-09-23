@@ -13,9 +13,9 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
 type TCustomProject = {
-    created_at: string;
-    updated_at: string;
-    } & Omit<TProject, 'created_at' | 'updated_at'>;
+  created_at: string;
+  updated_at: string;
+} & Omit<TProject, 'created_at' | 'updated_at'>;
 
 const projectColumns: ColumnDef<TCustomProject>[] = [
   {
@@ -84,11 +84,12 @@ const Projects = () => {
 
   const columns = createColumns(projectColumns, actions, 'title');
 
-  const projects = data?.map((project) => ({
-    ...project,
-    created_at: new Date(project.created_at).toLocaleDateString(),
-    updated_at: new Date(project.updated_at).toLocaleDateString(),
-  })) ?? [];
+  const projects =
+    data?.map((project) => ({
+      ...project,
+      created_at: new Date(project.created_at).toLocaleDateString(),
+      updated_at: new Date(project.updated_at).toLocaleDateString(),
+    })) ?? [];
 
   if (isLoading) return <Loader />;
 

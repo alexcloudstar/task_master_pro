@@ -1,5 +1,5 @@
 import { Loader } from '@/components/Loader';
-import { Columns, SelectProject } from '@/components/pages/Tasks';
+import { Add, Columns, SelectProject } from '@/components/pages/Tasks';
 import useGetToken from '@/hooks/useGetToken';
 import { TProject } from '@/services/projects/types';
 import { getProjectTasks } from '@/services/tasks/get';
@@ -29,7 +29,10 @@ const Tasks = () => {
 
   return (
     <div className='space-y-10'>
-      <SelectProject setSelectedProjectId={setSelectedProjectId} />
+      <div className='flex items-center justify-between'>
+        <SelectProject setSelectedProjectId={setSelectedProjectId} />
+        {selectedProjectId && <Add selectedProjectId={selectedProjectId} />}
+      </div>
       {selectedProjectId && <Columns tasks={data ?? []} />}
     </div>
   );
