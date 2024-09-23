@@ -90,6 +90,8 @@ export const createTask = async (req: Request, res: Response) => {
 		project_id,
 	}: TInsertTask = req.body;
 
+    const tasks = await db.query.task.findMany({ where: eq(task.project_id, +project_id) });
+
 	try {
 		const token = req.headers.authorization?.split(' ')[1];
 
@@ -121,6 +123,7 @@ export const createTask = async (req: Request, res: Response) => {
 				status,
 				description,
 				project_id: +project_id,
+                order: tasks.length + 1,
 			})
 			.returning();
 
