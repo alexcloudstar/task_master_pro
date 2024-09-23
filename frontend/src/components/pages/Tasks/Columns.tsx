@@ -1,8 +1,18 @@
 import { Draggable, Droppable } from '@/components/DragNDrop';
+import { SortableItem } from '@/components/DragNDrop/SortableItem';
 import useGetToken from '@/hooks/useGetToken';
 import { updateTask } from '@/services/tasks';
 import { ETaskStatus, TTask } from '@/services/tasks/types';
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -13,6 +23,12 @@ type TColumsProps = {
 
 const Columns = ({ tasks }: TColumsProps) => {
   const [tasksState, setTasksState] = useState<TTask[]>(tasks);
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
 
   const token = useGetToken();
 
@@ -63,7 +79,11 @@ const Columns = ({ tasks }: TColumsProps) => {
 
   return (
     <div className='grid grid-flow-col grid-cols-5 gap-1'>
-      <DndContext onDragEnd={onDragEnd}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={onDragEnd}
+      >
         {(Object.keys(ETaskStatus) as Array<keyof typeof ETaskStatus>).map(
           (key) => {
             return (

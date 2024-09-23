@@ -5,10 +5,17 @@ import { Toaster } from './components/ui/sonner';
 import { TooltipProvider } from './components/ui/tooltip';
 import { useAuth } from '@clerk/clerk-react';
 
-const queryClient = new QueryClient();
-
 const App = () => {
   const auth = useAuth();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: true,
+        refetchOnReconnect: true,
+        retry: 3,
+      },
+    },
+  });
 
   return (
     <QueryClientProvider client={queryClient}>

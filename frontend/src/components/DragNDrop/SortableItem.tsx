@@ -9,7 +9,7 @@ export function SortableItem({
   id: string;
   children: React.ReactNode;
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
+  const { attributes, listeners, setNodeRef, transform, transition, isOver } =
     useSortable({ id });
 
   const style = {
