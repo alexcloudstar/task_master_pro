@@ -67,13 +67,6 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
   });
 
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-  const [selectedStatus, setSelectedStatus] = useState<ETaskStatus | null>(
-    null,
-  );
-
-  const onChangeStatus = (value: ETaskStatus) => {
-    setSelectedStatus(value);
-  };
 
   const onChange = (value: string) => {
     setSelectedUserId(parseInt(value, 10));
@@ -89,7 +82,7 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
 
   const {
     isLoading: isLoadingGetUsers,
-    isError: iserrorGetUsers,
+    isError: isErrorGetUsers,
     data: getUsersData,
   } = useQuery({
     queryKey: ['users'],
@@ -111,7 +104,6 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
 
     const newTask: TCreateTask = {
       ...values,
-      status: selectedStatus ?? ETaskStatus.TODO,
       project_id: selectedTaskId,
       assigned_to_id: selectedUserId,
       created_by_id: data?.id ?? -1,
@@ -137,9 +129,14 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
     return <Loader />;
   }
 
-  if (isError || iserrorGetUsers) {
+  if (isError || isErrorGetUsers) {
     return <div>There was an error</div>;
   }
+
+    // TODO: Status is ""
+
+    console.log(form.formState.errors)
+    console.log(form.getValues())
 
   return (
     <div className='flex items-center justify-between'>
@@ -197,7 +194,7 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
                         </FormItem>
                       )}
                     />
-                    <Select onValueChange={onChangeStatus}>
+                    <Select>
                       <SelectTrigger className='w-[180px]'>
                         <SelectValue placeholder='Select status' />
                       </SelectTrigger>
@@ -238,6 +235,9 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
+                                        <button type='submit' form='create_task'>
+                        Add
+                        </button>
                   </form>
                 </Form>
               </AlertDialogDescription>
