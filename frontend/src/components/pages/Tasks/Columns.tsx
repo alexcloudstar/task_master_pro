@@ -66,7 +66,7 @@ const Columns = ({ tasks }: TColumsProps) => {
           items.map((task, index) =>
             mutation.mutateAsync({
               id: task.id.toString(),
-              fields: { order: index },
+              fields: { order: index, status: task.status },
             }),
           ),
         );
@@ -86,7 +86,6 @@ const Columns = ({ tasks }: TColumsProps) => {
     const overId = over.id;
 
     if (!Object.keys(ETaskStatus).includes(overId.toString())) {
-      console.log('onSortEnd');
       onSortEnd(event);
       return;
     }
