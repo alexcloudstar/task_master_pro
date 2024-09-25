@@ -30,14 +30,14 @@ export const getTasks = async (_: Request, res: Response) => {
 };
 
 export const getProjectTasks = async (req: Request, res: Response) => {
-    const { id } = req.params;
+	const { id } = req.params;
 
 	try {
 		const tasks: TSelectTask[] = await db.query.task.findMany({
 			with: {
 				assigned_to: true,
 			},
-            where: eq(task.project_id, +id),
+			where: eq(task.project_id, +id),
 		});
 
 		if (!tasks.length) {
@@ -88,7 +88,7 @@ export const createTask = async (req: Request, res: Response) => {
 		assigned_to_id,
 		color,
 		project_id,
-        order,
+		order,
 	}: TInsertTask = req.body;
 
 	try {
@@ -112,7 +112,7 @@ export const createTask = async (req: Request, res: Response) => {
 			});
 		}
 
-        console.log(req.body);
+		console.log(req.body);
 
 		const createdTask = await db
 			.insert(task)
@@ -124,7 +124,7 @@ export const createTask = async (req: Request, res: Response) => {
 				status,
 				description,
 				project_id: +project_id,
-                order,
+				order,
 			})
 			.returning();
 
@@ -132,7 +132,7 @@ export const createTask = async (req: Request, res: Response) => {
 			task: createdTask[0],
 		});
 	} catch (error) {
-        console.log(error);
+		console.log(error);
 		return res.status(500).json({
 			message: 'Internal Server Error',
 		});

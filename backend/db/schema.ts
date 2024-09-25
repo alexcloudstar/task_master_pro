@@ -9,11 +9,11 @@ import {
 } from 'drizzle-orm/pg-core';
 
 export const eStatus = pgEnum('status', [
-    'todo',
+	'todo',
 	'in_progress',
-    'blocked',
-    'in_review',
-    'done',
+	'blocked',
+	'in_review',
+	'done',
 ]);
 
 export const eRole = pgEnum('role', [
@@ -77,7 +77,7 @@ export const task = pgTable('task', {
 	created_at: timestamp('created_at').defaultNow(),
 	updated_at: timestamp('updated_at').defaultNow(),
 	color: varchar('color', { length: 255 }),
-    order: integer('order').notNull(),
+	order: integer('order').notNull(),
 });
 
 export const userRelations = relations(user, ({ many }) => ({
