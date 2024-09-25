@@ -74,11 +74,11 @@ const Projects = () => {
   const actions: TAction[] = [
     {
       title: 'View project',
-      onClick: () => alert('Should do something, right?'),
+      onClick: (id: number) => alert(`View project ${id}`),
     },
     {
-      title: 'Action 2',
-      onClick: () => alert('Should do something, right?'),
+      title: 'Delete project',
+      onClick: (id: number) => alert(`View project ${id}`),
     },
   ];
 

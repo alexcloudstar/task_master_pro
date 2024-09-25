@@ -2,7 +2,7 @@ import { Row } from '@tanstack/react-table';
 
 export type TAction = {
   title: string;
-  onClick: () => void;
+  onClick: (project_id: number) => void;
 };
 
 export type TRowActionsProps<T> = {

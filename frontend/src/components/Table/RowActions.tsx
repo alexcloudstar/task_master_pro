@@ -37,7 +37,7 @@ const RowActions = <T,>({
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         {actions.map(({ title, onClick }) => (
-          <DropdownMenuItem key={title} onClick={onClick}>
+          <DropdownMenuItem key={title} onClick={onClick.bind(null, parseInt(row.id))}>
             {title}
           </DropdownMenuItem>
         ))}

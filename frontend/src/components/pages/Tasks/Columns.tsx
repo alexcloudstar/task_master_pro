@@ -86,7 +86,6 @@ const Columns = ({ tasks }: TColumsProps) => {
     const overId = over.id;
 
     if (!Object.keys(ETaskStatus).includes(overId.toString())) {
-      console.log('onSortEnd');
       onSortEnd(event);
       return;
     }
