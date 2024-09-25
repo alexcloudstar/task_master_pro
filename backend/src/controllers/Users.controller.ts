@@ -3,7 +3,6 @@ import { db } from '../../db/drizzle';
 import {
 	TInsertUser,
 	TSelectProject,
-	TSelectSprint,
 	TSelectTask,
 	TSelectUser,
 	user,
@@ -193,13 +192,11 @@ export const getStats = async (_: Request, res: Response) => {
 		const users: TSelectUser[] = await db.query.user.findMany();
 		const projects: TSelectProject[] = await db.query.project.findMany();
 		const tasks: TSelectTask[] = await db.query.task.findMany();
-		const sprints: TSelectSprint[] = await db.query.sprint.findMany();
 
 		const stats = {
 			users: users.length,
 			projects: projects.length,
 			tasks: tasks.length,
-			sprints: sprints.length,
 		};
 
 		return res.status(200).json({
