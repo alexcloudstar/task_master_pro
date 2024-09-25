@@ -1,8 +1,22 @@
-import { Draggable, Droppable } from '@/components/DragNDrop';
+import { Droppable, Sortable } from '@/components/DragNDrop';
 import useGetToken from '@/hooks/useGetToken';
 import { updateTask } from '@/services/tasks';
 import { ETaskStatus, TTask } from '@/services/tasks/types';
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import {
+  closestCorners,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -14,12 +28,56 @@ type TColumsProps = {
 const Columns = ({ tasks }: TColumsProps) => {
   const [tasksState, setTasksState] = useState<TTask[]>(tasks);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
   const token = useGetToken();
 
   const mutation = useMutation({
     mutationFn: ({ id, fields }: { id: string; fields: Partial<TTask> }) =>
       updateTask({ token: token as string, id, fields }),
   });
+
+  const onSortEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!active || !over) return;
+
+    let items: TTask[] = tasksState;
+
+    if (active.id !== over?.id) {
+            const oldIndex = items.findIndex(
+        (item) => item.id === parseInt(active.id.toString()),
+            );
+            const newIndex = items.findIndex(
+        (item) => item.id === parseInt(over?.id.toString() ?? ''),
+            );
+
+            items = arrayMove(items, oldIndex, newIndex);
+
+            setTasksState(items);
+
+
+            try { 
+                Promise.all(
+                    items.map((task, index) =>
+                        mutation.mutateAsync({
+                            id: task.id.toString(),
+                            fields: { order: index },
+                        }),
+                    ),
+                );
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (error:any) {
+                toast.error(error.message)
+            }
+                
+    }
+  };
 
   const onDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
@@ -28,6 +86,12 @@ const Columns = ({ tasks }: TColumsProps) => {
 
     const activeId = active.id;
     const overId = over.id;
+
+    if (!Object.keys(ETaskStatus).includes(overId.toString())) {
+      console.log('onSortEnd');
+      onSortEnd(event);
+      return;
+    }
 
     const activeTask = tasksState.find(
       (task) => task.id === parseInt(activeId.toString()),
@@ -63,27 +127,33 @@ const Columns = ({ tasks }: TColumsProps) => {
 
   return (
     <div className='grid grid-flow-col grid-cols-5 gap-1'>
-      <DndContext onDragEnd={onDragEnd}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragEnd={onDragEnd}
+      >
         {(Object.keys(ETaskStatus) as Array<keyof typeof ETaskStatus>).map(
           (key) => {
             return (
               <Droppable key={key} id={key}>
-                <div className='min-h-[600px] h-full bg-sky-50 w-full rounded-lg p-5'>
-                  <h6 className='capitalize mb-5'>
-                    {ETaskStatus[key].replace('_', ' ')}
-                  </h6>
-                  <div className='flex flex-col gap-4'>
-                    {tasksState
-                      ?.filter((task) => task.status === ETaskStatus[key])
-                      .map((task) => (
-                        <Draggable key={task.id} id={task.id.toString()}>
-                          <div className='bg-white p-4 rounded-lg shadow'>
-                            <p>{task.title}</p>
-                          </div>
-                        </Draggable>
-                      ))}
-                  </div>
-                </div>
+                <h6 className='capitalize mb-5'>
+                  {ETaskStatus[key].replace('_', ' ')}
+                </h6>
+                <SortableContext
+                  items={tasksState.filter(
+                    (task) => task.status === ETaskStatus[key],
+                  )}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {tasksState
+                    ?.filter((task) => task.status === ETaskStatus[key])
+                                        .sort((a, b) => a.order - b.order)
+                    .map((task) => (
+                      <Sortable key={task.id} id={task.id.toString()}>
+                        {task.title}
+                      </Sortable>
+                    ))}
+                </SortableContext>
               </Droppable>
             );
           },

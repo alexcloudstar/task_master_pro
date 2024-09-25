@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { useDroppable } from '@dnd-kit/core';
 
 type TProps = {
@@ -6,19 +7,29 @@ type TProps = {
 };
 
 const Droppable = ({ children, id }: TProps) => {
+  const classes = 'min-h-[600px] h-full bg-sky-50 w-full rounded-lg p-5';
+
   const { setNodeRef, isOver } = useDroppable({
     id,
   });
 
   if (isOver) {
     return (
-      <div ref={setNodeRef} className='shadow-md rounded-lg'>
+      <div
+        id={id}
+        ref={setNodeRef}
+        className={cn(classes, 'shadow-md rounded-lg')}
+      >
         {children}
       </div>
     );
   }
 
-  return <div ref={setNodeRef}>{children}</div>;
+  return (
+    <div id={id} ref={setNodeRef} className={cn(classes)}>
+      {children}
+    </div>
+  );
 };
 
 export default Droppable;
