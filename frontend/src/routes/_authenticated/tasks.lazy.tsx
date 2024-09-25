@@ -31,8 +31,9 @@ const Tasks = () => {
     <div className='space-y-10'>
       <div className='flex items-center justify-between'>
         <SelectProject
-            selectedProjectId={selectedProjectId}
-                    setSelectedProjectId={setSelectedProjectId} />
+          selectedProjectId={selectedProjectId}
+          setSelectedProjectId={setSelectedProjectId}
+        />
         {selectedProjectId && <Add selectedProjectId={selectedProjectId} />}
       </div>
       {selectedProjectId && <Columns tasks={data ?? []} />}
