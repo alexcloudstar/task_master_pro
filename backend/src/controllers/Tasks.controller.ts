@@ -34,12 +34,6 @@ export const getProjectTasks = async (req: Request, res: Response) => {
 			where: eq(task.project_id, +id),
 		});
 
-		if (!tasks.length) {
-			return res.status(404).json({
-				message: 'Tasks not found',
-			});
-		}
-
 		return res.status(200).json({
 			tasks,
 		});
