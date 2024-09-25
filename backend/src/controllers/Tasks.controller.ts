@@ -88,6 +88,7 @@ export const createTask = async (req: Request, res: Response) => {
 		assigned_to_id,
 		color,
 		project_id,
+        order,
 	}: TInsertTask = req.body;
 
 	try {
@@ -111,6 +112,8 @@ export const createTask = async (req: Request, res: Response) => {
 			});
 		}
 
+        console.log(req.body);
+
 		const createdTask = await db
 			.insert(task)
 			.values({
@@ -121,6 +124,7 @@ export const createTask = async (req: Request, res: Response) => {
 				status,
 				description,
 				project_id: +project_id,
+                order,
 			})
 			.returning();
 
@@ -128,6 +132,7 @@ export const createTask = async (req: Request, res: Response) => {
 			task: createdTask[0],
 		});
 	} catch (error) {
+        console.log(error);
 		return res.status(500).json({
 			message: 'Internal Server Error',
 		});
