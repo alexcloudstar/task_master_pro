@@ -63,6 +63,7 @@ export const task = pgTable('task', {
 	updated_at: timestamp('updated_at').defaultNow(),
 	color: varchar('color', { length: 255 }),
 	order: integer('order').notNull(),
+    time: integer('time').default(0),
 });
 
 export const userRelations = relations(user, ({ many }) => ({
