@@ -50,32 +50,30 @@ const Columns = ({ tasks }: TColumsProps) => {
     let items: TTask[] = tasksState;
 
     if (active.id !== over?.id) {
-            const oldIndex = items.findIndex(
+      const oldIndex = items.findIndex(
         (item) => item.id === parseInt(active.id.toString()),
-            );
-            const newIndex = items.findIndex(
+      );
+      const newIndex = items.findIndex(
         (item) => item.id === parseInt(over?.id.toString() ?? ''),
-            );
+      );
 
-            items = arrayMove(items, oldIndex, newIndex);
+      items = arrayMove(items, oldIndex, newIndex);
 
-            setTasksState(items);
+      setTasksState(items);
 
-
-            try { 
-                Promise.all(
-                    items.map((task, index) =>
-                        mutation.mutateAsync({
-                            id: task.id.toString(),
-                            fields: { order: index },
-                        }),
-                    ),
-                );
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } catch (error:any) {
-                toast.error(error.message)
-            }
-                
+      try {
+        Promise.all(
+          items.map((task, index) =>
+            mutation.mutateAsync({
+              id: task.id.toString(),
+              fields: { order: index },
+            }),
+          ),
+        );
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        toast.error(error.message);
+      }
     }
   };
 
@@ -147,7 +145,7 @@ const Columns = ({ tasks }: TColumsProps) => {
                 >
                   {tasksState
                     ?.filter((task) => task.status === ETaskStatus[key])
-                                        .sort((a, b) => a.order - b.order)
+                    .sort((a, b) => a.order - b.order)
                     .map((task) => (
                       <Sortable key={task.id} id={task.id.toString()}>
                         {task.title}
