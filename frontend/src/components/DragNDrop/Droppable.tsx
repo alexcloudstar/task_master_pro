@@ -7,7 +7,7 @@ type TProps = {
 };
 
 const Droppable = ({ children, id }: TProps) => {
-    const classes = 'min-h-[600px] h-full bg-sky-50 w-full rounded-lg p-5';
+  const classes = 'min-h-[600px] h-full bg-sky-50 w-full rounded-lg p-5';
 
   const { setNodeRef, isOver } = useDroppable({
     id,
@@ -15,13 +15,21 @@ const Droppable = ({ children, id }: TProps) => {
 
   if (isOver) {
     return (
-      <div id={id} ref={setNodeRef} className={cn(classes, 'shadow-md rounded-lg')}>
+      <div
+        id={id}
+        ref={setNodeRef}
+        className={cn(classes, 'shadow-md rounded-lg')}
+      >
         {children}
       </div>
     );
   }
 
-  return <div id={id} ref={setNodeRef} className={cn(classes)}>{children}</div>;
+  return (
+    <div id={id} ref={setNodeRef} className={cn(classes)}>
+      {children}
+    </div>
+  );
 };
 
 export default Droppable;
