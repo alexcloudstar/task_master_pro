@@ -14,13 +14,10 @@ type TColumsProps = {
 const Columns = ({ tasks }: TColumsProps) => {
   const [tasksState, setTasksState] = useState<TTask[]>(tasks);
 
-    const token = useGetToken();
+  const token = useGetToken();
 
   const mutation = useMutation({
-    mutationFn: ({id, fields}: {
-            id: string;
-            fields: Partial<TTask>;
-        }) =>
+    mutationFn: ({ id, fields }: { id: string; fields: Partial<TTask> }) =>
       updateTask({ token: token as string, id, fields }),
   });
 
@@ -49,17 +46,19 @@ const Columns = ({ tasks }: TColumsProps) => {
       return task;
     });
 
-        try {
-            await mutation.mutateAsync({ id: activeTask.id.toString(), fields: { status: ETaskStatus[overId as keyof typeof ETaskStatus] } });
+    try {
+      await mutation.mutateAsync({
+        id: activeTask.id.toString(),
+        fields: { status: ETaskStatus[overId as keyof typeof ETaskStatus] },
+      });
 
-            setTasksState(newTasks);
+      setTasksState(newTasks);
 
-
-            toast.success("Task updated successfully");
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            toast.error(error.message);
-        }
+      toast.success('Task updated successfully');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   return (

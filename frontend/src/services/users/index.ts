@@ -1,4 +1,5 @@
 import { getStats } from './stats';
 import { getMe } from './me';
+import { getUsers } from './users';
 
-export { getStats, getMe };
+export { getStats, getMe, getUsers };

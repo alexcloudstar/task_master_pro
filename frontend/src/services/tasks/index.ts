@@ -1,4 +1,5 @@
 import { getTasks } from './get';
 import { updateTask } from './put';
+import { postTask } from './post';
 
-export { getTasks, updateTask };
+export { getTasks, updateTask, postTask };
