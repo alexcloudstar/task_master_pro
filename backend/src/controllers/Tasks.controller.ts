@@ -13,12 +13,6 @@ export const getTasks = async (_: Request, res: Response) => {
 			},
 		});
 
-		if (!tasks.length) {
-			return res.status(404).json({
-				message: 'Tasks not found',
-			});
-		}
-
 		return res.status(200).json({
 			tasks,
 		});
