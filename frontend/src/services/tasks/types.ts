@@ -20,5 +20,5 @@ export type TTask = {
   created_at: string;
   updated_at: string;
   color: string;
-    order: number;
+  order: number;
 };

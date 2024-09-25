@@ -20,9 +20,9 @@ export const postTask = async ({
       body: JSON.stringify(createdTask),
     });
 
-        if (!res.ok) {
-            throw new Error('Failed to create task');
-        }
+    if (!res.ok) {
+      throw new Error('Failed to create task');
+    }
 
     const { task }: { task: TTask } = await res.json();
 

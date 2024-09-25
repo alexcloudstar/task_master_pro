@@ -44,7 +44,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const token = useGetToken();
 
@@ -69,7 +69,7 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
     },
   });
 
-    const toggleIsModalOpen = () => setIsModalOpen(!isModalOpen);
+  const toggleIsModalOpen = () => setIsModalOpen(!isModalOpen);
 
   const queryClient = useQueryClient();
 
@@ -94,33 +94,32 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
       postTask({ token: token as string, createdTask: values }),
   });
 
-    const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        const newTask: TCreateTask = {
-            ...values,
-            assigned_to_id: parseInt(values.assigned_to_id),
-            project_id: selectedProjectId,
-            created_by_id: data?.id ?? -1,
-            assigned_to: getUsersData?.find(
-                (user) => user.id === parseInt(values.assigned_to_id),
-            ) as TUser,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-            order: 0,
-        };
-
-        try {
-            await mutation.mutateAsync(newTask);
-
-            // form.reset();
-            toast.success('Task created successfully');
-            queryClient.invalidateQueries({ queryKey: ['tasks'] });
-            toggleIsModalOpen();
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            toast.error(error.message);
-
-        }
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const newTask: TCreateTask = {
+      ...values,
+      assigned_to_id: parseInt(values.assigned_to_id),
+      project_id: selectedProjectId,
+      created_by_id: data?.id ?? -1,
+      assigned_to: getUsersData?.find(
+        (user) => user.id === parseInt(values.assigned_to_id),
+      ) as TUser,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      order: 0,
     };
+
+    try {
+      await mutation.mutateAsync(newTask);
+
+      // form.reset();
+      toast.success('Task created successfully');
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      toggleIsModalOpen();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
   if (isLoading || isLoadingGetUsers) {
     return <Loader />;
@@ -250,10 +249,14 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={toggleIsModalOpen}>Cancel</AlertDialogCancel>
-              <AlertDialogAction type='submit' form='create_task'
-                                onClick={toggleIsModalOpen}
-                            >
+              <AlertDialogCancel onClick={toggleIsModalOpen}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                type='submit'
+                form='create_task'
+                onClick={toggleIsModalOpen}
+              >
                 Add
               </AlertDialogAction>
             </AlertDialogFooter>
