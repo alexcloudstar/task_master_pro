@@ -243,13 +243,8 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction
-                type='submit'
-                form='create_task'
-              >
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction type='submit' form='create_task'>
                 Add
               </AlertDialogAction>
             </AlertDialogFooter>
