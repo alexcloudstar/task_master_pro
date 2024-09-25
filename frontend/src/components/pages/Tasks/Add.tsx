@@ -68,9 +68,8 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
 
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
-  const onChange = (value: string) => {
-    setSelectedUserId(parseInt(value, 10));
-  };
+    const onChange = (value: string) => setSelectedUserId(parseInt(value));
+
 
   const queryClient = useQueryClient();
 
@@ -96,7 +95,6 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
 
     if (!selectedUserId || !getUsersData?.length) {
       return;
@@ -104,8 +102,8 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
 
     const newTask: TCreateTask = {
       ...values,
+        //status: selectedStatus as ETaskStatus,
       project_id: selectedTaskId,
-      assigned_to_id: selectedUserId,
       created_by_id: data?.id ?? -1,
       assigned_to: getUsersData?.find(
         (user) => user.id === selectedUserId,
@@ -114,15 +112,6 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
       updated_at: new Date().toISOString(),
     };
 
-    try {
-      await mutation.mutateAsync(newTask);
-      form.reset();
-      toast.success('Task created successfully');
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      toast.error(error.message);
-    }
   };
 
   if (isLoading || isLoadingGetUsers) {
@@ -133,10 +122,7 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
     return <div>There was an error</div>;
   }
 
-  // TODO: Status is ""
-
-  console.log(form.formState.errors);
-  console.log(form.getValues());
+    console.log(form.getValues());
 
   return (
     <div className='flex items-center justify-between'>
@@ -194,11 +180,18 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
                         </FormItem>
                       )}
                     />
-                    <Select>
+                    <FormField
+                      control={form.control}
+                      name='status'
+                      render={({ field }) => (
+                    <Select
+                        onValueChange={field.onChange}
+                                                    value={field.value}
+                                                >
                       <SelectTrigger className='w-[180px]'>
                         <SelectValue placeholder='Select status' />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent ref={field.ref}>
                         <SelectGroup>
                           <SelectLabel>Status</SelectLabel>
                           {(
@@ -217,11 +210,23 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                    <Select onValueChange={onChange}>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='assigned_to_id'
+                      render={({ field }) => (
+                    <Select onValueChange={field.onChange}
+                                                    value={
+                                                        field.value === 0
+                                                            ? ''
+                                                            : field.value.toString()
+                                                    }
+                                                >
                       <SelectTrigger className='w-[180px]'>
                         <SelectValue placeholder='Select a user' />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent ref={field.ref}>
                         <SelectGroup>
                           <SelectLabel>Assign to</SelectLabel>
                           {getUsersData?.map((user) => (
@@ -235,6 +240,8 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
+                      )}
+                    />
                     <button type='submit' form='create_task'>
                       Add
                     </button>
