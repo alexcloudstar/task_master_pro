@@ -14,7 +14,7 @@ const BreadcrumbNav = () => {
   const pathArr = [...new Set(pathname.split('/'))];
 
   return (
-    <Breadcrumb className='hidden md:flex'>
+    <Breadcrumb className='w-full hidden md:flex'>
       <BreadcrumbList className='capitalize'>
         {pathArr.map((path, idx) => {
           const computedPath = path === '' ? 'dashboard' : path;
