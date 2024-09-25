@@ -76,6 +76,7 @@ describe('[GET] /tasks', () => {
 				created_at: mockDate,
 				updated_at: mockDate,
 				color: '#000000',
+				order: 0,
 			},
 			{
 				title: 'Task 2',
@@ -88,6 +89,7 @@ describe('[GET] /tasks', () => {
 				created_at: mockDate,
 				updated_at: mockDate,
 				color: '#000000',
+				order: 1,
 			},
 		];
 
@@ -145,6 +147,7 @@ describe('[GET] /tasks/:id', () => {
 			created_at: mockDate,
 			updated_at: mockDate,
 			color: '#000000',
+			order: 0,
 		};
 
 		(db.query.task.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
@@ -201,6 +204,7 @@ describe('[POST] /tasks', () => {
 			project_id: 0,
 			assigned_to_id: 0,
 			color: '#000000',
+			order: 0,
 		};
 
 		const mockUser = { id: 'mock-user-id' };
@@ -235,6 +239,7 @@ describe('[POST] /tasks', () => {
 			project_id: 0,
 			assigned_to_id: 0,
 			color: '#000000',
+			order: 0,
 		};
 
 		const createdTask = {
@@ -272,6 +277,7 @@ describe('[POST] /tasks', () => {
 			project_id: 0,
 			assigned_to_id: 0,
 			color: '#000000',
+			order: 0,
 		};
 
 		(jwtDecode as ReturnType<typeof vi.fn>).mockReturnValue({
@@ -300,6 +306,7 @@ describe('[POST] /tasks', () => {
 			project_id: 0,
 			assigned_to_id: 0,
 			color: '#000000',
+			order: 0,
 		} satisfies TInsertTask;
 
 		(jwtDecode as ReturnType<typeof vi.fn>).mockReturnValue({
@@ -340,6 +347,7 @@ describe('[PUT] /tasks/:id', () => {
 		created_at: mockDate.toISOString() as any,
 		updated_at: mockDate.toISOString() as any,
 		color: '#000000',
+		order: 0,
 	};
 
 	afterEach(() => {
@@ -486,6 +494,7 @@ describe('[DELETE] /tasks/:id', () => {
 			created_at: mockDate,
 			updated_at: mockDate,
 			color: '#000000',
+			order: 0,
 		};
 
 		const mockUser = {
