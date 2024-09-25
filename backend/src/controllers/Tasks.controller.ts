@@ -77,6 +77,7 @@ export const createTask = async (req: Request, res: Response) => {
 		color,
 		project_id,
 		order,
+        time,
 	}: TInsertTask = req.body;
 
 	try {
@@ -111,6 +112,7 @@ export const createTask = async (req: Request, res: Response) => {
 				description,
 				project_id: +project_id,
 				order,
+                time,
 			})
 			.returning();
 
