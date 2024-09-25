@@ -6,11 +6,13 @@ import { TAction } from '@/components/Table/types';
 import { Button } from '@/components/ui/button';
 import useGetToken from '@/hooks/useGetToken';
 import { getProjects } from '@/services/projects';
+import { deleteProject } from '@/services/projects/delete';
 import { TProject } from '@/services/projects/types';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
+import { toast } from 'sonner';
 
 type TCustomProject = {
   created_at: string;
@@ -71,6 +73,32 @@ const Projects = () => {
     enabled: !!token,
   });
 
+  const mutation = useMutation({
+    mutationFn: (id: TProject['id']) =>
+      deleteProject({ token: token as string, id}),
+  });
+
+    const queryClient = useQueryClient();
+
+    const onDeleteProject = (id: number) => {
+        const project = data?.find((project) => project.id === id);
+
+        if (!project) return;
+
+    if (!window.confirm(`Are you sure you want to delete the project ${project.title}?`)) return;
+
+        try { 
+            mutation.mutateAsync(id);
+            toast.success('Project deleted successfully');
+            queryClient.invalidateQueries({ queryKey: ['projects'] });
+
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            toast.error(error.message);
+        }
+    }
+
   const actions: TAction[] = [
     {
       title: 'View project',
@@ -78,7 +106,7 @@ const Projects = () => {
     },
     {
       title: 'Delete project',
-      onClick: (id: number) => alert(`View project ${id}`),
+      onClick: onDeleteProject,
     },
   ];
 

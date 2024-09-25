@@ -37,7 +37,8 @@ const RowActions = <T,>({
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         {actions.map(({ title, onClick }) => (
-          <DropdownMenuItem key={title} onClick={onClick.bind(null, parseInt(row.id))}>
+                    // @ts-expect-error id exists
+          <DropdownMenuItem key={title} onClick={onClick.bind(null, parseInt(row.original?.id))}>
             {title}
           </DropdownMenuItem>
         ))}
