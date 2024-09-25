@@ -110,7 +110,7 @@ describe('[GET] /projects', () => {
 		const response = await request(app).get('/projects');
 
 		expect(response.status).toBe(200);
-		expect(response.body).toEqual({ projects: []});
+		expect(response.body).toEqual({ projects: [] });
 	});
 
 	it('should return 500 when there is an internal server error', async () => {

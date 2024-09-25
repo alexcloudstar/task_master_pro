@@ -77,7 +77,7 @@ describe('[GET] /tasks', () => {
 				updated_at: mockDate,
 				color: '#000000',
 				order: 0,
-                time: 3600,
+				time: 3600,
 			},
 			{
 				title: 'Task 2',
@@ -91,7 +91,7 @@ describe('[GET] /tasks', () => {
 				updated_at: mockDate,
 				color: '#000000',
 				order: 1,
-                time: 7200
+				time: 7200,
 			},
 		];
 
@@ -117,8 +117,8 @@ describe('[GET] /tasks', () => {
 
 		expect(response.status).toBe(200);
 		expect(response.body).toEqual({
-            tasks: [],
-        });
+			tasks: [],
+		});
 	});
 
 	it('should return 500 when an error occurs', async () => {
@@ -152,7 +152,7 @@ describe('[GET] /tasks/:id', () => {
 			updated_at: mockDate,
 			color: '#000000',
 			order: 0,
-                time: 7200
+			time: 7200,
 		};
 
 		(db.query.task.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
@@ -210,7 +210,7 @@ describe('[POST] /tasks', () => {
 			assigned_to_id: 0,
 			color: '#000000',
 			order: 0,
-                time: 7200
+			time: 7200,
 		};
 
 		const mockUser = { id: 'mock-user-id' };
@@ -246,7 +246,7 @@ describe('[POST] /tasks', () => {
 			assigned_to_id: 0,
 			color: '#000000',
 			order: 0,
-                time: 7200
+			time: 7200,
 		};
 
 		const createdTask = {
@@ -285,7 +285,7 @@ describe('[POST] /tasks', () => {
 			assigned_to_id: 0,
 			color: '#000000',
 			order: 0,
-                time: 7200
+			time: 7200,
 		};
 
 		(jwtDecode as ReturnType<typeof vi.fn>).mockReturnValue({
@@ -356,7 +356,7 @@ describe('[PUT] /tasks/:id', () => {
 		updated_at: mockDate.toISOString() as any,
 		color: '#000000',
 		order: 0,
-                time: 7200
+		time: 7200,
 	};
 
 	afterEach(() => {
@@ -504,7 +504,7 @@ describe('[DELETE] /tasks/:id', () => {
 			updated_at: mockDate,
 			color: '#000000',
 			order: 0,
-                time: 7200
+			time: 7200,
 		};
 
 		const mockUser = {
