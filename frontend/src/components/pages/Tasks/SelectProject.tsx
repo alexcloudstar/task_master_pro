@@ -14,8 +14,10 @@ import { TProject } from '@/services/projects/types';
 import { useQuery } from '@tanstack/react-query';
 
 const SelectProject = ({
+    selectedProjectId,
   setSelectedProjectId,
 }: {
+        selectedProjectId: TProject['id'] | null;
   setSelectedProjectId: (project: TProject['id']) => void;
 }) => {
   const token = useGetToken();
@@ -39,7 +41,9 @@ const SelectProject = ({
   return (
     <div className='space-y-4'>
       <h5>Select a Project</h5>
-      <Select onValueChange={onChange}>
+      <Select
+        value={selectedProjectId?.toString()}
+                onValueChange={onChange}>
         <SelectTrigger className='w-[180px]'>
           <SelectValue placeholder='Select a project' />
         </SelectTrigger>
