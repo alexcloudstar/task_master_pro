@@ -110,13 +110,15 @@ describe('[GET] /tasks', () => {
 		expect(response.body).toEqual({ tasks: expectedTasks });
 	});
 
-	it('should return 404 when no tasks are found', async () => {
+	it('should return empty array when no tasks are found', async () => {
 		(db.query.task.findMany as ReturnType<typeof vi.fn>).mockResolvedValue([]);
 
 		const response = await request(app).get('/tasks');
 
-		expect(response.status).toBe(404);
-		expect(response.body).toEqual({ message: 'Tasks not found' });
+		expect(response.status).toBe(200);
+		expect(response.body).toEqual({
+            tasks: [],
+        });
 	});
 
 	it('should return 500 when an error occurs', async () => {
