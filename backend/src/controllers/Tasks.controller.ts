@@ -112,8 +112,6 @@ export const createTask = async (req: Request, res: Response) => {
 			});
 		}
 
-		console.log(req.body);
-
 		const createdTask = await db
 			.insert(task)
 			.values({
@@ -132,7 +130,6 @@ export const createTask = async (req: Request, res: Response) => {
 			task: createdTask[0],
 		});
 	} catch (error) {
-		console.log(error);
 		return res.status(500).json({
 			message: 'Internal Server Error',
 		});
