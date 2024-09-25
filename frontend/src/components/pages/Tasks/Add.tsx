@@ -68,8 +68,7 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
 
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
-    const onChange = (value: string) => setSelectedUserId(parseInt(value));
-
+  const onChange = (value: string) => setSelectedUserId(parseInt(value));
 
   const queryClient = useQueryClient();
 
@@ -95,14 +94,13 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-
     if (!selectedUserId || !getUsersData?.length) {
       return;
     }
 
     const newTask: TCreateTask = {
       ...values,
-        //status: selectedStatus as ETaskStatus,
+      //status: selectedStatus as ETaskStatus,
       project_id: selectedTaskId,
       created_by_id: data?.id ?? -1,
       assigned_to: getUsersData?.find(
@@ -111,7 +109,6 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
-
   };
 
   if (isLoading || isLoadingGetUsers) {
@@ -122,7 +119,7 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
     return <div>There was an error</div>;
   }
 
-    console.log(form.getValues());
+  console.log(form.getValues());
 
   return (
     <div className='flex items-center justify-between'>
@@ -184,62 +181,61 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
                       control={form.control}
                       name='status'
                       render={({ field }) => (
-                    <Select
-                        onValueChange={field.onChange}
-                                                    value={field.value}
-                                                >
-                      <SelectTrigger className='w-[180px]'>
-                        <SelectValue placeholder='Select status' />
-                      </SelectTrigger>
-                      <SelectContent ref={field.ref}>
-                        <SelectGroup>
-                          <SelectLabel>Status</SelectLabel>
-                          {(
-                            Object.keys(ETaskStatus) as Array<
-                              keyof typeof ETaskStatus
-                            >
-                          ).map((status) => (
-                            <SelectItem
-                              key={status}
-                              value={status}
-                              className='capitalize'
-                            >
-                              {status.toLowerCase().replace('_', ' ')}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className='w-[180px]'>
+                            <SelectValue placeholder='Select status' />
+                          </SelectTrigger>
+                          <SelectContent ref={field.ref}>
+                            <SelectGroup>
+                              <SelectLabel>Status</SelectLabel>
+                              {(
+                                Object.keys(ETaskStatus) as Array<
+                                  keyof typeof ETaskStatus
+                                >
+                              ).map((status) => (
+                                <SelectItem
+                                  key={status}
+                                  value={status}
+                                  className='capitalize'
+                                >
+                                  {status.toLowerCase().replace('_', ' ')}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
                       )}
                     />
                     <FormField
                       control={form.control}
                       name='assigned_to_id'
                       render={({ field }) => (
-                    <Select onValueChange={field.onChange}
-                                                    value={
-                                                        field.value === 0
-                                                            ? ''
-                                                            : field.value.toString()
-                                                    }
-                                                >
-                      <SelectTrigger className='w-[180px]'>
-                        <SelectValue placeholder='Select a user' />
-                      </SelectTrigger>
-                      <SelectContent ref={field.ref}>
-                        <SelectGroup>
-                          <SelectLabel>Assign to</SelectLabel>
-                          {getUsersData?.map((user) => (
-                            <SelectItem
-                              key={user.id}
-                              value={user.id.toString()}
-                            >
-                              {user.first_name} {user.last_name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={
+                            field.value === 0 ? '' : field.value.toString()
+                          }
+                        >
+                          <SelectTrigger className='w-[180px]'>
+                            <SelectValue placeholder='Select a user' />
+                          </SelectTrigger>
+                          <SelectContent ref={field.ref}>
+                            <SelectGroup>
+                              <SelectLabel>Assign to</SelectLabel>
+                              {getUsersData?.map((user) => (
+                                <SelectItem
+                                  key={user.id}
+                                  value={user.id.toString()}
+                                >
+                                  {user.first_name} {user.last_name}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
                       )}
                     />
                     <button type='submit' form='create_task'>
