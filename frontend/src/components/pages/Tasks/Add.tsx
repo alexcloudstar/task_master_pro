@@ -29,9 +29,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import useGetToken from '@/hooks/useGetToken';
+import { TProject } from '@/services/projects/types';
 import { postTask } from '@/services/tasks';
 import { TCreateTask } from '@/services/tasks/post';
-import { ETaskStatus, TTask } from '@/services/tasks/types';
+import { ETaskStatus } from '@/services/tasks/types';
 import { getMe, getUsers } from '@/services/users';
 import { TUser } from '@/services/users/types';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -42,7 +43,9 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
+const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
   const token = useGetToken();
 
   const formSchema = z.object({
@@ -51,7 +54,7 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
     color: z.string().min(2).max(255),
     status: z.string().min(2).max(255),
     project_id: z.number(),
-    assigned_to_id: z.number(),
+    assigned_to_id: z.string(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -62,13 +65,11 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
       color: '',
       status: '',
       project_id: 0,
-      assigned_to_id: 0,
+      assigned_to_id: '',
     },
   });
 
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-
-  const onChange = (value: string) => setSelectedUserId(parseInt(value));
+    const toggleIsModalOpen = () => setIsModalOpen(!isModalOpen);
 
   const queryClient = useQueryClient();
 
@@ -93,23 +94,33 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
       postTask({ token: token as string, createdTask: values }),
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (!selectedUserId || !getUsersData?.length) {
-      return;
-    }
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        const newTask: TCreateTask = {
+            ...values,
+            assigned_to_id: parseInt(values.assigned_to_id),
+            project_id: selectedProjectId,
+            created_by_id: data?.id ?? -1,
+            assigned_to: getUsersData?.find(
+                (user) => user.id === parseInt(values.assigned_to_id),
+            ) as TUser,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            order: 0,
+        };
 
-    const newTask: TCreateTask = {
-      ...values,
-      //status: selectedStatus as ETaskStatus,
-      project_id: selectedTaskId,
-      created_by_id: data?.id ?? -1,
-      assigned_to: getUsersData?.find(
-        (user) => user.id === selectedUserId,
-      ) as TUser,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+        try {
+            await mutation.mutateAsync(newTask);
+
+            // form.reset();
+            toast.success('Task created successfully');
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
+            toggleIsModalOpen();
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            toast.error(error.message);
+
+        }
     };
-  };
 
   if (isLoading || isLoadingGetUsers) {
     return <Loader />;
@@ -119,12 +130,10 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
     return <div>There was an error</div>;
   }
 
-  console.log(form.getValues());
-
   return (
     <div className='flex items-center justify-between'>
       <div>
-        <AlertDialog>
+        <AlertDialog open={isModalOpen} onOpenChange={toggleIsModalOpen}>
           <AlertDialogTrigger className='bg-sky-500 px-4 py-2 rounded-md text-white'>
             <Plus />
           </AlertDialogTrigger>
@@ -198,7 +207,7 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
                               ).map((status) => (
                                 <SelectItem
                                   key={status}
-                                  value={status}
+                                  value={status.toLowerCase()}
                                   className='capitalize'
                                 >
                                   {status.toLowerCase().replace('_', ' ')}
@@ -215,9 +224,7 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
                       render={({ field }) => (
                         <Select
                           onValueChange={field.onChange}
-                          value={
-                            field.value === 0 ? '' : field.value.toString()
-                          }
+                          value={field.value}
                         >
                           <SelectTrigger className='w-[180px]'>
                             <SelectValue placeholder='Select a user' />
@@ -238,16 +245,15 @@ const Add = ({ selectedTaskId }: { selectedTaskId: TTask['id'] }) => {
                         </Select>
                       )}
                     />
-                    <button type='submit' form='create_task'>
-                      Add
-                    </button>
                   </form>
                 </Form>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction type='submit' form='create_task'>
+              <AlertDialogCancel onClick={toggleIsModalOpen}>Cancel</AlertDialogCancel>
+              <AlertDialogAction type='submit' form='create_task'
+                                onClick={toggleIsModalOpen}
+                            >
                 Add
               </AlertDialogAction>
             </AlertDialogFooter>
