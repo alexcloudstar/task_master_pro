@@ -162,15 +162,6 @@ export const updateTask = async (req: Request, res: Response) => {
 			});
 		}
 
-		if (
-			findedUser.role !== 'admin' &&
-			findedUser.id !== findedTask?.created_by_id
-		) {
-			return res.status(403).json({
-				message: 'Forbidden',
-			});
-		}
-
 		const updatedTask = await db
 			.update(task)
 			.set({
