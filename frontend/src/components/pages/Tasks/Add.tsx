@@ -38,14 +38,11 @@ import { TUser } from '@/services/users/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
 const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const token = useGetToken();
 
   const formSchema = z.object({
@@ -68,8 +65,6 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
       assigned_to_id: '',
     },
   });
-
-  const toggleIsModalOpen = () => setIsModalOpen(!isModalOpen);
 
   const queryClient = useQueryClient();
 
@@ -114,7 +109,6 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
       // form.reset();
       toast.success('Task created successfully');
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      toggleIsModalOpen();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message);
@@ -132,7 +126,7 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
   return (
     <div className='flex items-center justify-between'>
       <div>
-        <AlertDialog open={isModalOpen} onOpenChange={toggleIsModalOpen}>
+        <AlertDialog>
           <AlertDialogTrigger className='bg-sky-500 px-4 py-2 rounded-md text-white'>
             <Plus />
           </AlertDialogTrigger>
@@ -249,13 +243,12 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={toggleIsModalOpen}>
+              <AlertDialogCancel>
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction
                 type='submit'
                 form='create_task'
-                onClick={toggleIsModalOpen}
               >
                 Add
               </AlertDialogAction>
