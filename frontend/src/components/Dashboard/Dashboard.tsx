@@ -1,4 +1,4 @@
-import { FolderKanban, ListTodo, SquareChartGantt, Users } from 'lucide-react';
+import { FolderKanban, ListTodo, Users } from 'lucide-react';
 import { v4 as uuid } from 'uuid';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
@@ -45,11 +45,6 @@ const Dashboard = () => {
       title: 'Total Projects',
       value: data?.projects.toString() || '0',
       Icon: FolderKanban,
-    },
-    {
-      title: 'Total Sprints',
-      value: data?.sprints.toString() || '0',
-      Icon: SquareChartGantt,
     },
     {
       title: 'Total Tasks',
