@@ -9,12 +9,6 @@ export const getProjects = async (_: Request, res: Response) => {
 	try {
 		const projects: TSelectProject[] = await db.query.project.findMany();
 
-		if (!projects.length) {
-			return res.status(404).json({
-				message: 'Projects not found',
-			});
-		}
-
 		return res.status(200).json({
 			projects,
 		});

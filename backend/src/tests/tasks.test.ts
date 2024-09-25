@@ -77,6 +77,7 @@ describe('[GET] /tasks', () => {
 				updated_at: mockDate,
 				color: '#000000',
 				order: 0,
+				time: 3600,
 			},
 			{
 				title: 'Task 2',
@@ -90,6 +91,7 @@ describe('[GET] /tasks', () => {
 				updated_at: mockDate,
 				color: '#000000',
 				order: 1,
+				time: 7200,
 			},
 		];
 
@@ -108,13 +110,15 @@ describe('[GET] /tasks', () => {
 		expect(response.body).toEqual({ tasks: expectedTasks });
 	});
 
-	it('should return 404 when no tasks are found', async () => {
+	it('should return empty array when no tasks are found', async () => {
 		(db.query.task.findMany as ReturnType<typeof vi.fn>).mockResolvedValue([]);
 
 		const response = await request(app).get('/tasks');
 
-		expect(response.status).toBe(404);
-		expect(response.body).toEqual({ message: 'Tasks not found' });
+		expect(response.status).toBe(200);
+		expect(response.body).toEqual({
+			tasks: [],
+		});
 	});
 
 	it('should return 500 when an error occurs', async () => {
@@ -148,6 +152,7 @@ describe('[GET] /tasks/:id', () => {
 			updated_at: mockDate,
 			color: '#000000',
 			order: 0,
+			time: 7200,
 		};
 
 		(db.query.task.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
@@ -205,6 +210,7 @@ describe('[POST] /tasks', () => {
 			assigned_to_id: 0,
 			color: '#000000',
 			order: 0,
+			time: 7200,
 		};
 
 		const mockUser = { id: 'mock-user-id' };
@@ -240,6 +246,7 @@ describe('[POST] /tasks', () => {
 			assigned_to_id: 0,
 			color: '#000000',
 			order: 0,
+			time: 7200,
 		};
 
 		const createdTask = {
@@ -278,6 +285,7 @@ describe('[POST] /tasks', () => {
 			assigned_to_id: 0,
 			color: '#000000',
 			order: 0,
+			time: 7200,
 		};
 
 		(jwtDecode as ReturnType<typeof vi.fn>).mockReturnValue({
@@ -348,6 +356,7 @@ describe('[PUT] /tasks/:id', () => {
 		updated_at: mockDate.toISOString() as any,
 		color: '#000000',
 		order: 0,
+		time: 7200,
 	};
 
 	afterEach(() => {
@@ -495,6 +504,7 @@ describe('[DELETE] /tasks/:id', () => {
 			updated_at: mockDate,
 			color: '#000000',
 			order: 0,
+			time: 7200,
 		};
 
 		const mockUser = {

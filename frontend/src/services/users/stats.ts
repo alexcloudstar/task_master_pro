@@ -4,7 +4,6 @@ export type TStats = {
   users: number;
   projects: number;
   tasks: number;
-  sprints: number;
 };
 
 export const getStats = async ({ token }: TToken): Promise<TStats> => {

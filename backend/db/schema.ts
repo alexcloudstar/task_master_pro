@@ -51,21 +51,6 @@ export const project = pgTable('project', {
 	updated_at: timestamp('updated_at').defaultNow(),
 });
 
-export const sprint = pgTable('sprint', {
-	id: serial('id').primaryKey(),
-	title: varchar('title', { length: 255 }).notNull(),
-	created_by_id: integer('created_by_id').notNull(),
-	assigned_to_id: integer('assigned_to_id'),
-	color: varchar('color', { length: 255 }),
-	status: eStatus('status'),
-	project_id: integer('project_id').notNull(),
-	deadline: timestamp('deadline', {
-		mode: 'string',
-	}).notNull(),
-	created_at: timestamp('created_at').defaultNow(),
-	updated_at: timestamp('updated_at').defaultNow(),
-});
-
 export const task = pgTable('task', {
 	id: serial('id').primaryKey(),
 	title: varchar('title', { length: 255 }).notNull(),
@@ -78,34 +63,18 @@ export const task = pgTable('task', {
 	updated_at: timestamp('updated_at').defaultNow(),
 	color: varchar('color', { length: 255 }),
 	order: integer('order').notNull(),
+	time: integer('time').default(0),
 });
 
 export const userRelations = relations(user, ({ many }) => ({
 	tasks: many(task),
 	projects: many(project),
-	sprint: many(sprint),
 }));
 
 export const projectRelations = relations(project, ({ one, many }) => ({
 	created_by: one(user, {
 		fields: [project.created_by_id],
 		references: [user.id],
-	}),
-	tasks: many(task),
-}));
-
-export const sprintRelations = relations(sprint, ({ one, many }) => ({
-	created_by: one(user, {
-		fields: [sprint.created_by_id],
-		references: [user.id],
-	}),
-	assigned_to: one(user, {
-		fields: [sprint.assigned_to_id],
-		references: [user.id],
-	}),
-	project: one(project, {
-		fields: [sprint.project_id],
-		references: [project.id],
 	}),
 	tasks: many(task),
 }));
@@ -130,7 +99,5 @@ export type TSelectUser = typeof user.$inferSelect;
 export type TInsertUser = typeof user.$inferInsert;
 export type TSelectProject = typeof project.$inferSelect;
 export type TInsertProject = typeof project.$inferInsert;
-export type TSelectSprint = typeof sprint.$inferSelect;
-export type TInsertSprint = typeof sprint.$inferInsert;
 export type TSelectTask = typeof task.$inferSelect;
 export type TInsertTask = typeof task.$inferInsert;
