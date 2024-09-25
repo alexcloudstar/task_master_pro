@@ -13,12 +13,6 @@ export const getTasks = async (_: Request, res: Response) => {
 			},
 		});
 
-		if (!tasks.length) {
-			return res.status(404).json({
-				message: 'Tasks not found',
-			});
-		}
-
 		return res.status(200).json({
 			tasks,
 		});
@@ -39,12 +33,6 @@ export const getProjectTasks = async (req: Request, res: Response) => {
 			},
 			where: eq(task.project_id, +id),
 		});
-
-		if (!tasks.length) {
-			return res.status(404).json({
-				message: 'Tasks not found',
-			});
-		}
 
 		return res.status(200).json({
 			tasks,
@@ -89,6 +77,7 @@ export const createTask = async (req: Request, res: Response) => {
 		color,
 		project_id,
 		order,
+		time,
 	}: TInsertTask = req.body;
 
 	try {
@@ -123,6 +112,7 @@ export const createTask = async (req: Request, res: Response) => {
 				description,
 				project_id: +project_id,
 				order,
+				time,
 			})
 			.returning();
 
@@ -169,15 +159,6 @@ export const updateTask = async (req: Request, res: Response) => {
 		if (!findedTask) {
 			return res.status(404).json({
 				message: 'Task not found',
-			});
-		}
-
-		if (
-			findedUser.role !== 'admin' &&
-			findedUser.id !== findedTask?.created_by_id
-		) {
-			return res.status(403).json({
-				message: 'Forbidden',
 			});
 		}
 

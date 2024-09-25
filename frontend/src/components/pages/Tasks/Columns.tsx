@@ -3,7 +3,7 @@ import useGetToken from '@/hooks/useGetToken';
 import { updateTask } from '@/services/tasks';
 import { ETaskStatus, TTask } from '@/services/tasks/types';
 import {
-  closestCorners,
+  closestCenter,
   DndContext,
   DragEndEvent,
   KeyboardSensor,
@@ -66,7 +66,7 @@ const Columns = ({ tasks }: TColumsProps) => {
           items.map((task, index) =>
             mutation.mutateAsync({
               id: task.id.toString(),
-              fields: { order: index },
+              fields: { order: index, status: task.status },
             }),
           ),
         );
@@ -126,7 +126,7 @@ const Columns = ({ tasks }: TColumsProps) => {
     <div className='grid grid-flow-col grid-cols-5 gap-1'>
       <DndContext
         sensors={sensors}
-        collisionDetection={closestCorners}
+        collisionDetection={closestCenter}
         onDragEnd={onDragEnd}
       >
         {(Object.keys(ETaskStatus) as Array<keyof typeof ETaskStatus>).map(

@@ -102,15 +102,15 @@ describe('[GET] /projects', () => {
 		expect(response.body).toEqual({ projects: expectedProjects });
 	});
 
-	it('should return 404 when no projects are found', async () => {
+	it('should return empty array when no projects are found', async () => {
 		(db.query.project.findMany as ReturnType<typeof vi.fn>).mockResolvedValue(
 			[],
 		);
 
 		const response = await request(app).get('/projects');
 
-		expect(response.status).toBe(404);
-		expect(response.body).toEqual({ message: 'Projects not found' });
+		expect(response.status).toBe(200);
+		expect(response.body).toEqual({ projects: [] });
 	});
 
 	it('should return 500 when there is an internal server error', async () => {
@@ -158,7 +158,7 @@ describe('[GET] /projects/:id', () => {
 		expect(response.body).toEqual({ project: expectedProject });
 	});
 
-	it('should return 404 when no projects are found', async () => {
+	it('should return 404 when is not found', async () => {
 		(db.query.project.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
 			null,
 		);
