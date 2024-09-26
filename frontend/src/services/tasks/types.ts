@@ -21,5 +21,5 @@ export type TTask = {
   updated_at: string;
   color: string;
   order: number;
-    time: number;
+  time: number;
 };

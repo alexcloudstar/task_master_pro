@@ -1,5 +1,6 @@
 import { Loader } from '@/components/Loader';
 import { Add } from '@/components/pages/Projects';
+import Details from '@/components/pages/Projects/Details';
 import { createColumns } from '@/components/Table/Columns';
 import { DataTable } from '@/components/Table/DataTable';
 import { TAction } from '@/components/Table/types';
@@ -12,6 +13,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 type TCustomProject = {
@@ -65,6 +67,8 @@ const projectColumns: ColumnDef<TCustomProject>[] = [
 ];
 
 const Projects = () => {
+    const [isOpenModal, setIsOpenModal] = useState(false);
+    const [selectedProjectId, setSelectedProjectId] = useState<TProject['id'] | null>(null);
   const token = useGetToken();
 
   const { isLoading, isError, data } = useQuery({
@@ -75,35 +79,51 @@ const Projects = () => {
 
   const mutation = useMutation({
     mutationFn: (id: TProject['id']) =>
-      deleteProject({ token: token as string, id}),
+      deleteProject({ token: token as string, id }),
   });
 
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-    const onDeleteProject = async (id: number) => {
+    const toggleModal = () => setIsOpenModal(!isOpenModal);
+
+  const onDeleteProject = async (id: number) => {
+    const project = data?.find((project) => project.id === id);
+
+    if (!project) return;
+
+    if (
+      !window.confirm(
+        `Are you sure you want to delete the project ${project.title}?`,
+      )
+    )
+      return;
+
+    try {
+      await mutation.mutateAsync(id);
+
+      toast.success('Project deleted successfully');
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+    const onViewProject = async (id: number) => {
         const project = data?.find((project) => project.id === id);
 
-        if (!project) return;
-
-    if (!window.confirm(`Are you sure you want to delete the project ${project.title}?`)) return;
-
-        try { 
-            await mutation.mutateAsync(id);
-
-
-
-            toast.success('Project deleted successfully');
-            queryClient.invalidateQueries({ queryKey: ['projects'] });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            toast.error(error.message);
+        if(!project) {
+            toast.error('Project not found');
+            return;
         }
-    }
+
+        setSelectedProjectId(project?.id ?? null);
+    };
 
   const actions: TAction[] = [
     {
       title: 'View project',
-      onClick: (id: number) => alert(`View project ${id}`),
+      onClick: onViewProject,
     },
     {
       title: 'Delete project',
@@ -127,10 +147,13 @@ const Projects = () => {
   if (!projects) return <div>No projects</div>;
 
   return (
+        <>
+    {selectedProjectId && <Details isOpen={isOpenModal} toggleModal={toggleModal} projectId={selectedProjectId } />}
     <div>
       <Add />
       <DataTable columns={columns} data={projects} filterIdentifier='title' />
     </div>
+    </>
   );
 };
 

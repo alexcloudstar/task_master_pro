@@ -37,7 +37,7 @@ const Columns = ({ tasks }: TColumsProps) => {
 
   const token = useGetToken();
 
-    const queryClient = new QueryClient();
+  const queryClient = new QueryClient();
 
   const mutation = useMutation({
     mutationFn: ({ id, fields }: { id: string; fields: Partial<TTask> }) =>
@@ -73,9 +73,7 @@ const Columns = ({ tasks }: TColumsProps) => {
           ),
         );
 
-
-    queryClient.invalidateQueries({ queryKey: ['tasks'] });
-
+        queryClient.invalidateQueries({ queryKey: ['tasks'] });
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
