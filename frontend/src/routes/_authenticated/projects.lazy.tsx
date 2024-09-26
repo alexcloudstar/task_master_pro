@@ -80,7 +80,7 @@ const Projects = () => {
 
     const queryClient = useQueryClient();
 
-    const onDeleteProject = (id: number) => {
+    const onDeleteProject = async (id: number) => {
         const project = data?.find((project) => project.id === id);
 
         if (!project) return;
@@ -88,11 +88,12 @@ const Projects = () => {
     if (!window.confirm(`Are you sure you want to delete the project ${project.title}?`)) return;
 
         try { 
-            mutation.mutateAsync(id);
+            await mutation.mutateAsync(id);
+
+
+
             toast.success('Project deleted successfully');
             queryClient.invalidateQueries({ queryKey: ['projects'] });
-
-
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             toast.error(error.message);

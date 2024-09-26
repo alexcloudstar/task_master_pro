@@ -17,7 +17,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { useMutation } from '@tanstack/react-query';
+import { QueryClient, useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -36,6 +36,8 @@ const Columns = ({ tasks }: TColumsProps) => {
   );
 
   const token = useGetToken();
+
+    const queryClient = new QueryClient();
 
   const mutation = useMutation({
     mutationFn: ({ id, fields }: { id: string; fields: Partial<TTask> }) =>
@@ -70,6 +72,11 @@ const Columns = ({ tasks }: TColumsProps) => {
             }),
           ),
         );
+
+
+    queryClient.invalidateQueries({ queryKey: ['tasks'] });
+
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         toast.error(error.message);

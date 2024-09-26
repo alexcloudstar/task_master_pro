@@ -52,17 +52,25 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
     status: z.string().min(2).max(255),
     project_id: z.number(),
     assigned_to_id: z.string(),
-  });
+        time: z.object({
+            hours: z.number(),
+            minutes: z.number(),
+        })
+    });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
-      description: '',
-      color: '',
-      status: '',
-      project_id: 0,
-      assigned_to_id: '',
+            title: '',
+            description: '',
+            color: '',
+            status: '',
+            project_id: 0,
+            assigned_to_id: '',
+            time: {
+                hours: 0,
+                minutes: 0,
+            }
     },
   });
 
@@ -90,6 +98,11 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        const hours = values.time.hours;
+        const minutes = values.time.minutes;
+
+        const time = hours * 60 + minutes;
+
     const newTask: TCreateTask = {
       ...values,
       assigned_to_id: parseInt(values.assigned_to_id),
@@ -101,6 +114,7 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       order: 0,
+        time,
     };
 
     try {
@@ -166,6 +180,46 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
                         </FormItem>
                       )}
                     />
+                                        <div className='flex items-center justify-between'>
+                    <FormField
+                      control={form.control}
+                      name='time.hours'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Hours</FormLabel>
+                          <FormControl>
+                            <Input 
+                                                                {...field} 
+                                                                type="number" 
+                                                                placeholder='1'
+                                                                min={0}
+                                                                onChange={(e) => field.onChange(+e.target.value)}
+                                                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='time.minutes'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Minutes</FormLabel>
+                          <FormControl>
+                            <Input 
+                                                                {...field} 
+                                                                type="number" 
+                                                                placeholder='30'
+                                                                min={0}
+                                                                onChange={(e) => field.onChange(+e.target.value)}
+                                                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    </div>
                     <FormField
                       control={form.control}
                       name='color'

@@ -10,6 +10,10 @@ export const deleteProject = async ({ token, id }: TToken & { id: number}): Prom
             },
         });
 
+        if(!res.ok) {
+            throw new Error('Failed to delete project');
+        }
+
         const { message }: { message: string } = await res.json();
 
         return message;
