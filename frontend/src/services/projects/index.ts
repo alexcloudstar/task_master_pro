@@ -1,5 +1,5 @@
 import { getProject } from './get';
 import { getProjects } from './get';
-import { postProject } from './post';
+import { updateOrCreateProject } from './post';
 
-export { getProject, getProjects, postProject };
+export { getProject, getProjects, updateOrCreateProject };

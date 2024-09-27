@@ -10,8 +10,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import useGetToken from '@/hooks/useGetToken';
-import { getProject } from '@/services/projects';
-import { useQuery } from '@tanstack/react-query';
+import { getProject, updateOrCreateProject } from '@/services/projects';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Textarea } from '@/components/ui/textarea';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -28,6 +28,10 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ImageUp } from 'lucide-react';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import { TInsertProject } from '@/services/projects/types';
+import { toast } from 'sonner';
+import { Input } from '@/components/ui/input';
+import { getMe } from '@/services/users';
 
 type TDetailsProps = {
   isOpen: boolean;
@@ -40,21 +44,61 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
   const token = useGetToken();
 
   const formSchema = z.object({
-    description: z.string(),
+        title: z.string().min(2).max(255),
+        description: z.string(),
+        color: z.string().min(2).max(255),
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {};
+
+    const queryClient = useQueryClient();
 
   const { isLoading, isError, data } = useQuery({
-    queryKey: ['stats'],
+    queryKey: ['project'],
     queryFn: () => getProject({ token: token as string, id: projectId }),
     enabled: !!token && !!projectId,
   });
 
+  const { isLoading: isLoadingMe, isError: isErrorMe, data: dataMe } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => getMe({ token: token as string }),
+    enabled: !!token,
+  });
+
+  const mutationUpdateProjectData = useMutation({
+    mutationFn: (values: TInsertProject) =>
+      updateOrCreateProject({ token: token as string, createdProject: values, isCreating: false }),
+  });
+
+    const disabledBtn = mutationUpdateProjectData.isPending || isSubmitting;
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        const newProject: TInsertProject = {
+            ...values,
+            id: data?.id,
+            created_by_id: dataMe?.id ?? -1,
+            created_at: new Date(),
+            updated_at: new Date(),
+        };
+
+        try {
+            await mutationUpdateProjectData.mutateAsync(newProject);
+
+            queryClient.invalidateQueries({
+                queryKey: ['projects'],
+            });
+            toast.success('Project updated successfully');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            toast.error(error.message);
+        }
+    };
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      description: '',
+            title: '',
+            color: '',
+            description: '',
     },
   });
 
@@ -64,19 +108,19 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
 
   useEffect(() => {
     if (data) {
-      form.setValue('description', data.description);
+            form.setValue('title', data.title);
+            form.setValue('description', data.description);
+            form.setValue('color', data.color);
     }
   }, [data, form]);
 
-  if (isLoading) {
+  if (isLoading || isLoadingMe) {
     return <Loader />;
   }
 
-  if (isError) {
+  if (isError || isErrorMe) {
     return <div>Error</div>;
   }
-
-  console.log(data);
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
@@ -87,9 +131,34 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                id='create_project'
                 className='space-y-4'
               >
+                    <FormField
+                      control={form.control}
+                      name='title'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Project title</FormLabel>
+                          <FormControl>
+                            <Input placeholder='shadcn' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='color'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Project color</FormLabel>
+                          <FormControl>
+                            <Input type='color' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                 <FormField
                   control={form.control}
                   name='description'
@@ -103,9 +172,12 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
                     </FormItem>
                   )}
                 />
+                                <Button type="submit">
+                                    Save
+                                </Button>
               </form>
             </Form>
-            {isSubmitting ? (
+            {disabledBtn ? (
               <Button disabled className='cursor-not-allowed'>
                 <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />
                 Please wait
@@ -119,7 +191,7 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel
-            disabled={isSubmitting}
+            disabled={disabledBtn}
             className='cursor-not-allowed'
           >
             {isSubmitting ? (
@@ -129,7 +201,7 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
             )}
           </AlertDialogCancel>
           <AlertDialogAction
-            disabled={isSubmitting}
+            disabled={disabledBtn}
             className='cursor-not-allowed'
           >
             {isSubmitting ? (

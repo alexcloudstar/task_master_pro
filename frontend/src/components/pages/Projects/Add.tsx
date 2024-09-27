@@ -20,8 +20,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import useGetToken from '@/hooks/useGetToken';
-import { postProject } from '@/services/projects';
-import { TCreateProject } from '@/services/projects/post';
+import { updateOrCreateProject } from '@/services/projects';
+import { TInsertProject } from '@/services/projects/types';
 import { getMe } from '@/services/users';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -57,12 +57,12 @@ const Add = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: (values: TCreateProject) =>
-      postProject({ token: token as string, createdProject: values }),
+    mutationFn: (values: TInsertProject) =>
+      updateOrCreateProject({ token: token as string, createdProject: values, isCreating: true }),
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const newProject: TCreateProject = {
+    const newProject: TInsertProject = {
       ...values,
       created_by_id: data?.id ?? -1,
       created_at: new Date(),

@@ -7,3 +7,7 @@ export type TProject = {
   created_at: Date;
   updated_at: Date;
 };
+
+export type TInsertProject = {
+    id?: TProject['id'];
+} & Omit<TProject, 'id'>;
