@@ -67,7 +67,7 @@ const projectColumns: ColumnDef<TCustomProject>[] = [
 ];
 
 const Projects = () => {
-    const [isOpenModal, setIsOpenModal] = useState(false);
+    const [isOpenModal, setIsOpenModal] = useState(true);
     const [selectedProjectId, setSelectedProjectId] = useState<TProject['id'] | null>(null);
   const token = useGetToken();
 
@@ -83,8 +83,6 @@ const Projects = () => {
   });
 
   const queryClient = useQueryClient();
-
-    const toggleModal = () => setIsOpenModal(!isOpenModal);
 
   const onDeleteProject = async (id: number) => {
     const project = data?.find((project) => project.id === id);
@@ -118,6 +116,9 @@ const Projects = () => {
         }
 
         setSelectedProjectId(project?.id ?? null);
+
+        setIsOpenModal(true);
+
     };
 
   const actions: TAction[] = [
@@ -148,7 +149,7 @@ const Projects = () => {
 
   return (
         <>
-    {selectedProjectId && <Details isOpen={isOpenModal} toggleModal={toggleModal} projectId={selectedProjectId } />}
+    {selectedProjectId && <Details isOpen={isOpenModal} setIsOpen={setIsOpenModal} projectId={selectedProjectId } />}
     <div>
       <Add />
       <DataTable columns={columns} data={projects} filterIdentifier='title' />
