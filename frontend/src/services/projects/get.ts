@@ -1,7 +1,10 @@
 import { TToken } from '@/lib/types';
 import { TProject } from './types';
 
-export const getProject = async ({ token, id }: TToken & {id: TProject['id']}): Promise<TProject> => {
+export const getProject = async ({
+  token,
+  id,
+}: TToken & { id: TProject['id'] }): Promise<TProject> => {
   try {
     const res = await fetch(`http://localhost:8000/api/projects/${id}`, {
       method: 'GET',

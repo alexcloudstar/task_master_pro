@@ -67,8 +67,10 @@ const projectColumns: ColumnDef<TCustomProject>[] = [
 ];
 
 const Projects = () => {
-    const [isOpenModal, setIsOpenModal] = useState(true);
-    const [selectedProjectId, setSelectedProjectId] = useState<TProject['id'] | null>(null);
+  const [isOpenModal, setIsOpenModal] = useState(true);
+  const [selectedProjectId, setSelectedProjectId] = useState<
+    TProject['id'] | null
+  >(null);
   const token = useGetToken();
 
   const { isLoading, isError, data } = useQuery({
@@ -107,19 +109,18 @@ const Projects = () => {
     }
   };
 
-    const onViewProject = async (id: number) => {
-        const project = data?.find((project) => project.id === id);
+  const onViewProject = async (id: number) => {
+    const project = data?.find((project) => project.id === id);
 
-        if(!project) {
-            toast.error('Project not found');
-            return;
-        }
+    if (!project) {
+      toast.error('Project not found');
+      return;
+    }
 
-        setSelectedProjectId(project?.id ?? null);
+    setSelectedProjectId(project?.id ?? null);
 
-        setIsOpenModal(true);
-
-    };
+    setIsOpenModal(true);
+  };
 
   const actions: TAction[] = [
     {
@@ -148,12 +149,18 @@ const Projects = () => {
   if (!projects) return <div>No projects</div>;
 
   return (
-        <>
-    {selectedProjectId && <Details isOpen={isOpenModal} setIsOpen={setIsOpenModal} projectId={selectedProjectId } />}
-    <div>
-      <Add />
-      <DataTable columns={columns} data={projects} filterIdentifier='title' />
-    </div>
+    <>
+      {selectedProjectId && (
+        <Details
+          isOpen={isOpenModal}
+          setIsOpen={setIsOpenModal}
+          projectId={selectedProjectId}
+        />
+      )}
+      <div>
+        <Add />
+        <DataTable columns={columns} data={projects} filterIdentifier='title' />
+      </div>
     </>
   );
 };
