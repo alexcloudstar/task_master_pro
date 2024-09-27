@@ -10,5 +10,5 @@ export type TProject = {
 
 export type TInsertProject = {
   id?: TProject['id'];
-created_by_id?: TProject['created_by_id'];
+  created_by_id?: TProject['created_by_id'];
 } & Omit<TProject, 'id' | 'created_by_id'>;
