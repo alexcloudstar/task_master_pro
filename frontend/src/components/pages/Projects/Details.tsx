@@ -65,7 +65,8 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
       }),
   });
 
-  const isDisabledBtn = mutationUpdateProjectData.isPending || isSubmitting;
+  const isLoadingData =
+    mutationUpdateProjectData.isPending || isSubmitting || isLoading;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const newProject: TInsertProject = {
@@ -109,7 +110,7 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
     }
   }, [data, form]);
 
-  if (isLoading) {
+  if (isLoadingData) {
     return <Loader />;
   }
 
@@ -171,11 +172,11 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
               </form>
             </Form>
             <Button
-              disabled={isDisabledBtn}
+              disabled={isLoadingData}
               onClick={onUpload}
-              className={isDisabledBtn ? 'cursor-not-allowed' : ''}
+              className={isLoadingData ? 'cursor-not-allowed' : ''}
             >
-              {isDisabledBtn ? (
+              {isLoadingData ? (
                 <>
                   <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />
                   Please wait
@@ -190,8 +191,8 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel
-            disabled={isDisabledBtn}
-            className={isDisabledBtn ? 'cursor-not-allowed' : ''}
+            disabled={isLoadingData}
+            className={isLoadingData ? 'cursor-not-allowed' : ''}
           >
             {isSubmitting ? (
               <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />
@@ -200,8 +201,8 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
             )}
           </AlertDialogCancel>
           <AlertDialogAction
-            disabled={isDisabledBtn}
-            className={isDisabledBtn ? 'cursor-not-allowed' : ''}
+            disabled={isLoadingData}
+            className={isLoadingData ? 'cursor-not-allowed' : ''}
             form='update_project'
             type='submit'
           >
