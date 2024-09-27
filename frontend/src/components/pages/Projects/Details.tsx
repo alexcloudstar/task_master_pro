@@ -44,13 +44,12 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
   const token = useGetToken();
 
   const formSchema = z.object({
-        title: z.string().min(2).max(255),
-        description: z.string(),
-        color: z.string().min(2).max(255),
+    title: z.string().min(2).max(255),
+    description: z.string(),
+    color: z.string().min(2).max(255),
   });
 
-
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const { isLoading, isError, data } = useQuery({
     queryKey: ['project'],
@@ -58,7 +57,11 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
     enabled: !!token && !!projectId,
   });
 
-  const { isLoading: isLoadingMe, isError: isErrorMe, data: dataMe } = useQuery({
+  const {
+    isLoading: isLoadingMe,
+    isError: isErrorMe,
+    data: dataMe,
+  } = useQuery({
     queryKey: ['me'],
     queryFn: () => getMe({ token: token as string }),
     enabled: !!token,
@@ -66,39 +69,43 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
 
   const mutationUpdateProjectData = useMutation({
     mutationFn: (values: TInsertProject) =>
-      updateOrCreateProject({ token: token as string, createdProject: values, isCreating: false }),
+      updateOrCreateProject({
+        token: token as string,
+        createdProject: values,
+        isCreating: false,
+      }),
   });
 
-    const disabledBtn = mutationUpdateProjectData.isPending || isSubmitting;
+  const disabledBtn = mutationUpdateProjectData.isPending || isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        const newProject: TInsertProject = {
-            ...values,
-            id: data?.id,
-            created_by_id: dataMe?.id ?? -1,
-            created_at: new Date(),
-            updated_at: new Date(),
-        };
-
-        try {
-            await mutationUpdateProjectData.mutateAsync(newProject);
-
-            queryClient.invalidateQueries({
-                queryKey: ['projects'],
-            });
-            toast.success('Project updated successfully');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            toast.error(error.message);
-        }
+    const newProject: TInsertProject = {
+      ...values,
+      id: data?.id,
+      created_by_id: dataMe?.id ?? -1,
+      created_at: new Date(),
+      updated_at: new Date(),
     };
+
+    try {
+      await mutationUpdateProjectData.mutateAsync(newProject);
+
+      queryClient.invalidateQueries({
+        queryKey: ['projects'],
+      });
+      toast.success('Project updated successfully');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-            title: '',
-            color: '',
-            description: '',
+      title: '',
+      color: '',
+      description: '',
     },
   });
 
@@ -108,9 +115,9 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
 
   useEffect(() => {
     if (data) {
-            form.setValue('title', data.title);
-            form.setValue('description', data.description);
-            form.setValue('color', data.color);
+      form.setValue('title', data.title);
+      form.setValue('description', data.description);
+      form.setValue('color', data.color);
     }
   }, [data, form]);
 
@@ -133,32 +140,32 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className='space-y-4'
               >
-                    <FormField
-                      control={form.control}
-                      name='title'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Project title</FormLabel>
-                          <FormControl>
-                            <Input placeholder='shadcn' {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name='color'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Project color</FormLabel>
-                          <FormControl>
-                            <Input type='color' {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                <FormField
+                  control={form.control}
+                  name='title'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Project title</FormLabel>
+                      <FormControl>
+                        <Input placeholder='shadcn' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='color'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Project color</FormLabel>
+                      <FormControl>
+                        <Input type='color' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name='description'
@@ -172,9 +179,7 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
                     </FormItem>
                   )}
                 />
-                                <Button type="submit">
-                                    Save
-                                </Button>
+                <Button type='submit'>Save</Button>
               </form>
             </Form>
             {disabledBtn ? (

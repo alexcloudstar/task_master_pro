@@ -58,7 +58,11 @@ const Add = () => {
 
   const mutation = useMutation({
     mutationFn: (values: TInsertProject) =>
-      updateOrCreateProject({ token: token as string, createdProject: values, isCreating: true }),
+      updateOrCreateProject({
+        token: token as string,
+        createdProject: values,
+        isCreating: true,
+      }),
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {

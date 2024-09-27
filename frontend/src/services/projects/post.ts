@@ -4,15 +4,15 @@ import { TInsertProject, TProject } from './types';
 export const updateOrCreateProject = async ({
   token,
   createdProject,
-    isCreating,
+  isCreating,
 }: {
-        token: TToken['token'];
-        createdProject: TInsertProject;
-        isCreating: boolean;
+  token: TToken['token'];
+  createdProject: TInsertProject;
+  isCreating: boolean;
 }): Promise<TProject> => {
-    const baseURL = 'http://localhost:8000/api/projects';
-    const method = isCreating ? 'POST' : 'PUT';
-    const url = isCreating ? baseURL : `${baseURL}/${createdProject.id}`;
+  const baseURL = 'http://localhost:8000/api/projects';
+  const method = isCreating ? 'POST' : 'PUT';
+  const url = isCreating ? baseURL : `${baseURL}/${createdProject.id}`;
 
   try {
     const res = await fetch(url, {

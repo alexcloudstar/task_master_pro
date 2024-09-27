@@ -9,5 +9,5 @@ export type TProject = {
 };
 
 export type TInsertProject = {
-    id?: TProject['id'];
+  id?: TProject['id'];
 } & Omit<TProject, 'id'>;
