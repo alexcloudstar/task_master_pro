@@ -31,7 +31,6 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 import { TInsertProject } from '@/services/projects/types';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
-import { getMe } from '@/services/users';
 
 type TDetailsProps = {
   isOpen: boolean;
@@ -57,16 +56,6 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
     enabled: !!token && !!projectId,
   });
 
-  const {
-    isLoading: isLoadingMe,
-    isError: isErrorMe,
-    data: dataMe,
-  } = useQuery({
-    queryKey: ['me'],
-    queryFn: () => getMe({ token: token as string }),
-    enabled: !!token,
-  });
-
   const mutationUpdateProjectData = useMutation({
     mutationFn: (values: TInsertProject) =>
       updateOrCreateProject({
@@ -82,7 +71,6 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
     const newProject: TInsertProject = {
       ...values,
       id: data?.id,
-      created_by_id: dataMe?.id ?? -1,
       created_at: new Date(),
       updated_at: new Date(),
     };
@@ -121,11 +109,11 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
     }
   }, [data, form]);
 
-  if (isLoading || isLoadingMe) {
+  if (isLoading) {
     return <Loader />;
   }
 
-  if (isError || isErrorMe) {
+  if (isError) {
     return <div>Error</div>;
   }
 
