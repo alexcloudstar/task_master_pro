@@ -65,7 +65,7 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
       }),
   });
 
-  const disabledBtn = mutationUpdateProjectData.isPending || isSubmitting;
+  const isDisabledBtn = mutationUpdateProjectData.isPending || isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const newProject: TInsertProject = {
@@ -127,6 +127,7 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className='space-y-4'
+                id='update_project'
               >
                 <FormField
                   control={form.control}
@@ -167,25 +168,30 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
                     </FormItem>
                   )}
                 />
-                <Button type='submit'>Save</Button>
               </form>
             </Form>
-            {disabledBtn ? (
-              <Button disabled className='cursor-not-allowed'>
-                <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />
-                Please wait
-              </Button>
-            ) : (
-              <Button onClick={onUpload}>
-                <ImageUp className='mr-2 h-4 w-4' /> Upload Image
-              </Button>
-            )}
+            <Button
+              disabled={isDisabledBtn}
+              onClick={onUpload}
+              className={isDisabledBtn ? 'cursor-not-allowed' : ''}
+            >
+              {isDisabledBtn ? (
+                <>
+                  <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />
+                  Please wait
+                </>
+              ) : (
+                <>
+                  <ImageUp className='mr-2 h-4 w-4' /> Upload Image
+                </>
+              )}
+            </Button>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel
-            disabled={disabledBtn}
-            className='cursor-not-allowed'
+            disabled={isDisabledBtn}
+            className={isDisabledBtn ? 'cursor-not-allowed' : ''}
           >
             {isSubmitting ? (
               <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />
@@ -194,8 +200,10 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
             )}
           </AlertDialogCancel>
           <AlertDialogAction
-            disabled={disabledBtn}
-            className='cursor-not-allowed'
+            disabled={isDisabledBtn}
+            className={isDisabledBtn ? 'cursor-not-allowed' : ''}
+            form='update_project'
+            type='submit'
           >
             {isSubmitting ? (
               <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />
