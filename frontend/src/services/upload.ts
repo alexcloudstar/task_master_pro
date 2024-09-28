@@ -2,14 +2,14 @@ import { TToken } from '@/lib/types';
 
 export const fileUpload = async ({
   token,
-    folder,
-    formData,
+  folder,
+  formData,
 }: {
   token: TToken['token'];
-    formData: FormData;
-    folder: string;
+  formData: FormData;
+  folder: string;
 }): Promise<{
-    url: string;
+  url: string;
 }> => {
   const baseURL = `http://localhost:8000/api/files/${folder}`;
 

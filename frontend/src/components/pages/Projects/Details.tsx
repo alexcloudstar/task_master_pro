@@ -168,9 +168,7 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
                 />
               </form>
             </Form>
-                        <UploadFile
-                            projectName={data?.title ?? 'uncategorized'}
-                        />
+            <UploadFile projectName={data?.title ?? 'uncategorized'} />
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
