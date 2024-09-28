@@ -13,7 +13,7 @@ import { uploadFile } from './controllers/Files.controller';
 
 const app: Application = express();
 const upload = multer({
-  storage: multer.memoryStorage(),
+	storage: multer.memoryStorage(),
 });
 
 declare global {

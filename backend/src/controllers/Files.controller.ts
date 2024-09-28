@@ -58,7 +58,7 @@ export const uploadFile = async (req: Request, res: Response) => {
 		Key: `${folder}/${req.file.originalname}-${Date.now()}`,
 		Body: req.file.buffer,
 		ContentType: req.file.mimetype,
-        Size: req.file.size,
+		Size: req.file.size,
 	};
 
 	try {
