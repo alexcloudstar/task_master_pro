@@ -6,8 +6,6 @@ import {
 import { env } from '../../config';
 import { Request, Response } from 'express';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { Upload } from '@aws-sdk/lib-storage';
-import multer from 'multer';
 
 const client = new S3Client({
 	region: env.AWS_REGION ?? '',
