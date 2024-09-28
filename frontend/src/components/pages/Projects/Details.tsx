@@ -24,9 +24,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { ImageUp } from 'lucide-react';
+import { useEffect } from 'react';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { TInsertProject } from '@/services/projects/types';
 import { toast } from 'sonner';
@@ -40,7 +38,6 @@ type TDetailsProps = {
 };
 
 const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const token = useGetToken();
 
   const formSchema = z.object({
@@ -67,7 +64,7 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
   });
 
   const isLoadingData =
-    mutationUpdateProjectData.isPending || isSubmitting || isLoading;
+    mutationUpdateProjectData.isPending || isLoading;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const newProject: TInsertProject = {
