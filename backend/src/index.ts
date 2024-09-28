@@ -29,7 +29,6 @@ app.use(
 	}),
 );
 
-app.post('/api/files/:folder', upload.single('file'), uploadFile);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -45,6 +44,7 @@ app.use((err: any, _: any, res: any, __: any) => {
 	res.status(401).send('Unauthenticated!');
 });
 
+app.post('/api/files/:folder', upload.single('file'), uploadFile);
 routes(app);
 
 app.listen(constants.port, () => {

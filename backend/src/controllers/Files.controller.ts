@@ -1,5 +1,6 @@
 import {
 	GetObjectCommand,
+	ListObjectsV2Command,
 	PutObjectCommand,
 	S3Client,
 } from '@aws-sdk/client-s3';
@@ -14,6 +15,49 @@ const client = new S3Client({
 		secretAccessKey: env.AWS_SECRET_ACCESS_KEY ?? '',
 	},
 });
+
+export const getFiles = async (req: Request, res: Response) => {
+	const { folder } = req.params;
+
+	if (!folder) {
+		return res.status(400).json({
+			message: 'Name is required',
+		});
+	}
+
+	try {
+		const params = {
+			Bucket: env.AWS_BUCKET,
+			Key: `${folder}`,
+		};
+
+        const getFiles = new ListObjectsV2Command(params);
+
+        const { Contents } = await client.send(getFiles);
+
+        const files = Contents?.map((file) => file.Key);
+
+        const signedUrls = await Promise.all(
+            files?.map((file) => {
+                return getSignedUrl(
+                    client,
+                    new GetObjectCommand({
+                        Bucket: env.AWS_BUCKET,
+                        Key: file,
+                    }),
+                );
+            }) ?? [],
+        );
+
+		return res.status(200).json({
+			url: signedUrls,
+		});
+	} catch (error) {
+		return res.status(500).json({
+			message: 'Internal Server Error',
+		});
+	}
+};
 
 export const getFile = async (req: Request, res: Response) => {
 	const { folder, file } = req.params;
