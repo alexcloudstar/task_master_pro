@@ -10,10 +10,10 @@ export const env = {
 	DB_PORT: process.env.DB_PORT,
 	CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
 	CLERK_PUBLIC_KEY: process.env.CLERK_PUBLIC_KEY,
-    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
-    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-    AWS_REGION: process.env.AWS_REGION,
-    AWS_BUCKET: process.env.AWS_BUCKET,
+	AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+	AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+	AWS_REGION: process.env.AWS_REGION,
+	AWS_BUCKET: process.env.AWS_BUCKET,
 };
 
 export const constants = {
@@ -22,4 +22,3 @@ export const constants = {
 	origin: 'http://localhost:5173',
 	optionsSuccessStatus: 200,
 };
-

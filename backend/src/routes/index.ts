@@ -11,5 +11,5 @@ export default (app: Application): void => {
 	app.use('/api/users', user);
 	app.use('/api/projects', project);
 	app.use('/api/tasks', task);
-    app.use('/api/files', file);
+	app.use('/api/files', file);
 };
