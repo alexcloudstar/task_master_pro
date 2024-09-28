@@ -30,6 +30,7 @@ import { TInsertProject } from '@/services/projects/types';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { UploadFile } from '@/components/UploadFile';
+import { fileUpload } from '@/services/upload';
 
 type TDetailsProps = {
   isOpen: boolean;
@@ -63,8 +64,18 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
       }),
   });
 
+
+  const mutationUploadFile = useMutation({
+    mutationFn: (fileFormData: FormData) =>
+      fileUpload({
+        token: token as string,
+        folder: data?.title ?? 'uncategorized',
+        formData: fileFormData,
+      }),
+  });
+
   const isLoadingData =
-    mutationUpdateProjectData.isPending || isLoading;
+    mutationUpdateProjectData.isPending || isLoading || mutationUploadFile.isPending;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const newProject: TInsertProject = {
@@ -165,7 +176,9 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
                 />
               </form>
             </Form>
-            <UploadFile projectName={data?.title ?? 'uncategorized'} />
+                        <UploadFile
+                            mutation={mutationUploadFile}
+                        />
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -173,8 +186,8 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
             disabled={isLoadingData}
             className={isLoadingData ? 'cursor-not-allowed' : ''}
           >
-            {isSubmitting ? (
-              <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />
+            {mutationUploadFile.isPending ? (
+              <ReloadIcon className='mr-2 size-4 animate-spin' />
             ) : (
               'Cancel'
             )}
@@ -185,8 +198,8 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
             form='update_project'
             type='submit'
           >
-            {isSubmitting ? (
-              <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />
+            {mutationUploadFile.isPending ? (
+              <ReloadIcon className='mr-2 size-4 animate-spin' />
             ) : (
               'Save'
             )}

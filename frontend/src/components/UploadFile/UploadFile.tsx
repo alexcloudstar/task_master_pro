@@ -1,27 +1,21 @@
-import React, { useRef } from 'react';
+import { ChangeEvent, useRef } from 'react';
 import { Button } from '../ui/button';
 import { ImageUp } from 'lucide-react';
-import { useMutation } from '@tanstack/react-query';
-import { fileUpload } from '@/services/upload';
-import useGetToken from '@/hooks/useGetToken';
+import { UseMutationResult } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-const UploadFile = ({ projectName }: { projectName: string }) => {
-  const token = useGetToken();
-  const inputRef = useRef<HTMLInputElement | null>(null);
+type TUploadFileProps = {
+    mutation: UseMutationResult<{
+        url: string;
+    }, Error, FormData, unknown>
+}
 
-  const mutation = useMutation({
-    mutationFn: (fileFormData: FormData) =>
-      fileUpload({
-        token: token as string,
-        folder: projectName,
-        formData: fileFormData,
-      }),
-  });
+const UploadFile = ({mutation}: TUploadFileProps) => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const onUpload = () => inputRef.current?.click();
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if(!e.target.files) {
             toast.error('Please select a file to upload');
             return;
