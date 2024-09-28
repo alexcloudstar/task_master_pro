@@ -31,6 +31,7 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 import { TInsertProject } from '@/services/projects/types';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
+import { UploadFile } from '@/components/UploadFile';
 
 type TDetailsProps = {
   isOpen: boolean;
@@ -97,10 +98,6 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
       description: '',
     },
   });
-
-  const onUpload = () => {
-    setIsSubmitting(true);
-  };
 
   useEffect(() => {
     if (data) {
@@ -171,22 +168,9 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
                 />
               </form>
             </Form>
-            <Button
-              disabled={isLoadingData}
-              onClick={onUpload}
-              className={isLoadingData ? 'cursor-not-allowed' : ''}
-            >
-              {isLoadingData ? (
-                <>
-                  <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />
-                  Please wait
-                </>
-              ) : (
-                <>
-                  <ImageUp className='mr-2 h-4 w-4' /> Upload Image
-                </>
-              )}
-            </Button>
+                        <UploadFile
+                            projectName={data?.title ?? 'uncategorized'}
+                        />
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
