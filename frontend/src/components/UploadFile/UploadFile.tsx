@@ -5,32 +5,36 @@ import { UseMutationResult } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 type TUploadFileProps = {
-    mutation: UseMutationResult<{
-        url: string;
-    }, Error, FormData, unknown>
-}
+  mutation: UseMutationResult<
+    {
+      url: string;
+    },
+    Error,
+    FormData,
+    unknown
+  >;
+};
 
-const UploadFile = ({mutation}: TUploadFileProps) => {
+const UploadFile = ({ mutation }: TUploadFileProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const onUpload = () => inputRef.current?.click();
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-        if(!e.target.files) {
-            toast.error('Please select a file to upload');
-            return;
-        }
+    if (!e.target.files) {
+      toast.error('Please select a file to upload');
+      return;
+    }
 
-        const formData = new FormData();
-        formData.append('file', e.target.files[0]);
+    const formData = new FormData();
+    formData.append('file', e.target.files[0]);
 
-        try {
-            await mutation.mutateAsync(formData);
-            toast.success('File uploaded successfully');
-
-        } catch {
-            toast.error('File upload failed. Please try again.');
-        }
+    try {
+      await mutation.mutateAsync(formData);
+      toast.success('File uploaded successfully');
+    } catch {
+      toast.error('File upload failed. Please try again.');
+    }
   };
 
   return (

@@ -64,7 +64,6 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
       }),
   });
 
-
   const mutationUploadFile = useMutation({
     mutationFn: (fileFormData: FormData) =>
       fileUpload({
@@ -75,7 +74,9 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
   });
 
   const isLoadingData =
-    mutationUpdateProjectData.isPending || isLoading || mutationUploadFile.isPending;
+    mutationUpdateProjectData.isPending ||
+    isLoading ||
+    mutationUploadFile.isPending;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const newProject: TInsertProject = {
@@ -176,9 +177,7 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
                 />
               </form>
             </Form>
-                        <UploadFile
-                            mutation={mutationUploadFile}
-                        />
+            <UploadFile mutation={mutationUploadFile} />
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
