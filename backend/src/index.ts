@@ -27,9 +27,11 @@ app.use(express.json());
 
 export const clerk = createClerkClient({ secretKey: env.CLERK_SECRET_KEY });
 
+/*
 app.all('/api/*', ClerkExpressRequireAuth(), (_, __, next) => {
 	next();
 });
+*/
 
 app.use((err: any, _: any, res: any, __: any) => {
 	console.error(err.stack);
