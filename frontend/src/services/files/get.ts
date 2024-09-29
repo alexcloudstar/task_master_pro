@@ -3,11 +3,11 @@ import { TToken } from '@/lib/types';
 export const getAssets = async ({
   token,
   folder,
-    file = '',
+  file = '',
 }: {
-        token: TToken['token'];
-        folder: string;
-        file?: string;
+  token: TToken['token'];
+  folder: string;
+  file?: string;
 }): Promise<{
   data: string | string[];
 }> => {

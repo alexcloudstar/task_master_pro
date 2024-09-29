@@ -33,7 +33,6 @@ import { UploadFile } from '@/components/UploadFile';
 import { uploadAssets } from '@/services/files';
 import { Assets } from '@/components/Assets';
 
-
 type TDetailsProps = {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
@@ -180,7 +179,7 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
               </form>
             </Form>
             <UploadFile mutation={mutationUploadFile} />
-                        <Assets projectName={data?.title ?? 'uncategorized'} />
+            <Assets projectName={data?.title ?? 'uncategorized'} />
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
