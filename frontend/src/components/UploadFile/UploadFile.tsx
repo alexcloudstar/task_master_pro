@@ -40,7 +40,7 @@ const UploadFile = ({ mutation }: TUploadFileProps) => {
   return (
     <>
       <div className='input-group'>
-        <input ref={inputRef} type='file' onChange={handleFileChange} hidden />
+        <input ref={inputRef} type='image/*' onChange={handleFileChange} hidden />
         <Button onClick={onUpload}>
           <ImageUp className='mr-2 size-4' /> Upload Image
         </Button>

@@ -30,7 +30,9 @@ import { TInsertProject } from '@/services/projects/types';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { UploadFile } from '@/components/UploadFile';
-import { fileUpload } from '@/services/upload';
+import { uploadAssets } from '@/services/files';
+import { Assets } from '@/components/Assets';
+
 
 type TDetailsProps = {
   isOpen: boolean;
@@ -66,7 +68,7 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
 
   const mutationUploadFile = useMutation({
     mutationFn: (fileFormData: FormData) =>
-      fileUpload({
+      uploadAssets({
         token: token as string,
         folder: data?.title ?? 'uncategorized',
         formData: fileFormData,
@@ -178,6 +180,7 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
               </form>
             </Form>
             <UploadFile mutation={mutationUploadFile} />
+                        <Assets projectName={data?.title ?? 'uncategorized'} />
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

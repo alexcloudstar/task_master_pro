@@ -1,6 +1,6 @@
 import { TToken } from '@/lib/types';
 
-export const fileUpload = async ({
+export const uploadAssets = async ({
   token,
   folder,
   formData,
@@ -11,7 +11,7 @@ export const fileUpload = async ({
 }): Promise<{
   url: string;
 }> => {
-  const baseURL = `http://localhost:8000/api/files/${folder}`;
+  const baseURL = `http://localhost:8000/api/assets/${folder}`;
 
   try {
     const res = await fetch(baseURL, {
