@@ -16,7 +16,7 @@ const client = new S3Client({
 	},
 });
 
-export const getFiles = async (req: Request, res: Response) => {
+export const getAssets = async (req: Request, res: Response) => {
 	const { folder } = req.params;
 
 	if (!folder) {
@@ -31,9 +31,9 @@ export const getFiles = async (req: Request, res: Response) => {
 			Key: `${folder}`,
 		};
 
-        const getFiles = new ListObjectsV2Command(params);
+        const getAssets = new ListObjectsV2Command(params);
 
-        const { Contents } = await client.send(getFiles);
+        const { Contents } = await client.send(getAssets);
 
         const files = Contents?.map((file) => file.Key);
 
@@ -50,7 +50,7 @@ export const getFiles = async (req: Request, res: Response) => {
         );
 
 		return res.status(200).json({
-			url: signedUrls,
+			data: signedUrls,
 		});
 	} catch (error) {
 		return res.status(500).json({
@@ -59,7 +59,7 @@ export const getFiles = async (req: Request, res: Response) => {
 	}
 };
 
-export const getFile = async (req: Request, res: Response) => {
+export const getAsset = async (req: Request, res: Response) => {
 	const { folder, file } = req.params;
 
 	if (!folder || !file) {
@@ -79,7 +79,7 @@ export const getFile = async (req: Request, res: Response) => {
 		const signedUrl = await getSignedUrl(client, command);
 
 		return res.status(200).json({
-			url: signedUrl,
+			data: signedUrl,
 		});
 	} catch (error) {
 		return res.status(500).json({
@@ -88,7 +88,7 @@ export const getFile = async (req: Request, res: Response) => {
 	}
 };
 
-export const uploadFile = async (req: Request, res: Response) => {
+export const uploadAsset = async (req: Request, res: Response) => {
 	const { folder } = req.params;
 
 	if (!req.file) {
