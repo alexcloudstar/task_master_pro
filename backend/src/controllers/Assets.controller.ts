@@ -31,23 +31,23 @@ export const getAssets = async (req: Request, res: Response) => {
 			Key: `${folder}`,
 		};
 
-        const getAssets = new ListObjectsV2Command(params);
+		const getAssets = new ListObjectsV2Command(params);
 
-        const { Contents } = await client.send(getAssets);
+		const { Contents } = await client.send(getAssets);
 
-        const files = Contents?.map((file) => file.Key);
+		const files = Contents?.map(file => file.Key);
 
-        const signedUrls = await Promise.all(
-            files?.map((file) => {
-                return getSignedUrl(
-                    client,
-                    new GetObjectCommand({
-                        Bucket: env.AWS_BUCKET,
-                        Key: file,
-                    }),
-                );
-            }) ?? [],
-        );
+		const signedUrls = await Promise.all(
+			files?.map(file => {
+				return getSignedUrl(
+					client,
+					new GetObjectCommand({
+						Bucket: env.AWS_BUCKET,
+						Key: file,
+					}),
+				);
+			}) ?? [],
+		);
 
 		return res.status(200).json({
 			data: signedUrls,

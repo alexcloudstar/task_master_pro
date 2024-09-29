@@ -11,7 +11,6 @@ import cors from 'cors';
 import multer from 'multer';
 import { uploadAsset } from './controllers/Assets.controller';
 
-
 const app: Application = express();
 const upload = multer({
 	storage: multer.memoryStorage(),
@@ -29,7 +28,6 @@ app.use(
 		optionsSuccessStatus: constants.optionsSuccessStatus,
 	}),
 );
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
