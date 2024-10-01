@@ -56,9 +56,11 @@ export const task = pgTable('task', {
 	title: varchar('title', { length: 255 }).notNull(),
 	description: varchar('description', { length: 255 }),
 	status: eStatus('status'),
-	project_id: integer('project_id').references(() => project.id, {
-        onDelete: 'cascade',
-    }).notNull(),
+	project_id: integer('project_id')
+		.references(() => project.id, {
+			onDelete: 'cascade',
+		})
+		.notNull(),
 	created_by_id: integer('created_by_id').notNull(),
 	assigned_to_id: integer('assigned_to_id'),
 	created_at: timestamp('created_at').defaultNow(),
