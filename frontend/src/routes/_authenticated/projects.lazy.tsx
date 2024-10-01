@@ -148,9 +148,13 @@ const Projects = () => {
 
   const projects =
     data?.map((project) => {
-            const user = getUsersData?.find(user => user.id === project.created_by_id)
+      const user = getUsersData?.find(
+        (user) => user.id === project.created_by_id,
+      );
 
-            const createdBy = user ? `${user.first_name} ${user.last_name}` : 'Unknown'
+      const createdBy = user
+        ? `${user.first_name} ${user.last_name}`
+        : 'Unknown';
 
       return {
         ...project,
