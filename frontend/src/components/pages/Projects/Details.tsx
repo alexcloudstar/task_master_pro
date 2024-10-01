@@ -24,13 +24,14 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { ImageUp } from 'lucide-react';
+import { useEffect } from 'react';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { TInsertProject } from '@/services/projects/types';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
+import { UploadFile } from '@/components/UploadFile';
+import { uploadAssets } from '@/services/files';
+import { Assets } from '@/components/Assets';
 
 type TDetailsProps = {
   isOpen: boolean;
@@ -39,7 +40,6 @@ type TDetailsProps = {
 };
 
 const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const token = useGetToken();
 
   const formSchema = z.object({
@@ -65,8 +65,19 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
       }),
   });
 
+  const mutationUploadFile = useMutation({
+    mutationFn: (fileFormData: FormData) =>
+      uploadAssets({
+        token: token as string,
+        folder: data?.title ?? 'uncategorized',
+        formData: fileFormData,
+      }),
+  });
+
   const isLoadingData =
-    mutationUpdateProjectData.isPending || isSubmitting || isLoading;
+    mutationUpdateProjectData.isPending ||
+    isLoading ||
+    mutationUploadFile.isPending;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const newProject: TInsertProject = {
@@ -98,10 +109,6 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
     },
   });
 
-  const onUpload = () => {
-    setIsSubmitting(true);
-  };
-
   useEffect(() => {
     if (data) {
       form.setValue('title', data.title);
@@ -120,7 +127,7 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogContent>
+      <AlertDialogContent className='lg:max-w-[900px]'>
         <AlertDialogHeader>
           <AlertDialogTitle>{data?.title}</AlertDialogTitle>
           <AlertDialogDescription className='space-y-4'>
@@ -171,22 +178,8 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
                 />
               </form>
             </Form>
-            <Button
-              disabled={isLoadingData}
-              onClick={onUpload}
-              className={isLoadingData ? 'cursor-not-allowed' : ''}
-            >
-              {isLoadingData ? (
-                <>
-                  <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />
-                  Please wait
-                </>
-              ) : (
-                <>
-                  <ImageUp className='mr-2 h-4 w-4' /> Upload Image
-                </>
-              )}
-            </Button>
+            <UploadFile mutation={mutationUploadFile} />
+            <Assets projectName={data?.title ?? 'uncategorized'} />
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -194,8 +187,8 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
             disabled={isLoadingData}
             className={isLoadingData ? 'cursor-not-allowed' : ''}
           >
-            {isSubmitting ? (
-              <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />
+            {mutationUploadFile.isPending ? (
+              <ReloadIcon className='mr-2 size-4 animate-spin' />
             ) : (
               'Cancel'
             )}
@@ -206,8 +199,8 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
             form='update_project'
             type='submit'
           >
-            {isSubmitting ? (
-              <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />
+            {mutationUploadFile.isPending ? (
+              <ReloadIcon className='mr-2 size-4 animate-spin' />
             ) : (
               'Save'
             )}
