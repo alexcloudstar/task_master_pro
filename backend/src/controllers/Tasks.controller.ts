@@ -226,15 +226,6 @@ export const deleteTask = async (req: Request, res: Response) => {
 			});
 		}
 
-		if (
-			findedUser.role !== 'admin' &&
-			findedUser.id !== findedTask?.created_by_id
-		) {
-			return res.status(403).json({
-				message: 'Forbidden',
-			});
-		}
-
 		await db
 			.delete(task)
 			.where(and(eq(task.id, +id), eq(task.created_by_id, findedUser.id)));
