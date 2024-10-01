@@ -127,7 +127,7 @@ const Details = ({ isOpen, setIsOpen, projectId }: TDetailsProps) => {
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogContent>
+      <AlertDialogContent className='lg:max-w-[900px]'>
         <AlertDialogHeader>
           <AlertDialogTitle>{data?.title}</AlertDialogTitle>
           <AlertDialogDescription className='space-y-4'>
