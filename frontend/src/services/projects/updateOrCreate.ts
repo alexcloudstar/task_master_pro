@@ -11,12 +11,11 @@ export const updateOrCreateProject = async ({
   isCreating: boolean;
 }): Promise<TProject> => {
   const baseURL = 'http://localhost:8000/api/projects';
-  const method = isCreating ? 'POST' : 'PUT';
   const url = isCreating ? baseURL : `${baseURL}/${createdProject.id}`;
 
   try {
     const res = await fetch(url, {
-      method: method,
+      method: isCreating ? 'POST' : 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
