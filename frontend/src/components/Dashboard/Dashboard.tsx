@@ -55,7 +55,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4 drop-shadow-md'>
+      <div className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 drop-shadow-md'>
         {cardContent.map(({ title, value, Icon }) => (
           <Card x-chunk='dashboard-01-chunk-0' key={uuid()}>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
