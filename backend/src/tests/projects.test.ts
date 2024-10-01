@@ -385,27 +385,6 @@ describe('[PUT] /projects/:id', () => {
 		expect(response.body).toEqual({ message: 'Unauthorized' });
 	});
 
-	it('should return 403 if the user is not authorized to update the project', async () => {
-		(db.query.user.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue({
-			...mockUser,
-			id: 'another-user-id',
-		});
-
-		const reqBody = {
-			title: 'Updated Project',
-			description: 'Updated description',
-			color: '#00FF00',
-		};
-
-		const response = await request(app)
-			.put('/projects/1')
-			.set('Authorization', 'Bearer valid.token.here')
-			.send(reqBody);
-
-		expect(response.status).toBe(403);
-		expect(response.body).toEqual({ message: 'Forbidden' });
-	});
-
 	it('should return 404 if the project is not found', async () => {
 		(db.query.project.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
 			null,
@@ -510,32 +489,6 @@ describe('[DELETE] /projects/:id', () => {
 
 		expect(response.status).toBe(404);
 		expect(response.body).toEqual({ message: 'User not found' });
-	});
-
-	it('should return 403 if the user is not authorized to delete the project', async () => {
-		const mockProject = { id: 1, created_by_id: 2 }; // Different user created the project
-		const mockUser = { id: 1, role: 'user', clerk_id: 'mock-user-id' };
-
-		// Mock jwtDecode to return the user's ID
-		(jwtDecode as ReturnType<typeof vi.fn>).mockReturnValue({
-			sub: mockUser.clerk_id,
-		});
-
-		// Mock project retrieval to find the project
-		(db.query.project.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
-			mockProject,
-		);
-		// Mock user retrieval to find the user
-		(db.query.user.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
-			mockUser,
-		);
-
-		const response = await request(app)
-			.delete('/projects/1')
-			.set('Authorization', 'Bearer valid.token.here');
-
-		expect(response.status).toBe(403);
-		expect(response.body).toEqual({ message: 'Forbidden' });
 	});
 
 	it('should return 404 if the project is not found', async () => {

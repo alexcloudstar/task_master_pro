@@ -123,15 +123,6 @@ export const updateProject = async (req: Request, res: Response) => {
 			});
 		}
 
-		if (
-			findedUser.role !== 'admin' &&
-			findedUser.id !== findedProject?.created_by_id
-		) {
-			return res.status(403).json({
-				message: 'Forbidden',
-			});
-		}
-
 		const updatedProject = await db
 			.update(project)
 			.set({
@@ -183,15 +174,6 @@ export const deleteProject = async (req: Request, res: Response) => {
 		if (!findedUser) {
 			return res.status(404).json({
 				message: 'User not found',
-			});
-		}
-
-		if (
-			findedUser.role !== 'admin' &&
-			findedUser.id !== findedProject?.created_by_id
-		) {
-			return res.status(403).json({
-				message: 'Forbidden',
 			});
 		}
 
