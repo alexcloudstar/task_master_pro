@@ -9,6 +9,7 @@ import useGetToken from '@/hooks/useGetToken';
 import { getProjects } from '@/services/projects';
 import { deleteProject } from '@/services/projects/delete';
 import { TProject } from '@/services/projects/types';
+import { getUsers } from '@/services/users';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import { ColumnDef } from '@tanstack/react-table';
@@ -53,7 +54,7 @@ const projectColumns: ColumnDef<TCustomProject>[] = [
     ),
   },
   {
-    accessorKey: 'created_by_id',
+    accessorKey: 'created_by',
     header: 'Created By',
   },
   {
@@ -76,6 +77,16 @@ const Projects = () => {
   const { isLoading, isError, data } = useQuery({
     queryKey: ['projects'],
     queryFn: () => getProjects({ token: token as string }),
+    enabled: !!token,
+  });
+
+  const {
+    isLoading: isLoadingGetUsers,
+    isError: isErrorGetUsers,
+    data: getUsersData,
+  } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => getUsers({ token: token as string }),
     enabled: !!token,
   });
 
@@ -136,15 +147,22 @@ const Projects = () => {
   const columns = createColumns(projectColumns, actions, 'title');
 
   const projects =
-    data?.map((project) => ({
-      ...project,
-      created_at: new Date(project.created_at).toLocaleDateString(),
-      updated_at: new Date(project.updated_at).toLocaleDateString(),
-    })) ?? [];
+    data?.map((project) => {
+            const user = getUsersData?.find(user => user.id === project.created_by_id)
 
-  if (isLoading) return <Loader />;
+            const createdBy = user ? `${user.first_name} ${user.last_name}` : 'Unknown'
 
-  if (isError) return <div>Error</div>;
+      return {
+        ...project,
+        created_by: createdBy,
+        created_at: new Date(project.created_at).toLocaleDateString(),
+        updated_at: new Date(project.updated_at).toLocaleDateString(),
+      };
+    }) ?? [];
+
+  if (isLoading || isLoadingGetUsers) return <Loader />;
+
+  if (isError || isErrorGetUsers) return <div>Error</div>;
 
   if (!projects) return <div>No projects</div>;
 

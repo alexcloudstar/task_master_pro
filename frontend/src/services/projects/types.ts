@@ -4,6 +4,7 @@ export type TProject = {
   description: string;
   color: string;
   created_by_id: number;
+  created_by?: string;
   created_at: Date;
   updated_at: Date;
 };
