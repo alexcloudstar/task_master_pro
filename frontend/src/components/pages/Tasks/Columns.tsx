@@ -18,7 +18,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { QueryClient, useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 type TColumsProps = {
@@ -27,6 +27,10 @@ type TColumsProps = {
 
 const Columns = ({ tasks }: TColumsProps) => {
   const [tasksState, setTasksState] = useState<TTask[]>(tasks);
+
+  useEffect(() => {
+    setTasksState(tasks);
+  }, [tasks]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
