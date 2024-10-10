@@ -7,7 +7,6 @@ Task Master Pro is a comprehensive task management application designed to strea
 - User authentication and project management
 - Task creation, assignment, and tracking
 - Asset management for project resources
-- Real-time updates and notifications
 
 ## Frontend
 
