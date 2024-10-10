@@ -1,21 +1,16 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import Assets from './Assets';
+import { describe, expect, it, vi } from 'vitest';
 import useGetToken from '@/hooks/useGetToken';
 import { useQuery } from '@tanstack/react-query';
+import { Assets } from '@/components/Assets';
 
-// Mock the hooks
 vi.mock('@/hooks/useGetToken');
 vi.mock('@tanstack/react-query', () => ({
   useQuery: vi.fn(),
 }));
 
 describe('Assets Component', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('should display loader when loading', () => {
     (useGetToken as ReturnType<typeof vi.fn>).mockReturnValue('mock-token');
     (useQuery as ReturnType<typeof vi.fn>).mockReturnValue({
@@ -24,7 +19,7 @@ describe('Assets Component', () => {
       data: null,
     });
 
-    render(<Assets projectName="test-project" />);
+    render(<Assets projectName='test-project' />);
 
     expect(screen.getByTestId('loader')).toBeInTheDocument();
   });
@@ -37,7 +32,7 @@ describe('Assets Component', () => {
       data: null,
     });
 
-    render(<Assets projectName="test-project" />);
+    render(<Assets projectName='test-project' />);
 
     expect(screen.getByText('Error')).toBeInTheDocument();
   });
@@ -50,7 +45,7 @@ describe('Assets Component', () => {
       data: { data: ['asset1.jpg', 'asset2.jpg'] },
     });
 
-    render(<Assets projectName="test-project" />);
+    render(<Assets projectName='test-project' />);
 
     expect(screen.getByAltText('test-project asset 0')).toBeInTheDocument();
     expect(screen.getByAltText('test-project asset 1')).toBeInTheDocument();
