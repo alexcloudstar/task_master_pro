@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import { describe, expect, it, vi } from 'vitest';
 import useGetToken from '@/hooks/useGetToken';
 import { useQuery } from '@tanstack/react-query';
 import { Assets } from '@/components/Assets';
+import '@testing-library/jest-dom';
 
 vi.mock('@/hooks/useGetToken');
 vi.mock('@tanstack/react-query', () => ({
