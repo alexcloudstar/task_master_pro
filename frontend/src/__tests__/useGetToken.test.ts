@@ -8,31 +8,31 @@ import useGetToken from '@/hooks/useGetToken';
 vi.mock('@clerk/clerk-react');
 
 describe('useGetToken', () => {
-	it('should return null if user is not signed in', () => {
-		// Mock the useAuth hook to return an object where isSignedIn is false
-		(useAuth as ReturnType<typeof vi.fn>).mockReturnValue({
-			isSignedIn: false,
-			getToken: vi.fn(),
-		});
+  it('should return null if user is not signed in', () => {
+    // Mock the useAuth hook to return an object where isSignedIn is false
+    (useAuth as ReturnType<typeof vi.fn>).mockReturnValue({
+      isSignedIn: false,
+      getToken: vi.fn(),
+    });
 
-		const { result } = renderHook(() => useGetToken());
+    const { result } = renderHook(() => useGetToken());
 
-		expect(result.current).toBeNull();
-	});
+    expect(result.current).toBeNull();
+  });
 
-	it('should return token if user is signed in', async () => {
-		const mockToken = 'mock-token';
-		// Mock the useAuth hook to return an object where isSignedIn is true and getToken resolves to a mock token
-		(useAuth as ReturnType<typeof vi.fn>).mockReturnValue({
-			isSignedIn: true,
-			getToken: vi.fn().mockResolvedValue(mockToken),
-		});
+  it('should return token if user is signed in', async () => {
+    const mockToken = 'mock-token';
+    // Mock the useAuth hook to return an object where isSignedIn is true and getToken resolves to a mock token
+    (useAuth as ReturnType<typeof vi.fn>).mockReturnValue({
+      isSignedIn: true,
+      getToken: vi.fn().mockResolvedValue(mockToken),
+    });
 
-		const { result } = renderHook(() => useGetToken());
+    const { result } = renderHook(() => useGetToken());
 
-		// Wait for the useEffect to complete
-		await waitFor(() => expect(result.current).toBe(mockToken));
+    // Wait for the useEffect to complete
+    await waitFor(() => expect(result.current).toBe(mockToken));
 
-		expect(result.current).toBe(mockToken);
-	});
+    expect(result.current).toBe(mockToken);
+  });
 });

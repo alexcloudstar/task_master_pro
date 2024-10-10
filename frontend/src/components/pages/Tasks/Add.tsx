@@ -75,7 +75,6 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
     },
   });
 
-
   const { isLoading, isError, data } = useQuery({
     queryKey: ['me'],
     queryFn: () => getMe({ token: token as string }),
@@ -96,7 +95,6 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
     mutationFn: (values: TCreateTask) =>
       postTask({ token: token as string, createdTask: values }),
   });
-
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const hours = values.time.hours;
@@ -123,8 +121,8 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
 
       form.reset();
       toast.success('Task created successfully');
-      queryClient.invalidateQueries({ queryKey: ['tasks'] })
-      queryClient.invalidateQueries({ queryKey: ['project_tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['project_tasks'] });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
