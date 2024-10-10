@@ -44,6 +44,7 @@ import { z } from 'zod';
 
 const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
   const token = useGetToken();
+  const queryClient = useQueryClient();
 
   const formSchema = z.object({
     title: z.string().min(2).max(255),
@@ -73,8 +74,6 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
       },
     },
   });
-
-  const queryClient = useQueryClient();
 
   const { isLoading, isError, data } = useQuery({
     queryKey: ['me'],
@@ -120,9 +119,11 @@ const Add = ({ selectedProjectId }: { selectedProjectId: TProject['id'] }) => {
     try {
       await mutation.mutateAsync(newTask);
 
-      // form.reset();
+      form.reset();
       toast.success('Task created successfully');
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['project_tasks'] });
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message);
